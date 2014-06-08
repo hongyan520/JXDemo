@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp" >
+
+    <ImageView
+        android:id="@+id/img_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_launcher" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_toRightOf="@+id/img_icon"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@+id/rlayout_manage"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/text_title"
+                style="@style/textview_black16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="英语口语" />
+
+            <ImageView
+                android:id="@+id/img_xl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/img_dy"
+                android:background="@drawable/icon_ok" />
+
+            <ImageView
+                android:id="@+id/img_dy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_toLeftOf="@+id/img_right"
+                android:background="@drawable/icon_ok_gray" />
+
+            <ImageView
+                android:id="@+id/img_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/select_right" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/text_content"
+            style="@style/textview_gray14_888888"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:text="沙湖大道的哈的哈尽快哈坎打算的拉动快哈坎打算的拉动 " />
+    </LinearLayout>
+
+</RelativeLayout>

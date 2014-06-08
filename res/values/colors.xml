@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+    <!-- 常用颜色 -->
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="red">#ff0000</color>
+    <color name="yellow">#ff00ffff</color>
+    <color name="blue">#0000ff</color>
+    <color name="blue_qian">#D1EEEE</color>
+    <color name="green">#ff00ff00</color>
+    <color name="transparent">#00000000</color>
+    <color name="gold">#b89766</color>
+    <color name="gray">#999999</color>
+    <color name="gray_qian">#D4D4D4</color>
+    <!-- 列表颜色 -->
+    <color name="list_gray">#aeaeae</color>
+    <color name="list_black">#535353</color>
+    <!-- 系统颜色 -->
+    <color name="top_title_color">#601300</color>
+    <color name="bg_color">#f3f3f7</color>
+    <color name="top_bar">#EE4136</color>
+    <color name="edit_text_hint">#b7b7b7</color>
+    <color name="gray_888888">#888888</color>
+    <color name="transparent_white_50">#7fffffff</color>
+    <color name="transparent_white_30">#4fffffff</color>
+    <color name="transparent_black_30">#4f000000</color>
+
+    <!-- 新训练 已提交 已点评 -->
+     <color name="color_xxl">#00d8ff</color>
+     <color name="color_ytj">#000000</color>
+     <color name="color_ydp">#00c700</color>
+</resources>

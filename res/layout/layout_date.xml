@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/bg_color"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_horizontal_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="5dp" >
+
+    <TextView    android:id="@+id/text_date"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="2014年1月5日" android:gravity="center"
+        android:textColor="#cccccc" />
+
+</LinearLayout>

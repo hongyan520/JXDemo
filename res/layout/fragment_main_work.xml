@@ -1,0 +1,25 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/bottomIndex"
+        android:layout_width="fill_parent"
+        android:layout_height="30dip"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center|bottom"
+        android:layout_marginBottom="60dip"
+        android:gravity="center|bottom"
+        android:orientation="horizontal"
+        android:visibility="invisible" />
+
+    <com.demo.jxdemo.ui.customviews.MyViewPager
+        android:id="@+id/vPager"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/bottomIndex"
+        android:layout_gravity="center"
+        android:persistentDrawingCache="animation" />
+
+</RelativeLayout>

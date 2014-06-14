@@ -70,21 +70,6 @@ public class Constant
 
 	public static Integer PAGESIZE = 0;
 
-	/**
-	 * HttpPostAsync 请求方式 postByteData
-	 */
-	public final static String POST_BYTE_DATA = "postByteData";
-
-	/**
-	 * HttpPostAsync 请求方式 postKeyValueData
-	 */
-	public final static String POST_KEYVALUE_DATA = "postKeyValueData";
-
-	/**
-	 * HttpPostAsync 请求失败
-	 */
-	public final static String HTTP_REQUEST_FAIL = "HTTP_REQUEST_FAIL";
-
 	public final static String RESPONSEREADTIMEVALUE = "5000";// 设置请求超时时间值
 
 	public final static String MOBILE_POST_URL = "MOBILE_POST_URL";

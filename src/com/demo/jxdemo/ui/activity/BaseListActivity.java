@@ -20,13 +20,14 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.demo.base.services.http.HttpPostAsync;
+import com.demo.base.support.BaseConstants;
 import com.demo.base.util.JsonUtil;
 import com.demo.base.util.StringUtil;
 import com.demo.jxdemo.R;
 import com.demo.jxdemo.application.ConfigCache;
 import com.demo.jxdemo.application.SharedPreferencesConfig;
 import com.demo.jxdemo.constant.Constant;
-import com.demo.jxdemo.services.HttpPostAsync;
 import com.demo.jxdemo.ui.adapter.BaseListAdapter;
 import com.demo.jxdemo.ui.customviews.PullToRefreshView;
 import com.demo.jxdemo.ui.customviews.PullToRefreshView.OnFooterRefreshListener;
@@ -207,7 +208,7 @@ public abstract class BaseListActivity extends BaseActivity
 					Log.e("err", "服务器异常，请联系管理员!");
 					readCacheFile("list.txt");
 				}
-				else if (Constant.HTTP_REQUEST_FAIL.equals(result.toString().trim()))
+				else if (BaseConstants.HTTP_REQUEST_FAIL.equals(result.toString().trim()))
 				{
 					dismissProgress();
 					ToastManager.getInstance(BaseListActivity.this).showToast("连接不上服务器");
@@ -246,7 +247,7 @@ public abstract class BaseListActivity extends BaseActivity
 				}
 				return "";
 			}
-		}.execute(Constant.POST_KEYVALUE_DATA, SharedPreferencesConfig.config(BaseListActivity.this).get(Constant.MOBILE_POST_URL),
+		}.execute(BaseConstants.POST_KEYVALUE_DATA, SharedPreferencesConfig.config(BaseListActivity.this).get(Constant.MOBILE_POST_URL),
 				parasTemp);
 
 	}

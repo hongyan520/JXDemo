@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.demo.base.services.http.HttpPostAsync;
 import com.demo.base.support.BaseConstants;
 import com.demo.base.util.JsonUtil;
 import com.demo.base.util.StringUtil;
@@ -25,7 +26,6 @@ import com.demo.jxdemo.R;
 import com.demo.jxdemo.application.SharedPreferencesConfig;
 import com.demo.jxdemo.constant.CommandConstants;
 import com.demo.jxdemo.constant.Constant;
-import com.demo.jxdemo.services.HttpPostAsync;
 import com.demo.jxdemo.ui.activity.BaseActivity;
 import com.demo.jxdemo.ui.activity.main.MainActivity;
 import com.demo.jxdemo.ui.activity.menu.AboutActivity;
@@ -231,7 +231,7 @@ public class LoginActivity extends BaseActivity
 					dismissProgress();
 					ToastManager.getInstance(LoginActivity.this).showToast("服务器异常，请联系管理员!");
 				}
-				else if (Constant.HTTP_REQUEST_FAIL.equals(result.toString().trim()))
+				else if (BaseConstants.HTTP_REQUEST_FAIL.equals(result.toString().trim()))
 				{
 					dismissProgress();
 					ToastManager.getInstance(LoginActivity.this).showToast("连接不上服务器");
@@ -328,7 +328,7 @@ public class LoginActivity extends BaseActivity
 					dismissProgress();
 					ToastManager.getInstance(LoginActivity.this).showToast("服务器异常，请联系管理员!");
 				}
-				else if (Constant.HTTP_REQUEST_FAIL.equals(result.toString().trim()))
+				else if (BaseConstants.HTTP_REQUEST_FAIL.equals(result.toString().trim()))
 				{
 					dismissProgress();
 					ToastManager.getInstance(LoginActivity.this).showToast("连接不上服务器");
@@ -354,7 +354,7 @@ public class LoginActivity extends BaseActivity
 				}
 				return "";
 			}
-		}.execute(Constant.POST_KEYVALUE_DATA, CommandConstants.URL + CommandConstants.LOGIN, parasTemp);
+		}.execute(BaseConstants.POST_KEYVALUE_DATA, CommandConstants.URL + CommandConstants.LOGIN, parasTemp);
 
 	}
 

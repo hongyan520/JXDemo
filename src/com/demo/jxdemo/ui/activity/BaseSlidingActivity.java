@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 import com.demo.base.global.ActivityTaskManager;
+import com.demo.base.util.Utils;
 import com.demo.jxdemo.R;
 import com.demo.jxdemo.ui.activity.main.MainActivity;
 import com.demo.jxdemo.ui.customviews.slide.SlidingActivity;
@@ -44,17 +45,23 @@ public abstract class BaseSlidingActivity extends SlidingActivity
 
 		Bitmap bitmapOrg = BitmapFactory.decodeResource(getResources(),R.drawable.sidepanebackground);
 		
-		WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
-		DisplayMetrics dm = new DisplayMetrics();
-		// 取得窗口属性
-		wm.getDefaultDisplay().getMetrics(dm);
+		DisplayMetrics dm = Utils.getDisplayMetrics(this);
+				
 		// 窗口的宽度
 		int screenWidth = dm.widthPixels;
+		int screenHight = dm.heightPixels;
+		
+		int offset = screenWidth-bitmapOrg.getWidth();
+		float currentWidth = 0;
+		if(screenHight < bitmapOrg.getHeight()){
+			currentWidth = ((float)bitmapOrg.getWidth())/(((float)bitmapOrg.getHeight())/((float)screenHight));
+			offset = (int) (screenWidth - currentWidth);
+		}
 		
 		SlidingMenu sm = getSlidingMenu();
 		sm.setShadowWidth(50);
 		sm.setShadowDrawable(R.drawable.shadow);
-		sm.setBehindOffset(screenWidth-bitmapOrg.getWidth());
+		sm.setBehindOffset(offset);
 		sm.setFadeDegree(0.35f);
 		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
 	}

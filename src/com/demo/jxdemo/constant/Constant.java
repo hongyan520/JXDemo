@@ -1,5 +1,7 @@
 package com.demo.jxdemo.constant;
 
+import android.os.Environment;
+
 import com.demo.jxdemo.application.AllActivityListApplication;
 
 
@@ -100,4 +102,20 @@ public class Constant
 	/** 自动登录 */
 	public final static String ISAUTOLOGIN = "OFF";
 	public final static String CACHE_PATH = AllActivityListApplication.getInstance().getApplicationContext().getCacheDir().getPath()+ "/";
+	
+	/**
+	 * 缓存根目录
+	 */
+	public static final String BASE_CACHE_PATH = Environment.getExternalStorageDirectory().toString() + "/gixue/";
+	
+	/**
+	 * 静态缓存目录
+	 */
+	public static final String STATIC_PATH = "static/";
+	
+	/**
+	 * API动态缓存目录
+	 */
+	public static final String API_PATH = "Api/";
+	
 }

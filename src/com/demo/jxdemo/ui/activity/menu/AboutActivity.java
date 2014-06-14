@@ -2,6 +2,7 @@ package com.demo.jxdemo.ui.activity.menu;
 
 import ui.listener.OnClickAvoidForceListener;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -14,11 +15,11 @@ import com.demo.jxdemo.ui.activity.BaseSlidingActivity;
 
 public class AboutActivity extends BaseSlidingActivity
 {
-	private LinearLayout backLayout;
-
 	private TextView urlText;
 
 	private TextView companyText;
+
+	private String fromLoginString = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -28,6 +29,7 @@ public class AboutActivity extends BaseSlidingActivity
 		setContentView(R.layout.activity_menu_about);
 		loadMenu();
 
+		fromLoginString = StringUtil.Object2String(getIntent().getStringExtra("fromLogin"));
 		findViews();
 		setViewClick();
 	}
@@ -35,12 +37,11 @@ public class AboutActivity extends BaseSlidingActivity
 	private void findViews()
 	{
 		((TextView) findViewById(R.id.formTilte)).setText(getResources().getString(R.string.left_about));
-		backLayout = (LinearLayout) findViewById(R.id.returnBtn);
-		if (StringUtil.isBlank(getIntent().getStringExtra("fromLogin")))
-		{
+		if (StringUtil.isBlank(fromLoginString))
 			((ImageView) findViewById(R.id.imgview_return)).setBackgroundResource(R.drawable.top_left);
-			backLayout.setVisibility(View.VISIBLE);
-		}
+		else
+			((ImageView) findViewById(R.id.imgview_return)).setBackgroundResource(R.drawable.img_back);
+		((ImageView) findViewById(R.id.imgview_return)).setVisibility(View.VISIBLE);
 
 		urlText = (TextView) findViewById(R.id.text_about_url);
 		companyText = (TextView) findViewById(R.id.text_about_company);
@@ -60,7 +61,7 @@ public class AboutActivity extends BaseSlidingActivity
 
 	private void setViewClick()
 	{
-		backLayout.setOnClickListener(onClickAvoidForceListener);
+		((LinearLayout) findViewById(R.id.layout_return)).setOnClickListener(onClickAvoidForceListener);
 	}
 
 	private OnClickAvoidForceListener onClickAvoidForceListener = new OnClickAvoidForceListener()
@@ -71,12 +72,30 @@ public class AboutActivity extends BaseSlidingActivity
 		{
 			switch (v.getId())
 			{
-				case R.id.returnBtn:
-					getSlidingMenu().toggle();
+				case R.id.layout_return:
+					if (StringUtil.isBlank(fromLoginString))
+					{
+						closeKeyboard();
+						getSlidingMenu().toggle();
+					}
+					else
+						finish();
 					break;
 				default:
 					break;
 			}
 		}
 	};
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event)
+	{
+		if (!StringUtil.isBlank(fromLoginString))
+		{
+			finish();
+			return false;
+		}
+		else
+			return super.onKeyDown(keyCode, event);
+	}
 }

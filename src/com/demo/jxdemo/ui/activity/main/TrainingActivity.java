@@ -1,4 +1,4 @@
-package com.demo.jxdemo.ui.activity.menu.manage;
+package com.demo.jxdemo.ui.activity.main;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,8 +7,8 @@ import java.util.Map;
 
 import ui.listener.OnClickAvoidForceListener;
 import ui.listener.OnItemClickAvoidForceListener;
-import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -17,16 +17,24 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.demo.base.util.ScrollListViewUtil;
 import com.demo.jxdemo.R;
-import com.demo.jxdemo.ui.activity.BaseSlidingActivity;
-import com.demo.jxdemo.ui.adapter.ManageListAdapter;
-import com.demo.jxdemo.utils.ToastManager;
+import com.demo.jxdemo.ui.activity.BaseActivity;
+import com.demo.jxdemo.ui.adapter.AttachListAdapter;
 
-public class ManageActivity extends BaseSlidingActivity
+/**
+ * 训练
+ * 
+ * @author Chan
+ */
+public class TrainingActivity extends BaseActivity
 {
-	private ListView listView;
 
-	private ManageListAdapter adapter;
+	private ListView attachListView;
+
+	private AttachListAdapter attachAdapter;
+
+	// private LearningMaterialCommentListAdapter commentAdapter;
 
 	private List<Map<String, Object>> lists;
 
@@ -35,8 +43,7 @@ public class ManageActivity extends BaseSlidingActivity
 	{
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.activity_menu_manage);
-		loadMenu();
+		setContentView(R.layout.activity_traning);
 
 		findViews();
 		initData();
@@ -46,13 +53,11 @@ public class ManageActivity extends BaseSlidingActivity
 
 	private void findViews()
 	{
-		((TextView) findViewById(R.id.formTilte)).setText(getResources().getString(R.string.left_manage_choose));
-		((ImageView) findViewById(R.id.imgview_return)).setBackgroundResource(R.drawable.top_left);
+		((TextView) findViewById(R.id.formTilte)).setText("详细信息");
+		((ImageView) findViewById(R.id.imgview_return)).setBackgroundResource(R.drawable.img_back);
 		((ImageView) findViewById(R.id.imgview_return)).setVisibility(View.VISIBLE);
-		((TextView) findViewById(R.id.text_right)).setText(getResources().getString(R.string.left_manage_success));
-		((TextView) findViewById(R.id.text_right)).setVisibility(View.VISIBLE);
 
-		listView = (ListView) findViewById(R.id.list_manage);
+		attachListView = (ListView) findViewById(R.id.list_traning_attach);
 	}
 
 	private void initData()
@@ -72,16 +77,18 @@ public class ManageActivity extends BaseSlidingActivity
 
 	private void initView()
 	{
-		adapter = new ManageListAdapter(ManageActivity.this);
-		adapter.setDataList(lists);
-		listView.setAdapter(adapter);
-		listView.setOnItemClickListener(onItemClickAvoidForceListener);
+
+		attachAdapter = new AttachListAdapter(TrainingActivity.this);
+		attachAdapter.setDataList(lists);
+		attachListView.setAdapter(attachAdapter);
+		ScrollListViewUtil.setListViewHeightBasedOnChildren(attachListView);
+
+		attachListView.setOnItemClickListener(onItemClickAvoidForceListener);
 	}
 
 	private void setViewClick()
 	{
 		((LinearLayout) findViewById(R.id.layout_return)).setOnClickListener(onClickAvoidForceListener);
-		((LinearLayout) findViewById(R.id.layout_remark)).setOnClickListener(onClickAvoidForceListener);
 	}
 
 	private OnClickAvoidForceListener onClickAvoidForceListener = new OnClickAvoidForceListener()
@@ -93,11 +100,7 @@ public class ManageActivity extends BaseSlidingActivity
 			switch (v.getId())
 			{
 				case R.id.layout_return:
-					closeKeyboard();
-					getSlidingMenu().toggle();
-					break;
-				case R.id.layout_remark:
-					ToastManager.getInstance(ManageActivity.this).showToast("完成.......");
+					finishMyActivity();
 					break;
 				default:
 					break;
@@ -111,9 +114,6 @@ public class ManageActivity extends BaseSlidingActivity
 		@Override
 		public void onItemClickAvoidForce(AdapterView<?> arg0, View arg1, int arg2, long arg3)
 		{
-			Intent intent = new Intent();
-			intent.setClass(ManageActivity.this, ManageDetailActivity.class);
-			startActivity(intent);
 		}
 	};
 

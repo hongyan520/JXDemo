@@ -8,6 +8,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import ui.listener.OnClickAvoidForceListener;
+import ui.listener.OnItemClickAvoidForceListener;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,10 +23,10 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.demo.base.global.ActivityTaskManager;
@@ -40,15 +41,11 @@ import com.demo.jxdemo.utils.ToastManager;
 
 public class MainActivity extends BaseSlidingActivity
 {
-	private LinearLayout windowTitleLayout;
+	private RelativeLayout windowTitleLayout;
 
 	private LinearLayout searchLayout;
 
 	private EditText searchEditText;
-
-	private LinearLayout backLayout;
-
-	private FrameLayout rightLayout;
 
 	private boolean isExit;
 
@@ -151,16 +148,14 @@ public class MainActivity extends BaseSlidingActivity
 
 	private void findViews()
 	{
-		windowTitleLayout = (LinearLayout) findViewById(R.id.windowtitle);
+		windowTitleLayout = (RelativeLayout) findViewById(R.id.windowtitle);
 		searchLayout = (LinearLayout) findViewById(R.id.layout_search);
 		searchEditText = (EditText) findViewById(R.id.edit_search);
 
-		backLayout = (LinearLayout) findViewById(R.id.returnBtn);
 		((ImageView) findViewById(R.id.imgview_return)).setBackgroundResource(R.drawable.top_left);
-		backLayout.setVisibility(View.VISIBLE);
-		rightLayout = (FrameLayout) findViewById(R.id.remarkImg_layout);
-		((ImageView) findViewById(R.id.remarkImg_mid)).setBackgroundResource(R.drawable.top_search);
-		rightLayout.setVisibility(View.VISIBLE);
+		((ImageView) findViewById(R.id.imgview_return)).setVisibility(View.VISIBLE);
+		((ImageView) findViewById(R.id.imgview_right)).setBackgroundResource(R.drawable.top_search);
+		((ImageView) findViewById(R.id.imgview_right)).setVisibility(View.VISIBLE);
 
 		bottomLayout = (LinearLayout) findViewById(R.id.layout_tab_bottom);
 		bottomLayout.setVisibility(View.INVISIBLE);
@@ -172,21 +167,6 @@ public class MainActivity extends BaseSlidingActivity
 		viewPager = (MyViewPager) findViewById(R.id.vPage_introduce);
 		viewPager.setHorizontalScrollBarEnabled(false);
 		btn1.setTextColor(getResources().getColor(R.color.red));
-
-		// setBehindContentView(R.layout.slidemenu_back_content); // 后面的布局(机构)
-		//
-		// FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-		// leftFragment = new LeftFragment();
-		// fragmentTransaction.replace(R.id.content, leftFragment);// 实例化，但是被actvity_main布局覆盖。
-		// fragmentTransaction.commit();
-		//
-		// SlidingMenu sm = getSlidingMenu();
-		// sm.setShadowWidth(50);
-		// sm.setShadowDrawable(R.drawable.shadow);
-		// sm.setBehindOffset(250);
-		// sm.setFadeDegree(0.35f);
-		// sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-
 	}
 
 	private void initData()
@@ -246,6 +226,15 @@ public class MainActivity extends BaseSlidingActivity
 				lv.setDivider(getResources().getDrawable(R.drawable.vote_line_qian));
 				lv.setDividerHeight(1);
 				lv.setFooterDividersEnabled(true);
+				lv.setOnItemClickListener(new OnItemClickAvoidForceListener()
+				{
+					
+					@Override
+					public void onItemClickAvoidForce(AdapterView<?> arg0, View arg1, int arg2, long arg3)
+					{
+						
+					}
+				});
 
 				pagerContents.add(layout);
 			}
@@ -265,8 +254,8 @@ public class MainActivity extends BaseSlidingActivity
 		btn2.setOnClickListener(onClickAvoidForceListener);
 		btn1.setOnClickListener(onClickAvoidForceListener);
 		btn4.setOnClickListener(onClickAvoidForceListener);
-		backLayout.setOnClickListener(onClickAvoidForceListener);
-		rightLayout.setOnClickListener(onClickAvoidForceListener);
+		((LinearLayout) findViewById(R.id.layout_return)).setOnClickListener(onClickAvoidForceListener);
+		((LinearLayout) findViewById(R.id.layout_remark)).setOnClickListener(onClickAvoidForceListener);
 		((Button) findViewById(R.id.btn_cancel)).setOnClickListener(onClickAvoidForceListener);
 	}
 
@@ -278,6 +267,7 @@ public class MainActivity extends BaseSlidingActivity
 		{
 
 			int currentPage = pagerAdapter.cruurentItem;
+			Intent intent = new Intent();
 			switch (v.getId())
 			{
 				case R.id.btn_4:
@@ -287,19 +277,23 @@ public class MainActivity extends BaseSlidingActivity
 				case R.id.btn_3:
 					pagerAdapter.onPageSelected(2);
 					pagerAdapter.setBtnColor(btn3);
+					intent.setClass(MainActivity.this, LearningMaterialsActivity.class);
+					startActivity(intent);
 					break;
 				case R.id.btn_2:
 					pagerAdapter.onPageSelected(1);
 					pagerAdapter.setBtnColor(btn2);
+					intent.setClass(MainActivity.this, TrainingActivity.class);
+					startActivity(intent);
 					break;
 				case R.id.btn_1:
 					pagerAdapter.onPageSelected(0);
 					pagerAdapter.setBtnColor(btn1);
 					break;
-				case R.id.returnBtn:
+				case R.id.layout_return:
 					getSlidingMenu().toggle();
 					break;
-				case R.id.remarkImg_layout:
+				case R.id.layout_remark:
 					windowTitleLayout.setVisibility(View.GONE);
 					images_ga.setVisibility(View.GONE);
 					((LinearLayout) findViewById(R.id.gallery_point_linear)).setVisibility(View.GONE);
@@ -307,6 +301,7 @@ public class MainActivity extends BaseSlidingActivity
 					// getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 					break;
 				case R.id.btn_cancel:
+					closeKeyboard();
 					windowTitleLayout.setVisibility(View.VISIBLE);
 					images_ga.setVisibility(View.VISIBLE);
 					((LinearLayout) findViewById(R.id.gallery_point_linear)).setVisibility(View.VISIBLE);

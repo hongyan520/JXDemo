@@ -16,13 +16,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.demo.base.util.JsonUtil;
 import com.demo.base.util.StringUtil;
+import com.demo.jxdemo.R;
 import com.demo.jxdemo.application.ConfigCache;
 import com.demo.jxdemo.application.SharedPreferencesConfig;
 import com.demo.jxdemo.constant.Constant;
@@ -32,7 +32,6 @@ import com.demo.jxdemo.ui.customviews.PullToRefreshView;
 import com.demo.jxdemo.ui.customviews.PullToRefreshView.OnFooterRefreshListener;
 import com.demo.jxdemo.ui.customviews.PullToRefreshView.OnHeaderRefreshListener;
 import com.demo.jxdemo.utils.ToastManager;
-import com.demo.jxdemo.R;
 
 /**
  * 该类适用于只有一个上拉刷新列表的activiyt界面，子类继承与次，并
@@ -122,15 +121,13 @@ public abstract class BaseListActivity extends BaseActivity
 
 		needInit = false;
 
-		((Button) findViewById(R.id.remarkBtn)).setVisibility(View.GONE);
-
 		listview = (ListView) findViewById(this.listLayoutId);
 
 		mPullToRefreshView = (PullToRefreshView) listview.getParent();
 
 		setPullListEmptyView(this, "抱歉,暂时没有相关数据");
 		((TextView) findViewById(R.id.formTilte)).setText(title);
-		returnLayout = (LinearLayout) findViewById(R.id.returnBtn);
+		returnLayout = (LinearLayout) findViewById(R.id.layout_return);
 		returnLayout.setVisibility(View.VISIBLE);
 		returnLayout.setOnClickListener(new OnClickListener()
 		{

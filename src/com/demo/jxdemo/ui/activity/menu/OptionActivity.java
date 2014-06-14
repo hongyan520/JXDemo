@@ -24,8 +24,6 @@ import com.demo.jxdemo.utils.ToastManager;
 
 public class OptionActivity extends BaseSlidingActivity
 {
-	private LinearLayout backLayout;
-
 	private Button submitButton;
 
 	private EditText optionEditText;
@@ -46,9 +44,8 @@ public class OptionActivity extends BaseSlidingActivity
 	private void findViews()
 	{
 		((TextView) findViewById(R.id.formTilte)).setText(getResources().getString(R.string.left_option));
-		backLayout = (LinearLayout) findViewById(R.id.returnBtn);
 		((ImageView) findViewById(R.id.imgview_return)).setBackgroundResource(R.drawable.top_left);
-		backLayout.setVisibility(View.VISIBLE);
+		((ImageView) findViewById(R.id.imgview_return)).setVisibility(View.VISIBLE);
 
 		optionEditText = (EditText) findViewById(R.id.edit_option);
 		optionEditText.setFocusableInTouchMode(true);
@@ -74,7 +71,7 @@ public class OptionActivity extends BaseSlidingActivity
 
 	private void setViewClick()
 	{
-		backLayout.setOnClickListener(onClickAvoidForceListener);
+		((LinearLayout) findViewById(R.id.layout_return)).setOnClickListener(onClickAvoidForceListener);
 		submitButton.setOnClickListener(onClickAvoidForceListener);
 	}
 
@@ -86,7 +83,8 @@ public class OptionActivity extends BaseSlidingActivity
 		{
 			switch (v.getId())
 			{
-				case R.id.returnBtn:
+				case R.id.layout_return:
+					closeKeyboard();
 					getSlidingMenu().toggle();
 					break;
 				case R.id.btn_option:

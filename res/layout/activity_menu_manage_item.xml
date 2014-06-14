@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp" >
+    android:paddingRight="16dp"  android:paddingTop="10dp">
 
     <ImageView
         android:id="@+id/img_icon"
@@ -29,12 +29,14 @@
                 style="@style/textview_black16"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:text="英语口语" />
 
             <ImageView
                 android:id="@+id/img_xl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/img_dy"
                 android:background="@drawable/icon_ok" />
 
@@ -42,6 +44,7 @@
                 android:id="@+id/img_dy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_marginLeft="16dp"
                 android:layout_toLeftOf="@+id/img_right"
                 android:background="@drawable/icon_ok_gray" />
@@ -51,6 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
                 android:background="@drawable/select_right" />
         </RelativeLayout>
 

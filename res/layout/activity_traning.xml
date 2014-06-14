@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/bg_color"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/windowtitle"
+        android:layout_width="fill_parent"
+        android:layout_height="59dp"
+        layout="@layout/windowtitle" >
+    </include>
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <!-- 聊天信息栏 -->
+
+            <RelativeLayout
+                android:id="@+id/rlayout_talk"
+                android:layout_width="fill_parent"
+                android:layout_height="60dp"
+                android:background="@color/white"
+                android:gravity="center"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp" >
+
+                <TextView
+                    android:id="@+id/text_user"
+                    style="@style/textview_black16_bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:drawableLeft="@drawable/shape_blue_round"
+                    android:drawablePadding="8dp"
+                    android:singleLine="true"
+                    android:text="Lucy:" />
+
+                <TextView
+                    android:id="@+id/text_talk_content"
+                    style="@style/textview_gray16_545454"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_toRightOf="@+id/text_user"
+                    android:singleLine="true"
+                    android:text="hkjadhasdsakdjalkdjasdjksajdksajdksadsada" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/select_right" />
+            </RelativeLayout>
+
+            <!-- 训练详情 -->
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="28dp"
+                android:background="@color/drak_gray_bg"
+                android:gravity="center"
+                android:orientation="horizontal" >
+
+                <TextView
+                    style="@style/textview_yellow12_ffff00"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/icon_dark_triangle"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="16dp"
+                    android:text="1" />
+
+                <TextView
+                    style="@style/textview_white12"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="训练详情" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/textview_gray12_888888"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical"
+                android:padding="16dp"
+                android:text="	啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦哈哈哈哈哈哈哈哈哈哈哈哈 画画 啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦" />
+
+            <!-- 学员训练 -->
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="28dp"
+                android:background="@color/drak_gray_bg"
+                android:gravity="center"
+                android:orientation="horizontal" >
+
+                <TextView
+                    style="@style/textview_yellow12_ffff00"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/icon_dark_triangle"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="16dp"
+                    android:text="2" />
+
+                <TextView
+                    style="@style/textview_white12"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="学员实践" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="30dp"
+                android:background="@drawable/shape_outline_red_coner"
+                android:gravity="center"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="录音区域..高度位\为186dp........" />
+            </LinearLayout>
+
+            <EditText
+                style="@style/login_black_16"
+                android:layout_width="fill_parent"
+                android:layout_height="171dp"
+                android:background="@color/white"
+                android:gravity="top"
+                android:hint="请按照要求写下稿件"
+                android:paddingBottom="10dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="10dp"
+                android:textColorHint="@color/edit_text_hint" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginBottom="10dp"
+                android:background="@color/line_color"
+                android:orientation="horizontal" />
+
+            <RelativeLayout
+                android:id="@+id/rlayout_submit"
+                android:layout_width="fill_parent"
+                android:layout_height="45dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/shape_outline_no_coner"
+                android:gravity="center"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp" >
+
+                <TextView
+                    style="@style/textview_red18"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:singleLine="true"
+                    android:text="提交稿件" />
+
+                <TextView
+                    style="@style/textview_black14_575757"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:text="已书写100个词" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/line_color"
+                android:orientation="horizontal" />
+            <!-- 老师指导 -->
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="28dp"
+                android:background="@color/drak_gray_bg"
+                android:gravity="center"
+                android:orientation="horizontal" >
+
+                <TextView
+                    style="@style/textview_yellow12_ffff00"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/icon_dark_triangle"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="16dp"
+                    android:text="3" />
+
+                <TextView
+                    style="@style/textview_white12"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="老师指导" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/textview_gray12_888888"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical"
+                android:padding="16dp"
+                android:text="\t哈哈哈哈哈哈哈哈哈哈哈哈 画画 啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦\n\t啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingLeft="16dp"
+                android:text="共3个附件"
+                android:textColor="#707070"
+                android:textSize="12sp" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/line_color"
+                android:orientation="horizontal" />
+
+            <ListView
+                android:id="@+id/list_traning_attach"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:divider="@color/line_color"
+                android:dividerHeight="0.5dp"
+                android:paddingLeft="16dp" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginBottom="12dp"
+                android:background="@color/line_color"
+                android:orientation="horizontal" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

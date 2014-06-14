@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.demo.base.global.ActivityTaskManager;
@@ -16,6 +16,7 @@ import com.demo.jxdemo.ui.activity.login.LoginActivity;
 import com.demo.jxdemo.ui.activity.main.MainActivity;
 import com.demo.jxdemo.ui.activity.menu.AboutActivity;
 import com.demo.jxdemo.ui.activity.menu.OptionActivity;
+import com.demo.jxdemo.ui.activity.menu.UserDetailActivity;
 import com.demo.jxdemo.ui.activity.menu.UserInfoActivity;
 import com.demo.jxdemo.ui.activity.menu.manage.ManageActivity;
 import com.demo.jxdemo.ui.fragment.BaseFragment;
@@ -62,6 +63,17 @@ public class LeftFragment extends BaseFragment
 
 	private void setViewClick()
 	{
+		((ImageView) getActivity().findViewById(R.id.img_user)).setOnClickListener(new OnClickAvoidForceListener()
+		{
+
+			@Override
+			public void onClickAvoidForce(View v)
+			{
+				Intent intent = new Intent();
+				intent.setClass(getActivity(), UserDetailActivity.class);
+				startActivity(intent);
+			}
+		});
 		((TextView) getActivity().findViewById(R.id.text_index)).setOnClickListener(onClickAvoidForceListener);
 		((TextView) getActivity().findViewById(R.id.text_speak)).setOnClickListener(onClickAvoidForceListener);
 		((TextView) getActivity().findViewById(R.id.text_write)).setOnClickListener(onClickAvoidForceListener);
@@ -70,17 +82,17 @@ public class LeftFragment extends BaseFragment
 		((TextView) getActivity().findViewById(R.id.text_option)).setOnClickListener(onClickAvoidForceListener);
 		((TextView) getActivity().findViewById(R.id.text_about)).setOnClickListener(onClickAvoidForceListener);
 		((TextView) getActivity().findViewById(R.id.text_logout)).setOnClickListener(onClickAvoidForceListener);
-		
-//		((TextView) getActivity().findViewById(R.id.text_speak)).setOnClickListener(new OnClickListener()
-//		{
-//			
-//			@Override
-//			public void onClick(View v)
-//			{
-//				MainActivity.newInstance().refreshData(1);
-//				
-//			}
-//		});
+
+		// ((TextView) getActivity().findViewById(R.id.text_speak)).setOnClickListener(new OnClickListener()
+		// {
+		//
+		// @Override
+		// public void onClick(View v)
+		// {
+		// MainActivity.newInstance().refreshData(1);
+		//
+		// }
+		// });
 	}
 
 	private OnClickAvoidForceListener onClickAvoidForceListener = new OnClickAvoidForceListener()

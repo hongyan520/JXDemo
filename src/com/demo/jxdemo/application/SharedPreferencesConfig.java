@@ -34,10 +34,26 @@ public class SharedPreferencesConfig
 		configMap.put(Constant.USER_TOKEN, sharedPreferences.getString(Constant.USER_TOKEN, Constant.EMPTY_STRING));
 		// 用户密码
 		configMap.put(Constant.USER_PASSWORD, sharedPreferences.getString(Constant.USER_PASSWORD, Constant.EMPTY_STRING));
-		// 反馈意见
-		configMap.put(Constant.OPTION, sharedPreferences.getString(Constant.OPTION, Constant.EMPTY_STRING));
 		// 手机号码
 		configMap.put(Constant.USER_TEL, sharedPreferences.getString(Constant.USER_TEL, Constant.EMPTY_STRING));
+		// 用户类型
+		configMap.put(Constant.USER_TYPE, sharedPreferences.getString(Constant.USER_TYPE, Constant.EMPTY_STRING));
+		// 用户头像url
+		configMap.put(Constant.USER_AVATAR, sharedPreferences.getString(Constant.USER_AVATAR, Constant.EMPTY_STRING));
+		// 性别
+		configMap.put(Constant.USER_GENDER, sharedPreferences.getString(Constant.USER_GENDER, Constant.EMPTY_STRING));
+		// 所在地
+		configMap.put(Constant.USER_LOCATION, sharedPreferences.getString(Constant.USER_LOCATION, Constant.EMPTY_STRING));
+		// 职业
+		configMap.put(Constant.USER_JOB, sharedPreferences.getString(Constant.USER_JOB, Constant.EMPTY_STRING));
+		// 个人介绍
+		configMap.put(Constant.USER_INTRODUCTION, sharedPreferences.getString(Constant.USER_INTRODUCTION, Constant.EMPTY_STRING));
+		// 数据有效载荷
+		configMap.put(Constant.USER_DIGEST, sharedPreferences.getString(Constant.USER_DIGEST, Constant.EMPTY_STRING));
+		// // 课程
+		// configMap.put(Constant.USER_COURSEARRAY_LIST, sharedPreferences.getString(Constant.USER_DIGEST, Constant.EMPTY_STRING));
+		// 反馈意见
+		configMap.put(Constant.OPTION, sharedPreferences.getString(Constant.OPTION, Constant.EMPTY_STRING));
 		// 服务器IP
 		configMap.put(Constant.SERVER_IP, sharedPreferences.getString(Constant.SERVER_IP, Constant.DEFAULT_SERVER_IP));
 		// 服务器端口

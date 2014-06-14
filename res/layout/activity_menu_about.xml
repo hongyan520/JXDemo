@@ -25,14 +25,24 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="10dp"
                 android:src="@drawable/about_logo" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/line_color"
+                android:orientation="horizontal" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:paddingLeft="16dp" >
 
                 <RelativeLayout
                     android:layout_width="fill_parent"
@@ -46,7 +56,6 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="10dp"
                         android:singleLine="true"
                         android:text="@string/left_about_version" />
 
@@ -56,8 +65,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="10dp"
-                        android:text="Version1.0" />
+                        android:layout_marginRight="16dp"
+                        android:text="Version1.0" android:paddingRight="16dp" />
                 </RelativeLayout>
 
                 <LinearLayout
@@ -65,7 +74,7 @@
                     android:layout_height="0.5dp"
                     android:layout_marginBottom="3dp"
                     android:layout_marginTop="3dp"
-                    android:background="#ffa8abad"
+                    android:background="@color/line_color"
                     android:orientation="horizontal" />
 
                 <RelativeLayout
@@ -80,7 +89,6 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="10dp"
                         android:singleLine="true"
                         android:text="@string/left_about_type" />
 
@@ -90,8 +98,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="10dp"
-                        android:text="XXXXXXXXX" />
+                        android:layout_marginRight="16dp"
+                        android:text="XXXXXXXXX"  android:paddingRight="16dp" />
                 </RelativeLayout>
 
                 <LinearLayout
@@ -99,7 +107,7 @@
                     android:layout_height="0.5dp"
                     android:layout_marginBottom="3dp"
                     android:layout_marginTop="3dp"
-                    android:background="#ffa8abad"
+                    android:background="@color/line_color"
                     android:orientation="horizontal" />
 
                 <RelativeLayout
@@ -114,7 +122,6 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="10dp"
                         android:singleLine="true"
                         android:text="@string/left_about_user" />
 
@@ -124,8 +131,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="10dp"
-                        android:text="XXX" />
+                        android:layout_marginRight="16dp"
+                        android:text="XXX"  android:paddingRight="16dp" />
                 </RelativeLayout>
 
                 <LinearLayout
@@ -133,7 +140,7 @@
                     android:layout_height="0.5dp"
                     android:layout_marginBottom="3dp"
                     android:layout_marginTop="3dp"
-                    android:background="#ffa8abad"
+                    android:background="@color/line_color"
                     android:orientation="horizontal" />
 
                 <RelativeLayout
@@ -149,7 +156,6 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="10dp"
                         android:singleLine="true"
                         android:text="@string/left_about_url" />
 
@@ -160,7 +166,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="10dp"
+                        android:layout_marginRight="16dp"
+                        android:drawablePadding="5dp"
                         android:drawableRight="@drawable/select_right"
                         android:text="@string/left_about_url1" />
                 </RelativeLayout>
@@ -170,7 +177,7 @@
                     android:layout_height="0.5dp"
                     android:layout_marginBottom="3dp"
                     android:layout_marginTop="3dp"
-                    android:background="#ffa8abad"
+                    android:background="@color/line_color"
                     android:orientation="horizontal" />
 
                 <RelativeLayout
@@ -186,7 +193,6 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="10dp"
                         android:singleLine="true"
                         android:text="@string/left_about_company" />
 
@@ -197,11 +203,18 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="10dp"
+                        android:layout_marginRight="16dp"
+                        android:drawablePadding="5dp"
                         android:drawableRight="@drawable/select_right"
                         android:text="@string/left_about_company1" />
                 </RelativeLayout>
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/line_color"
+                android:orientation="horizontal" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -214,7 +227,6 @@
                     style="@style/textview_black16"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
                     android:singleLine="true"
                     android:text="XXXXX" />
 

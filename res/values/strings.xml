@@ -34,7 +34,7 @@
     <string name="left_about">关于积雪</string>
     <string name="left_logout">账户登出</string>
     <!-- 主页 -->
-
+   <string name="left_index_userdetail">学员详情</string>
 
     <!-- 意见反馈 -->
     <string name="left_option_hint">有任何问题或建议都请告诉我们，谢谢！</string>

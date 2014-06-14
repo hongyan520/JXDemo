@@ -1,7 +1,9 @@
 package com.demo.jxdemo.constant;
 
-import com.demo.jxdemo.application.AllActivityListApplication;
+import java.util.List;
+import java.util.Map;
 
+import com.demo.jxdemo.application.AllActivityListApplication;
 
 public class Constant
 {
@@ -12,13 +14,29 @@ public class Constant
 	public final static String USER_NICKNAME = "USER_NICKNAME";
 
 	public final static String USER_ID = "USER_ID";
-	
+
 	public final static String USER_TOKEN = "USER_TOKEN";
-	
+
 	public final static String USER_TEL = "USER_TEL";
 
 	public final static String USER_PASSWORD = "USER_PASSWORD";
-	
+
+	public final static String USER_TYPE = "USER_TYPE";
+
+	public final static String USER_AVATAR = "USER_AVATAR";
+
+	public final static String USER_GENDER = "USER_GENDER";
+
+	public final static String USER_LOCATION = "USER_LOCATION";
+
+	public final static String USER_JOB = "USER_JOB";
+
+	public final static String USER_INTRODUCTION = "USER_INTRODUCTION";
+
+	public final static String USER_DIGEST = "Digest";
+
+//	public final static String USER_COURSEARRAY_LIST = "USER_COURSEARRAY_LIST";//List<Map<String, Object>>
+
 	public final static String OPTION = "OPTION";
 
 	public final static String SERVER_IP = "SERVER_IP";
@@ -36,7 +54,6 @@ public class Constant
 	public final static String DEFAULT_SERVER_PORT = "7000";// "9090";
 
 	public final static String DEFAULT_PROJECT_NAME = "jixue";
-
 
 	/**
 	 * 是否正在进行图标的移动，默认为false，意味着不会对触摸事件进行拦截
@@ -87,7 +104,6 @@ public class Constant
 	/** 是否开启振动 */
 	public final static String ISVIBRATE = "OFF";
 
-
 	/**
 	 * 看过介绍标志
 	 */
@@ -99,5 +115,6 @@ public class Constant
 
 	/** 自动登录 */
 	public final static String ISAUTOLOGIN = "OFF";
-	public final static String CACHE_PATH = AllActivityListApplication.getInstance().getApplicationContext().getCacheDir().getPath()+ "/";
+
+	public final static String CACHE_PATH = AllActivityListApplication.getInstance().getApplicationContext().getCacheDir().getPath() + "/";
 }

@@ -13,7 +13,6 @@ import com.demo.jxdemo.ui.activity.BaseActivity;
 
 public class ManageDetailActivity extends BaseActivity
 {
-	private LinearLayout backLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -31,9 +30,8 @@ public class ManageDetailActivity extends BaseActivity
 	private void findViews()
 	{
 		((TextView) findViewById(R.id.formTilte)).setText("英语口语");
-		backLayout = (LinearLayout) findViewById(R.id.returnBtn);
 		((ImageView) findViewById(R.id.imgview_return)).setBackgroundResource(R.drawable.img_back);
-		backLayout.setVisibility(View.VISIBLE);
+		((ImageView) findViewById(R.id.imgview_return)).setVisibility(View.VISIBLE);
 	}
 
 	private void initData()
@@ -47,7 +45,7 @@ public class ManageDetailActivity extends BaseActivity
 
 	private void setViewClick()
 	{
-		backLayout.setOnClickListener(onClickAvoidForceListener);
+		((LinearLayout) findViewById(R.id.layout_return)).setOnClickListener(onClickAvoidForceListener);
 	}
 
 	private OnClickAvoidForceListener onClickAvoidForceListener = new OnClickAvoidForceListener()
@@ -58,7 +56,7 @@ public class ManageDetailActivity extends BaseActivity
 		{
 			switch (v.getId())
 			{
-				case R.id.returnBtn:
+				case R.id.layout_return:
 					finishMyActivity();
 					break;
 				default:

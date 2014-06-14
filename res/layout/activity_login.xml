@@ -30,7 +30,7 @@
                 android:layout_centerVertical="true"
                 android:orientation="vertical"
                 android:paddingBottom="5dp"
-                android:paddingLeft="10dp"
+                android:paddingLeft="16dp"
                 android:paddingTop="5dp" >
 
                 <TextView
@@ -62,7 +62,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="5dp"
                 android:layout_toRightOf="@+id/layot_register"
                 android:orientation="vertical"
                 android:paddingBottom="5dp"
@@ -73,11 +72,13 @@
                     style="@style/login_black_16"
                     android:layout_width="fill_parent"
                     android:layout_height="45dp"
+                    android:layout_marginRight="16dp"
                     android:hint="@string/register_phonenum_hint"
                     android:inputType="number"
+                    android:maxLength="11"
                     android:paddingLeft="20dp"
                     android:singleLine="true"
-                    android:text="" android:maxLength="11"
+                    android:text=""
                     android:textColorHint="@color/edit_text_hint" />
 
                 <LinearLayout
@@ -85,13 +86,14 @@
                     android:layout_height="0.5dp"
                     android:layout_marginBottom="3dp"
                     android:layout_marginTop="3dp"
-                    android:background="#ffa8abad"
+                    android:background="@color/line_color"
                     android:orientation="horizontal" />
 
                 <RelativeLayout
                     android:layout_width="fill_parent"
                     android:layout_height="45dp"
-                    android:gravity="center" >
+                    android:gravity="center"
+                    android:paddingRight="16dp" >
 
                     <EditText
                         android:id="@+id/edit_login_pwd"
@@ -116,7 +118,6 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="3dp"
-                        android:layout_marginRight="3dp"
                         android:background="@drawable/shape_outline_red_coner"
                         android:padding="5dp"
                         android:text="@string/register_get_messcheck" />
@@ -130,14 +131,15 @@
             android:layout_height="45dp"
             android:layout_marginTop="20dp"
             android:background="@drawable/shape_outline_no_coner"
-            android:gravity="center" >
+            android:gravity="center"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp" >
 
             <TextView
                 style="@style/textview_red18"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
                 android:singleLine="true"
                 android:text="@string/register_into" />
 
@@ -146,7 +148,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
                 android:background="@drawable/select_right" />
         </RelativeLayout>
 
@@ -154,9 +155,9 @@
             style="@style/login_tips_gray_12"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="5dp"
             android:layout_marginTop="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
             android:text="@string/register_tips" />
     </LinearLayout>
 

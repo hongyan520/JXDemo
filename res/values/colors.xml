@@ -25,6 +25,8 @@
     <color name="transparent_white_50">#7fffffff</color>
     <color name="transparent_white_30">#4fffffff</color>
     <color name="transparent_black_30">#4f000000</color>
+    <color name="line_color">#d7d7d7</color>
+    <color name="drak_gray_bg">#696969</color>
 
     <!-- 新训练 已提交 已点评 -->
      <color name="color_xxl">#00d8ff</color>

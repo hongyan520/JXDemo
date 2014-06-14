@@ -1,10 +1,14 @@
 package com.demo.jxdemo.ui.activity;
 
+import ui.listener.OnClickAvoidForceListener;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 
 import com.demo.base.global.ActivityTaskManager;
 import com.demo.jxdemo.R;
@@ -52,6 +56,16 @@ public abstract class BaseSlidingActivity extends SlidingActivity
 		finish();
 
 		return super.onKeyDown(keyCode, event);
+	}
+
+	public void closeKeyboard()
+	{
+		if (getCurrentFocus() != null)
+		{
+			((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+					InputMethodManager.HIDE_NOT_ALWAYS);
+		}
+
 	}
 
 }

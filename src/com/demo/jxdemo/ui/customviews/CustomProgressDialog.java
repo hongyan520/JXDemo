@@ -3,6 +3,9 @@ package com.demo.jxdemo.ui.customviews;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.demo.jxdemo.R;
@@ -22,20 +25,24 @@ public class CustomProgressDialog extends Dialog
 	 */
 	private Context mContext = null;
 
-	/**
-	 * DAILOG对象
-	 */
-	private static CustomProgressDialog mCustomProgressDialog = null;
+	private TextView tView;
+
+	public TextView gettView()
+	{
+		return tView;
+	}
+
+	public void settView(TextView tView)
+	{
+		this.tView = tView;
+	}
+
+	private View view;
 
 	public CustomProgressDialog(Context context)
 	{
 		super(context);
 		this.mContext = context;
-	}
-
-	public CustomProgressDialog(Context context, int theme)
-	{
-		super(context, theme);
 	}
 
 	/**
@@ -44,53 +51,42 @@ public class CustomProgressDialog extends Dialog
 	 * @param context
 	 * @return
 	 */
-	public static CustomProgressDialog createDialog(Context context)
+	public CustomProgressDialog createDialog(Context context)
 	{
-		mCustomProgressDialog = new CustomProgressDialog(context, R.style.CustomProgressDialog);
-		mCustomProgressDialog.setContentView(R.layout.custom_progress_dialog);
-		mCustomProgressDialog.getWindow().getAttributes().gravity = Gravity.CENTER;
-		mCustomProgressDialog.setCancelable(false);
-		return mCustomProgressDialog;
+		view = LayoutInflater.from(context).inflate(R.layout.custom_progress_dialog, null);
+		tView = (TextView) view.findViewById(R.id.tv_loadingmsg);
+		this.setDialogView(view);
+//		this.setDialogGravity(Gravity.CENTER);
+//		this.setDialogLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+		setCanceledOnTouchOutside(false);
+		getWindow().setGravity(Gravity.CENTER); // 此处可以设置dialog显示的位置
+		getWindow().setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+		return this;
 	}
 
-	public void onWindowFocusChanged(boolean hasFocus)
+	public void setDialogView(int layoutId)
 	{
 
-		if (mCustomProgressDialog == null)
-		{
-			return;
-		}
+		setContentView(layoutId);
 
 	}
 
-	/**
-	 * [Summary]
-	 * setMessage 提示内容
-	 * 
-	 * @param strMessage
-	 * @return
-	 */
-	public CustomProgressDialog setMessage(String strMessage)
+	public void setDialogView(View view)
 	{
-		TextView tvMsg = (TextView) mCustomProgressDialog.findViewById(R.id.tv_loadingmsg);
 
-		if (tvMsg != null)
-		{
-			tvMsg.setText(strMessage);
-		}
+		setContentView(view);
 
-		return mCustomProgressDialog;
 	}
 
-	public CustomProgressDialog changeMessage(String strMessage)
+	public void setDialogGravity(int gravity)
 	{
-		TextView tvMsg = (TextView) mCustomProgressDialog.findViewById(R.id.tv_loadingmsg);
+		getWindow().setGravity(gravity); // 此处可以设置dialog显示的位置
+	}
 
-		if (tvMsg != null)
-		{
-			tvMsg.setText(strMessage);
-		}
-
-		return mCustomProgressDialog;
+	public void setDialogLayout(int w, int h)
+	{
+		getWindow().setLayout(w, h);
 	}
 }

@@ -80,6 +80,13 @@
             android:windowSoftInputMode="adjustPan" >
         </activity>
         <activity
+            android:name=".ui.activity.menu.UserDetailActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+        </activity>
+        <activity
             android:name=".ui.activity.menu.OptionActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:launchMode="singleTask"
@@ -111,6 +118,20 @@
             android:name=".ui.activity.menu.manage.ManageDetailActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+        </activity>
+        <activity
+            android:name=".ui.activity.main.LearningMaterialsActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:launchMode="standard"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+        </activity>
+        <activity
+            android:name=".ui.activity.main.TrainingActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:launchMode="standard"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
         </activity>

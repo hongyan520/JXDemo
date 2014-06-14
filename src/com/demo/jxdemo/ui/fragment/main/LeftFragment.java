@@ -1,16 +1,21 @@
 package com.demo.jxdemo.ui.fragment.main;
 
 import ui.listener.OnClickAvoidForceListener;
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.demo.base.global.ActivityTaskManager;
+import com.demo.base.util.BitmapUtils;
 import com.demo.jxdemo.R;
 import com.demo.jxdemo.ui.activity.login.LoginActivity;
 import com.demo.jxdemo.ui.activity.main.MainActivity;
@@ -49,7 +54,9 @@ public class LeftFragment extends BaseFragment
 		}
 		((ViewGroup) getView()).removeAllViews();
 		((ViewGroup) getView()).addView(inflater.inflate(R.layout.fragment_left, null));
-
+	//	Bitmap bitmapOrg = BitmapFactory.decodeResource(getResources(),R.drawable.sidepanebackground);
+//		BitmapUtils.scaleBitmap(bitmapOrg, getActivity());
+	//	((LinearLayout)getActivity().findViewById(R.id.layout_leftfragment)).setBackgroundDrawable(BitmapUtils.scaleBitmap(bitmapOrg, getActivity()));
 		showProgress();
 		initData();
 		setViewClick();

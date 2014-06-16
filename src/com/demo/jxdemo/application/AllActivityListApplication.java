@@ -12,6 +12,9 @@ import android.content.pm.PackageManager;
 import android.util.Log;
 import android.view.WindowManager;
 
+import com.demo.base.support.BaseConstants;
+import com.demo.jxdemo.R;
+import com.demo.jxdemo.constant.Constant;
 import com.demo.jxdemo.ui.activity.main.MainActivity;
 
 public class AllActivityListApplication extends Application
@@ -44,7 +47,20 @@ public class AllActivityListApplication extends Application
 
 		Thread.setDefaultUncaughtExceptionHandler(handler);
 		Log.d("", "---CrashHandler init ok---");
+		
+		initValue();
+		
 		super.onCreate();
+	}
+	
+	public void initValue(){
+		// 设置是否使用缓存
+		String isUseCache = getResources().getString(R.string.is_use_cache);
+		BaseConstants.ISUSECACHE = "true".equals(isUseCache) ? true : false;
+		
+		BaseConstants.BASE_CACHE_PATH = Constant.BASE_CACHE_PATH;
+		BaseConstants.STATIC_PATH = Constant.STATIC_PATH;
+		BaseConstants.API_PATH = Constant.API_PATH;
 	}
 
 	public static void setInstance(AllActivityListApplication i)

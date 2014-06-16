@@ -119,5 +119,10 @@ public class Constant
 	 * API动态缓存目录
 	 */
 	public static final String API_PATH = "Api/";
+	
+	/**
+	 * 是否使用缓存
+	 */
+	public static final boolean isUseCache = true;
 
 }

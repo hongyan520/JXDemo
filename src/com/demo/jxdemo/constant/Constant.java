@@ -123,6 +123,11 @@ public class Constant
 	public static final String API_PATH = "Api/";
 	
 	/**
+	 * 后缀
+	 */
+	public static final String API_FILE_SUFFIX=".gixue";
+	
+	/**
 	 * 是否使用缓存
 	 */
 	public static final boolean isUseCache = true;

@@ -61,6 +61,7 @@ public class AllActivityListApplication extends Application
 		BaseConstants.BASE_CACHE_PATH = Constant.BASE_CACHE_PATH;
 		BaseConstants.STATIC_PATH = Constant.STATIC_PATH;
 		BaseConstants.API_PATH = Constant.API_PATH;
+		BaseConstants.API_FILE_SUFFIX = Constant.API_FILE_SUFFIX;
 	}
 
 	public static void setInstance(AllActivityListApplication i)

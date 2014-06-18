@@ -50,8 +50,10 @@ public class SharedPreferencesConfig
 		configMap.put(Constant.USER_INTRODUCTION, sharedPreferences.getString(Constant.USER_INTRODUCTION, Constant.EMPTY_STRING));
 		// 数据有效载荷
 		configMap.put(Constant.USER_DIGEST, sharedPreferences.getString(Constant.USER_DIGEST, Constant.EMPTY_STRING));
-		// // 课程
-		// configMap.put(Constant.USER_COURSEARRAY_LIST, sharedPreferences.getString(Constant.USER_DIGEST, Constant.EMPTY_STRING));
+		// 课程
+		configMap.put(Constant.USER_COURSEARRAY, sharedPreferences.getString(Constant.USER_COURSEARRAY, Constant.EMPTY_STRING));
+		// 测试
+		configMap.put(Constant.USER_TEST, sharedPreferences.getString(Constant.USER_TEST, Constant.EMPTY_STRING));
 		// 反馈意见
 		configMap.put(Constant.OPTION, sharedPreferences.getString(Constant.OPTION, Constant.EMPTY_STRING));
 		// 服务器IP

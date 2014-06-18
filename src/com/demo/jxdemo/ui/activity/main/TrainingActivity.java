@@ -7,6 +7,7 @@ import java.util.Map;
 
 import ui.listener.OnClickAvoidForceListener;
 import ui.listener.OnItemClickAvoidForceListener;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.demo.base.util.ScrollListViewUtil;
@@ -89,6 +91,7 @@ public class TrainingActivity extends BaseActivity
 	private void setViewClick()
 	{
 		((LinearLayout) findViewById(R.id.layout_return)).setOnClickListener(onClickAvoidForceListener);
+		((RelativeLayout) findViewById(R.id.rlayout_chat)).setOnClickListener(onClickAvoidForceListener);
 	}
 
 	private OnClickAvoidForceListener onClickAvoidForceListener = new OnClickAvoidForceListener()
@@ -101,6 +104,11 @@ public class TrainingActivity extends BaseActivity
 			{
 				case R.id.layout_return:
 					finishMyActivity();
+					break;
+				case R.id.rlayout_chat:
+					Intent intent = new Intent();
+					intent.setClass(TrainingActivity.this, ChatActivity.class);
+					startActivity(intent);
 					break;
 				default:
 					break;

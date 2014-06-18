@@ -1,23 +1,22 @@
 package com.demo.jxdemo.ui.activity;
 
-import ui.listener.OnClickAvoidForceListener;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
-import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 import com.demo.base.global.ActivityTaskManager;
 import com.demo.base.util.Utils;
 import com.demo.jxdemo.R;
 import com.demo.jxdemo.ui.activity.main.MainActivity;
+import com.demo.jxdemo.ui.customviews.CustomProgressDialog;
 import com.demo.jxdemo.ui.customviews.slide.SlidingActivity;
 import com.demo.jxdemo.ui.customviews.slide.SlidingMenu;
 import com.demo.jxdemo.ui.fragment.main.LeftFragment;
@@ -26,6 +25,21 @@ public abstract class BaseSlidingActivity extends SlidingActivity
 {
 
 	private LeftFragment leftFragment;
+
+	/**
+	 * 加载等待圈
+	 */
+	private CustomProgressDialog myProgressDialog;
+
+	/**
+	 * 显示等待框
+	 */
+	private static final int SHOW_PROGRESS_DIALOG = 10;
+
+	/**
+	 * 关闭等待框
+	 */
+	private static final int DISMISS_PROGRESS = 11;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -43,21 +57,22 @@ public abstract class BaseSlidingActivity extends SlidingActivity
 		fragmentTransaction.replace(R.id.content, leftFragment);// 实例化，但是被actvity_main布局覆盖。
 		fragmentTransaction.commit();
 
-		Bitmap bitmapOrg = BitmapFactory.decodeResource(getResources(),R.drawable.sidepanebackground);
-		
+		Bitmap bitmapOrg = BitmapFactory.decodeResource(getResources(), R.drawable.sidepanebackground);
+
 		DisplayMetrics dm = Utils.getDisplayMetrics(this);
-				
+
 		// 窗口的宽度
 		int screenWidth = dm.widthPixels;
 		int screenHight = dm.heightPixels;
-		
-		int offset = screenWidth-bitmapOrg.getWidth();
+
+		int offset = screenWidth - bitmapOrg.getWidth();
 		float currentWidth = 0;
-		if(screenHight < bitmapOrg.getHeight()){
-			currentWidth = ((float)bitmapOrg.getWidth())/(((float)bitmapOrg.getHeight())/((float)screenHight));
+		if (screenHight < bitmapOrg.getHeight())
+		{
+			currentWidth = ((float) bitmapOrg.getWidth()) / (((float) bitmapOrg.getHeight()) / ((float) screenHight));
 			offset = (int) (screenWidth - currentWidth);
 		}
-		
+
 		SlidingMenu sm = getSlidingMenu();
 		sm.setShadowWidth(50);
 		sm.setShadowDrawable(R.drawable.shadow);
@@ -85,7 +100,68 @@ public abstract class BaseSlidingActivity extends SlidingActivity
 			((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
 					InputMethodManager.HIDE_NOT_ALWAYS);
 		}
-
 	}
+
+	/**
+	 * 等待圈显示
+	 * 
+	 * @param waittime
+	 *            等待时间
+	 */
+	public void showProgress(long waittime)
+	{
+		progressHandler.sendEmptyMessage(SHOW_PROGRESS_DIALOG);
+		// waittime后自动关闭等待框
+		progressHandler.sendEmptyMessageDelayed(DISMISS_PROGRESS, waittime);
+	}
+
+	/**
+	 * 等待圈消失
+	 */
+	public void dismissProgress()
+	{
+		progressHandler.sendEmptyMessage(DISMISS_PROGRESS);
+	}
+
+	private Handler progressHandler = new Handler()
+	{
+		public void handleMessage(Message msg)
+		{
+
+			// 切换横竖屏会异常
+			try
+			{
+				if (msg != null)
+				{
+					int what = msg.what;
+
+					if (what == SHOW_PROGRESS_DIALOG)
+					{
+						if (myProgressDialog == null)
+						{
+							myProgressDialog = new CustomProgressDialog(BaseSlidingActivity.this);
+							myProgressDialog.createDialog(BaseSlidingActivity.this);
+							myProgressDialog.gettView().setText(getResources().getString(R.string.dealing));
+						}
+
+						if (!myProgressDialog.isShowing())
+						{
+							myProgressDialog.show();
+						}
+					}
+					else if (what == DISMISS_PROGRESS && null != myProgressDialog && myProgressDialog.isShowing())
+					{
+						myProgressDialog.dismiss();
+					}
+
+				}
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+
+		}
+	};
 
 }

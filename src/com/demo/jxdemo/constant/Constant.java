@@ -35,9 +35,11 @@ public class Constant
 
 	public final static String USER_INTRODUCTION = "USER_INTRODUCTION";
 
-	public final static String USER_DIGEST = "Digest";
-
-//	public final static String USER_COURSEARRAY_LIST = "USER_COURSEARRAY_LIST";//List<Map<String, Object>>
+	public final static String USER_DIGEST = "DIGEST";
+	
+	public final static String USER_COURSEARRAY = "USER_COURSEARRAY";
+	
+	public final static String USER_TEST = "USER_TEST";
 
 	public final static String OPTION = "OPTION";
 

@@ -30,9 +30,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.demo.base.global.ActivityTaskManager;
+import com.demo.base.util.JsonUtil;
+import com.demo.base.util.ScrollListViewUtil;
 import com.demo.base.util.Utils;
 import com.demo.jxdemo.R;
+import com.demo.jxdemo.application.SharedPreferencesConfig;
+import com.demo.jxdemo.constant.Constant;
 import com.demo.jxdemo.ui.activity.BaseSlidingActivity;
+import com.demo.jxdemo.ui.adapter.MainListAdapter;
 import com.demo.jxdemo.ui.adapter.MainTabPagerAdapter;
 import com.demo.jxdemo.ui.adapter.SwitherImageAdapter;
 import com.demo.jxdemo.ui.customviews.GuideGallery;
@@ -50,7 +55,7 @@ public class MainActivity extends BaseSlidingActivity
 	private boolean isExit;
 
 	/** 传过来的 1:英语口语 2:英语写作 */
-	private int type = 0;
+	private String courseTitle;
 
 	/************* 图片轮播块 **************/
 	private List<String> urls;
@@ -92,6 +97,8 @@ public class MainActivity extends BaseSlidingActivity
 
 	private List<Map<String, Object>> tabList;
 
+	private ListView listView;
+
 	/***************************/
 
 	public static MainActivity newInstance()
@@ -108,7 +115,8 @@ public class MainActivity extends BaseSlidingActivity
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
 		loadMenu();
-		type = getIntent().getIntExtra("type", 0);
+		courseTitle = getIntent().getStringExtra("courseTitle") == null ? getResources().getString(R.string.app_name) : getIntent()
+				.getStringExtra("courseTitle");
 		findViews();
 		initData();
 		initView();
@@ -164,6 +172,9 @@ public class MainActivity extends BaseSlidingActivity
 		btn3 = (Button) findViewById(R.id.btn_3);
 		btn4 = (Button) findViewById(R.id.btn_4);
 
+		listView = (ListView) (getLayoutInflater().inflate(R.layout.layout_list_page, null).findViewById(R.id.listview));
+		listView.setDivider(null);
+
 		viewPager = (MyViewPager) findViewById(R.id.vPage_introduce);
 		viewPager.setHorizontalScrollBarEnabled(false);
 		btn1.setTextColor(getResources().getColor(R.color.red));
@@ -171,76 +182,51 @@ public class MainActivity extends BaseSlidingActivity
 
 	private void initData()
 	{
-		tabList = testData();
+		String test = SharedPreferencesConfig.config(this).get(Constant.USER_TEST);
+		tabList = JsonUtil.getList(test);
 		mHandler.sendEmptyMessage(1);
 	}
 
 	private void initView()
 	{
-		switch (type)
-		{
-			case 0:
-				((TextView) findViewById(R.id.formTilte)).setText(getResources().getString(R.string.app_name));
-				break;
-			case 1:
-				((TextView) findViewById(R.id.formTilte)).setText(getResources().getString(R.string.left_speak));
-				break;
-			case 2:
-				((TextView) findViewById(R.id.formTilte)).setText(getResources().getString(R.string.left_write));
-				break;
-			default:
-				break;
-		}
+		((TextView) findViewById(R.id.formTilte)).setText(courseTitle);
 	}
 
-	private void initListView(int types)
+	private void initListView(String courseTitle)
 	{
 		if (tabList != null)
 		{
 			pagerContents.clear();
-			for (int i = 0; i < tabList.size(); i++)
+			for (int i = 0; i < 4; i++)
 			{
-				// LinearLayout layout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.layout_date, null);
-				// LinearLayout layout2 = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.layout_studydata, null);
-				LinearLayout layout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.activity_tab_listview_item, null);
-				TextView textView = (TextView) layout.findViewById(R.id.text_vote_title);
-
-				switch (types)
+				LinearLayout layout = null;
+				MainListAdapter mainListAdapter = null;
+				if (i == 0)
 				{
-					case 0:
-						textView.setText("第" + i);
-						break;
-					case 1:
-						textView.setText("英语口语的第" + i);
-						break;
-					case 2:
-						textView.setText("英语写作的第" + i);
-						break;
-					default:
-						break;
+					mainListAdapter = new MainListAdapter(this);
+					mainListAdapter.setDataList(tabList);
+					listView.setAdapter(mainListAdapter);
+					pagerContents.add(listView);
 				}
-
-				ListView lv = (ListView) layout.findViewById(R.id.listView_voting);
-				lv.setCacheColorHint(R.color.transparent);
-				lv.setPadding(3, 0, 3, 0);
-				lv.setDivider(getResources().getDrawable(R.drawable.vote_line_qian));
-				lv.setDividerHeight(1);
-				lv.setFooterDividersEnabled(true);
-				lv.setOnItemClickListener(new OnItemClickAvoidForceListener()
+				else if (i == 2)// ("0".equals(tabList.get(i).get("Type").toString()))
+				{// 学习资料
+					layout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.layout_studydata, null);
+					pagerContents.add(layout);
+				}
+				else if (i == 1)
+				{// 训练
+					layout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.layout_trainingproject, null);
+					pagerContents.add(layout);
+				}
+				else
 				{
-					
-					@Override
-					public void onItemClickAvoidForce(AdapterView<?> arg0, View arg1, int arg2, long arg3)
-					{
-						
-					}
-				});
-
-				pagerContents.add(layout);
+					layout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.layout_date, null);
+					pagerContents.add(layout);
+				}
 			}
 		}
 
-		pagerAdapter = new MainTabPagerAdapter(this, pagerContents, tabList.size(), viewPager);
+		pagerAdapter = new MainTabPagerAdapter(this, pagerContents, 4, viewPager);
 		viewPager.setOnPageChangeListener(pagerAdapter);
 
 		viewPager.setAdapter(pagerAdapter);
@@ -267,7 +253,7 @@ public class MainActivity extends BaseSlidingActivity
 		{
 
 			int currentPage = pagerAdapter.cruurentItem;
-			Intent intent = new Intent();
+			// Intent intent = new Intent();
 			switch (v.getId())
 			{
 				case R.id.btn_4:
@@ -277,14 +263,14 @@ public class MainActivity extends BaseSlidingActivity
 				case R.id.btn_3:
 					pagerAdapter.onPageSelected(2);
 					pagerAdapter.setBtnColor(btn3);
-					intent.setClass(MainActivity.this, LearningMaterialsActivity.class);
-					startActivity(intent);
+					// intent.setClass(MainActivity.this, LearningMaterialsActivity.class);
+					// startActivity(intent);
 					break;
 				case R.id.btn_2:
 					pagerAdapter.onPageSelected(1);
 					pagerAdapter.setBtnColor(btn2);
-					intent.setClass(MainActivity.this, TrainingActivity.class);
-					startActivity(intent);
+					// intent.setClass(MainActivity.this, TrainingActivity.class);
+					// startActivity(intent);
 					break;
 				case R.id.btn_1:
 					pagerAdapter.onPageSelected(0);
@@ -326,7 +312,7 @@ public class MainActivity extends BaseSlidingActivity
 			switch (msg.what)
 			{
 				case 1:
-					initListView(type);
+					initListView(courseTitle);
 					bottomLayout.setVisibility(View.VISIBLE);
 					break;
 				case 2:
@@ -549,9 +535,9 @@ public class MainActivity extends BaseSlidingActivity
 		}
 	}
 
-	public void refreshData(int type)
+	public void refreshData(String courseTitle)
 	{
-		this.type = type;
+		this.courseTitle = courseTitle;
 		loadMenu();
 		findViews();
 		initData();

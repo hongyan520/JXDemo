@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.demo.jxdemo.application.SharedPreferencesConfig;
@@ -49,7 +50,7 @@ public class AFragment extends BaseFragment
 		((ViewGroup) getView()).removeAllViews();
 		((ViewGroup) getView()).addView(inflater.inflate(R.layout.fragment_main_mess, null));
 		((TextView) getActivity().findViewById(R.id.formTilte)).setText("test");
-		((LinearLayout) getActivity().findViewById(R.id.windowtitle)).setVisibility(View.VISIBLE);
+		((RelativeLayout) getActivity().findViewById(R.id.windowtitle)).setVisibility(View.VISIBLE);
 
 		// if (StringUtil.isBlank(configMap.get(Constant.USER_ID)))
 		// {
@@ -114,7 +115,7 @@ public class AFragment extends BaseFragment
 		if (!hidden)
 		{
 			((TextView) getActivity().findViewById(R.id.formTilte)).setText("test");
-			((LinearLayout) getActivity().findViewById(R.id.windowtitle)).setVisibility(View.VISIBLE);
+			((RelativeLayout) getActivity().findViewById(R.id.windowtitle)).setVisibility(View.VISIBLE);
 		}
 		super.onHiddenChanged(hidden);
 	}

@@ -55,8 +55,7 @@
                         android:id="@+id/text_index"
                         style="@style/textview_black16"
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="3dp"
+                        android:layout_height="50dp"
                         android:drawableLeft="@drawable/icon_about"
                         android:gravity="center_vertical"
                         android:text="@string/left_index" />
@@ -64,15 +63,16 @@
                     <ImageView
                         android:layout_width="fill_parent"
                         android:layout_height="0.5dp"
-                        android:layout_marginTop="3dp"
                         android:background="@color/transparent_black_30" />
 
-                    <TextView
+                    <LinearLayout   android:id="@+id/layout_left" android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" android:orientation="vertical"/>
+                    
+                   <!--  <TextView
                         android:id="@+id/text_speak"
                         style="@style/textview_black16"
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_height="50dp"
                         android:drawableLeft="@drawable/icon_about"
                         android:gravity="center_vertical"
                         android:text="@string/left_speak" />
@@ -80,19 +80,17 @@
                     <ImageView
                         android:layout_width="fill_parent"
                         android:layout_height="0.5dp"
-                        android:layout_marginTop="3dp"
                         android:background="@color/transparent_black_30" />
 
                     <TextView
                         android:id="@+id/text_write"
                         style="@style/textview_black16"
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="50dp"
                         android:layout_marginBottom="3dp"
-                        android:layout_marginTop="5dp"
                         android:drawableLeft="@drawable/icon_about"
                         android:gravity="center_vertical"
-                        android:text="@string/left_write" />
+                        android:text="@string/left_write" /> -->
                 </LinearLayout>
 
                 <LinearLayout
@@ -108,8 +106,7 @@
                         android:id="@+id/text_manage"
                         style="@style/textview_black16"
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="3dp"
+                        android:layout_height="50dp"
                         android:drawableLeft="@drawable/icon_manage"
                         android:gravity="center_vertical"
                         android:text="@string/left_manage" />
@@ -117,15 +114,13 @@
                     <ImageView
                         android:layout_width="fill_parent"
                         android:layout_height="0.5dp"
-                        android:layout_marginTop="3dp"
                         android:background="@color/transparent_black_30" />
 
                     <TextView
                         android:id="@+id/text_self"
                         style="@style/textview_black16"
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_height="50dp"
                         android:drawableLeft="@drawable/icon_self"
                         android:gravity="center_vertical"
                         android:text="@string/left_self" />
@@ -133,15 +128,13 @@
                     <ImageView
                         android:layout_width="fill_parent"
                         android:layout_height="0.5dp"
-                        android:layout_marginTop="3dp"
                         android:background="@color/transparent_black_30" />
 
                     <TextView
                         android:id="@+id/text_option"
                         style="@style/textview_black16"
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_height="50dp"
                         android:drawableLeft="@drawable/icon_option"
                         android:gravity="center_vertical"
                         android:text="@string/left_option" />
@@ -149,15 +142,13 @@
                     <ImageView
                         android:layout_width="fill_parent"
                         android:layout_height="0.5dp"
-                        android:layout_marginTop="3dp"
                         android:background="@color/transparent_black_30" />
 
                     <TextView
                         android:id="@+id/text_about"
                         style="@style/textview_black16"
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_height="50dp"
                         android:drawableLeft="@drawable/icon_about"
                         android:gravity="center_vertical"
                         android:text="@string/left_about" />
@@ -165,16 +156,14 @@
                     <ImageView
                         android:layout_width="fill_parent"
                         android:layout_height="0.5dp"
-                        android:layout_marginTop="3dp"
                         android:background="@color/transparent_black_30" />
 
                     <TextView
                         android:id="@+id/text_logout"
                         style="@style/textview_black16"
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="50dp"
                         android:layout_marginBottom="3dp"
-                        android:layout_marginTop="5dp"
                         android:drawableLeft="@drawable/icon_logout"
                         android:gravity="center_vertical"
                         android:text="@string/left_logout" />

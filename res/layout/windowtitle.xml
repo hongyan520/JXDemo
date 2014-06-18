@@ -3,17 +3,16 @@
     android:id="@+id/windowTitleRelativeLayout"
     android:layout_width="fill_parent"
     android:layout_height="59dp"
-    android:background="@color/top_bar"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp" >
+    android:background="@color/top_bar" >
 
     <LinearLayout
         android:id="@+id/layout_return"
-        android:layout_width="wrap_content"
+        android:layout_width="60dp"
         android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:orientation="horizontal"
+        android:paddingLeft="16dp"
         android:visibility="visible" >
 
         <ImageView
@@ -49,12 +48,13 @@
 
     <LinearLayout
         android:id="@+id/layout_remark"
-        android:layout_width="wrap_content"
+        android:layout_width="80dp"
         android:layout_height="fill_parent"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:orientation="horizontal"
-        android:visibility="visible" >
+        android:paddingRight="16dp"
+        android:visibility="visible" android:gravity="right">
 
         <ImageView
             android:id="@+id/imgview_right"

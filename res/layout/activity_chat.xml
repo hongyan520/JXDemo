@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/bg_color"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@+id/windowtitle"
+        android:layout_width="fill_parent"
+        android:layout_height="59dp"
+        layout="@layout/windowtitle" >
+    </include>
+
+    <ListView
+        android:id="@+id/listview_chat"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/listview_bottom"
+        android:layout_below="@+id/windowtitle"
+        android:divider="@null"
+        android:padding="16dp" />
+
+    <LinearLayout
+        android:id="@+id/listview_bottom"
+        android:layout_width="fill_parent"
+        android:layout_height="59dp"
+        android:layout_alignParentBottom="true"
+        android:background="#555555"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp" >
+
+        <EditText
+            android:id="@+id/edit_chat"
+            style="@style/login_black_16"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/shape_top_line"
+            android:hint="请输入聊天内容"
+            android:paddingLeft="8dp"
+            android:singleLine="true"
+            android:textColorHint="@color/edit_text_hint" />
+
+        <Button
+            android:id="@+id/btn_send"
+            style="@style/textview_white14"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:background="@null"
+            android:text="发 送" />
+    </LinearLayout>
+
+</RelativeLayout>

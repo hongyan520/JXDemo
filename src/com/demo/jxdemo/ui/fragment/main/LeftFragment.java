@@ -1,22 +1,28 @@
 package com.demo.jxdemo.ui.fragment.main;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import ui.listener.OnClickAvoidForceListener;
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.demo.base.global.ActivityTaskManager;
-import com.demo.base.util.BitmapUtils;
+import com.demo.base.util.JsonUtil;
+import com.demo.base.util.StringUtil;
 import com.demo.jxdemo.R;
+import com.demo.jxdemo.application.SharedPreferencesConfig;
+import com.demo.jxdemo.constant.Constant;
 import com.demo.jxdemo.ui.activity.login.LoginActivity;
 import com.demo.jxdemo.ui.activity.main.MainActivity;
 import com.demo.jxdemo.ui.activity.menu.AboutActivity;
@@ -24,10 +30,18 @@ import com.demo.jxdemo.ui.activity.menu.OptionActivity;
 import com.demo.jxdemo.ui.activity.menu.UserDetailActivity;
 import com.demo.jxdemo.ui.activity.menu.UserInfoActivity;
 import com.demo.jxdemo.ui.activity.menu.manage.ManageActivity;
+import com.demo.jxdemo.ui.customviews.CustomDialog;
 import com.demo.jxdemo.ui.fragment.BaseFragment;
 
 public class LeftFragment extends BaseFragment
 {
+	private List<Map<String, Object>> courseList;
+
+	private LinearLayout courseLayout;
+
+	private CustomDialog cDialog;
+
+	private Map<String, OnClickListener> map = new HashMap<String, View.OnClickListener>();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -54,10 +68,37 @@ public class LeftFragment extends BaseFragment
 		}
 		((ViewGroup) getView()).removeAllViews();
 		((ViewGroup) getView()).addView(inflater.inflate(R.layout.fragment_left, null));
-	//	Bitmap bitmapOrg = BitmapFactory.decodeResource(getResources(),R.drawable.sidepanebackground);
-//		BitmapUtils.scaleBitmap(bitmapOrg, getActivity());
-	//	((LinearLayout)getActivity().findViewById(R.id.layout_leftfragment)).setBackgroundDrawable(BitmapUtils.scaleBitmap(bitmapOrg, getActivity()));
+		courseLayout = (LinearLayout) getActivity().findViewById(R.id.layout_left);
+		// Bitmap bitmapOrg = BitmapFactory.decodeResource(getResources(),R.drawable.sidepanebackground);
+		// BitmapUtils.scaleBitmap(bitmapOrg, getActivity());
+		// ((LinearLayout)getActivity().findViewById(R.id.layout_leftfragment)).setBackgroundDrawable(BitmapUtils.scaleBitmap(bitmapOrg, getActivity()));
 		showProgress();
+
+		map.put("确定", new OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v)
+			{
+				// TODO Auto-generated method stub
+				// ToastManager.getInstance(getActivity()).showToast("第一个.....");
+				Intent intent = new Intent();
+				ActivityTaskManager.getInstance().closeAllActivity();
+				intent.setClass(getActivity(), LoginActivity.class);
+				ActivityTaskManager.getInstance().closeAllActivity();
+				startActivity(intent);
+			}
+		});
+		cDialog = new CustomDialog(getActivity(), "确定登出？", map, "取消", new OnClickListener()
+		{
+
+			@Override
+			public void onClick(View v)
+			{
+				cDialog.cancel();
+			}
+		});
+
 		initData();
 		setViewClick();
 		return null;
@@ -65,6 +106,9 @@ public class LeftFragment extends BaseFragment
 
 	private void initData()
 	{
+		String course = SharedPreferencesConfig.config(getActivity()).get(Constant.USER_COURSEARRAY);
+		courseList = JsonUtil.getList(course);
+
 		mHandler.sendEmptyMessage(1);
 	}
 
@@ -82,24 +126,37 @@ public class LeftFragment extends BaseFragment
 			}
 		});
 		((TextView) getActivity().findViewById(R.id.text_index)).setOnClickListener(onClickAvoidForceListener);
-		((TextView) getActivity().findViewById(R.id.text_speak)).setOnClickListener(onClickAvoidForceListener);
-		((TextView) getActivity().findViewById(R.id.text_write)).setOnClickListener(onClickAvoidForceListener);
+		// ((TextView) getActivity().findViewById(R.id.text_speak)).setOnClickListener(onClickAvoidForceListener);
+		// ((TextView) getActivity().findViewById(R.id.text_write)).setOnClickListener(onClickAvoidForceListener);
 		((TextView) getActivity().findViewById(R.id.text_manage)).setOnClickListener(onClickAvoidForceListener);
 		((TextView) getActivity().findViewById(R.id.text_self)).setOnClickListener(onClickAvoidForceListener);
 		((TextView) getActivity().findViewById(R.id.text_option)).setOnClickListener(onClickAvoidForceListener);
 		((TextView) getActivity().findViewById(R.id.text_about)).setOnClickListener(onClickAvoidForceListener);
 		((TextView) getActivity().findViewById(R.id.text_logout)).setOnClickListener(onClickAvoidForceListener);
+	}
 
-		// ((TextView) getActivity().findViewById(R.id.text_speak)).setOnClickListener(new OnClickListener()
-		// {
-		//
-		// @Override
-		// public void onClick(View v)
-		// {
-		// MainActivity.newInstance().refreshData(1);
-		//
-		// }
-		// });
+	private void initView()
+	{
+		for (int i = 0; i < courseList.size(); i++)
+		{
+			LinearLayout layout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.layout_left_course, null);
+			final TextView textView = (TextView) layout.findViewById(R.id.text_course);
+			textView.setText(StringUtil.Object2String(courseList.get(i).get("Title")));
+			textView.setOnClickListener(new OnClickListener()
+			{
+
+				@Override
+				public void onClick(View v)
+				{
+					Intent intent = new Intent();
+					intent.setClass(getActivity(), MainActivity.class);
+					intent.putExtra("courseTitle", textView.getText().toString());
+					ActivityTaskManager.getInstance().closeAllActivity();
+					startActivity(intent);
+				}
+			});
+			courseLayout.addView(layout);
+		}
 	}
 
 	private OnClickAvoidForceListener onClickAvoidForceListener = new OnClickAvoidForceListener()
@@ -113,16 +170,16 @@ public class LeftFragment extends BaseFragment
 			{
 				case R.id.text_index:
 					intent.setClass(getActivity(), MainActivity.class);
-					intent.putExtra("type", 0);
+					intent.putExtra("courseTitle", getResources().getString(R.string.app_name));
 					break;
-				case R.id.text_speak:
-					intent.setClass(getActivity(), MainActivity.class);
-					intent.putExtra("type", 1);
-					break;
-				case R.id.text_write:
-					intent.setClass(getActivity(), MainActivity.class);
-					intent.putExtra("type", 2);
-					break;
+				// case R.id.text_speak:
+				// intent.setClass(getActivity(), MainActivity.class);
+				// intent.putExtra("type", 1);
+				// break;
+				// case R.id.text_write:
+				// intent.setClass(getActivity(), MainActivity.class);
+				// intent.putExtra("type", 2);
+				// break;
 				case R.id.text_manage:
 					intent.setClass(getActivity(), ManageActivity.class);
 					break;
@@ -136,9 +193,10 @@ public class LeftFragment extends BaseFragment
 					intent.setClass(getActivity(), AboutActivity.class);
 					break;
 				case R.id.text_logout:
-					ActivityTaskManager.getInstance().closeAllActivity();
-					intent.setClass(getActivity(), LoginActivity.class);
-					break;
+					cDialog.show();
+					return;
+					// ActivityTaskManager.getInstance().closeAllActivity();
+					// intent.setClass(getActivity(), LoginActivity.class);
 				default:
 					break;
 			}
@@ -157,6 +215,8 @@ public class LeftFragment extends BaseFragment
 			{
 				case 1:
 					closeProgress();
+					if (courseList != null)
+						initView();
 					break;
 				default:
 					break;

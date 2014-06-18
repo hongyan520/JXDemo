@@ -25,7 +25,7 @@
             <!-- 聊天信息栏 -->
 
             <RelativeLayout
-                android:id="@+id/rlayout_talk"
+                android:id="@+id/rlayout_chat"
                 android:layout_width="fill_parent"
                 android:layout_height="60dp"
                 android:background="@color/white"
@@ -45,7 +45,7 @@
                     android:text="Lucy:" />
 
                 <TextView
-                    android:id="@+id/text_talk_content"
+                    android:id="@+id/text_content"
                     style="@style/textview_gray16_545454"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

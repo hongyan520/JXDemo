@@ -21,7 +21,7 @@
             style="@style/textview_black16"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
+            android:layout_marginRight="5dp" android:drawablePadding="5dp"
             android:drawableLeft="@drawable/shape_blue_round"
             android:text=" 嘻嘻嘻哈哈嘻嘻嘻哈哈嘻嘻嘻嘻" />
 
@@ -54,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="5dp" android:layout_marginRight="3dp"
                 android:layout_toLeftOf="@+id/img_right"
                 android:text="3个评论" />
 

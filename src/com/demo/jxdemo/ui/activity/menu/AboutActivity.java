@@ -27,7 +27,7 @@ public class AboutActivity extends BaseSlidingActivity
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_menu_about);
-		loadMenu();
+		// loadMenu();
 
 		fromLoginString = StringUtil.Object2String(getIntent().getStringExtra("fromLogin"));
 		findViews();
@@ -38,9 +38,15 @@ public class AboutActivity extends BaseSlidingActivity
 	{
 		((TextView) findViewById(R.id.formTilte)).setText(getResources().getString(R.string.left_about));
 		if (StringUtil.isBlank(fromLoginString))
+		{
 			((ImageView) findViewById(R.id.imgview_return)).setBackgroundResource(R.drawable.top_left);
+			loadMenu();
+		}
 		else
+		{
 			((ImageView) findViewById(R.id.imgview_return)).setBackgroundResource(R.drawable.img_back);
+			setBehindContentView(R.layout.slidemenu_back_content); // 后面的布局(机构)
+		}
 		((ImageView) findViewById(R.id.imgview_return)).setVisibility(View.VISIBLE);
 
 		urlText = (TextView) findViewById(R.id.text_about_url);

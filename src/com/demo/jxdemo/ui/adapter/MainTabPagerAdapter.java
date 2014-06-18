@@ -8,7 +8,9 @@ import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.demo.jxdemo.R;
@@ -59,7 +61,7 @@ public class MainTabPagerAdapter extends PagerAdapter implements OnPageChangeLis
 	@Override
 	public void destroyItem(View arg0, int arg1, Object arg2)
 	{
-
+		((ViewPager) arg0).removeView(mListViews.get(arg1));
 	}
 
 	@Override
@@ -76,16 +78,40 @@ public class MainTabPagerAdapter extends PagerAdapter implements OnPageChangeLis
 	@Override
 	public Object instantiateItem(View arg0, int arg1)
 	{
+		// try
+		// {
+		//
+		// ((MyViewPager) arg0).addView(mListViews.get(arg1), 0);
+		// }
+		// catch (Exception e)
+		// {
+		// e.printStackTrace();
+		// }
+		// return mListViews.get(arg1);
+		//
+
 		try
 		{
-
-			((MyViewPager) arg0).addView(mListViews.get(arg1), 0);
+			if (mListViews.get(arg1).getParent() == null)
+				((ViewPager) arg0).addView(mListViews.get(arg1), 0);
+			else
+			{
+				// 很难理解新添加进来的view会自动绑定一个父类，由于一个儿子view不能与两个父类相关，所以得解绑
+				// 不这样做否则会产生 viewpager java.lang.IllegalStateException: The specified child already has a parent. You must call removeView() on the child's
+				// parent first.
+				// 还有一种方法是viewPager.setOffscreenPageLimit(3); 这种方法不用判断parent 是不是已经存在，但多余的listview不能被destroy
+				((ViewGroup) mListViews.get(arg1).getParent()).removeView(mListViews.get(arg1));
+				((ViewPager) arg0).addView(mListViews.get(arg1), 0);
+			}
 		}
 		catch (Exception e)
 		{
+			// TODO Auto-generated catch block
+			Log.d("parent=", "" + mListViews.get(arg1).getParent());
 			e.printStackTrace();
 		}
 		return mListViews.get(arg1);
+
 	}
 
 	@Override

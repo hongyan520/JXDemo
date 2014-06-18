@@ -29,6 +29,7 @@ import com.demo.jxdemo.constant.Constant;
 import com.demo.jxdemo.ui.activity.BaseActivity;
 import com.demo.jxdemo.ui.activity.main.MainActivity;
 import com.demo.jxdemo.ui.activity.menu.AboutActivity;
+import com.demo.jxdemo.ui.activity.menu.UserInfoActivity;
 import com.demo.jxdemo.ui.customviews.CustomDialog;
 import com.demo.jxdemo.ui.customviews.CustomProgressDialog;
 import com.demo.jxdemo.utils.ToastManager;
@@ -138,6 +139,44 @@ public class LoginActivity extends BaseActivity
 			switch (v.getId())
 			{
 				case R.id.rlayout_into:
+
+					String test = "[{\"AcceptMaterial\":1,\"AcceptTraining\":1,\"ID\":1,\"Icon\":\"/uploads/dfceee24cb4f463f/IconSpoken.png\",\"Title\":\"英语口语\"},{\"AcceptMaterial\":1,\"AcceptTraining\":1,\"ID\":2,\"Icon\":\"/uploads/e0ed88dce6884ed8/IconWriting.png\",\"Title\":\"英语写作\"}]";
+					SharedPreferencesConfig.saveConfig(LoginActivity.this, Constant.USER_COURSEARRAY, StringUtil.Object2String(test));
+
+					StringBuffer testbuffer = new StringBuffer();
+					testbuffer.append(" ");
+					testbuffer.append("[{\"Abstract\":\"近日，网友评出“年度最伤人聊天词汇”，“呵呵”当选，没有之一。“笑声里含义深刻，不显山 ");
+					testbuffer.append("不露水，让你琢磨不透。”网友形容这个词只有一个用处：以最大效果激怒对方，践踏对方全部热情。其实，英语中常说的“interesting”也有异曲同工之 ");
+					testbuffer
+							.append("妙。\",\"AttachementArray\":[],\"Banner\":\"\",\"CommentCount\":0,\"Content\":\"当外国人听你讲了一堆他觉得很扯的东西，一般都会说“interesting”。如果你真觉得他表示感兴趣 ");
+					testbuffer.append("的话，那就错了，他们只是想表达“呵呵”而已。周末，分享一组超搞的创意，看外国怎么表达“呵呵”这个高贵冷艳的词。\r\n\r\n《国外怎么表达“呵呵”这个高贵冷艳的词 ");
+					testbuffer.append("》\r\n\r\n　　近日，网友评出“年度最伤人聊天词汇”，“呵呵”当选，没有之一。“笑声里含义深刻，不显山不露水，让你琢磨不透。”网友形容这个词只有一个用处：以最 ");
+					testbuffer.append("大效果激怒对方，践踏对方全部热情。其实，英语中常说的“interesting”也有异曲同工之妙。\r\n\r\n　　英语单词interesting，汉语通常译为“有趣的”。听到美国人 ");
+					testbuffer
+							.append("说“It’s interesting”（很有趣）或“That’s an interesting idea”（有趣的想法），通常，中国人都理解为赞同或夸奖。\r\n\r\n　　但是，实际上，interesting，并不 ");
+					testbuffer.append("是一个褒义词。当然，也不是一个贬义词。“具体情况具体分析”。好比在某场合，有个中国人说了句什么，根据当时的情景、语境或上下文，闻者应该能听得出是真心赞同，还 ");
+					testbuffer
+							.append("是客套敷衍，甚或为讽刺嘲笑。\r\n\r\n　　interesting，根据权威的剑桥英语词典，意思是：引人注意（holding one’s attention）。比如，一个 同学说，I just read a  ");
+					testbuffer
+							.append("book. It’s very interesting. （我刚看了一本书，很有意思。）引起闻者的注意，接下来，会有补充评论，如：It’s really funny. （很搞笑的。）这是褒义的用法。\r\n ");
+					testbuffer
+							.append("\r\n　　也有贬义的用法。如： You screaming at me when it wasn't my fault was really interesting! （不是我的过错，你却对我吼叫，真有意思！）\r\n\r\n　　如何辨 ");
+					testbuffer
+							.append("别是否认同、赞同甚或夸奖？关键全在于根据语境上下文（The context is everything）。\r\n\r\n　　如果在说了“It’s interesting”或者“That’s an interesting idea ");
+					testbuffer.append("”之后，显出“愿听详情”的样子，或者顺着话题分享同感，那表示闻者确实是真有兴趣，很是赞同。\r\n\r\n　　但如果下文是转换话题，迂回敲击，那便表明，闻者并不赞同 ");
+					testbuffer.append("。“That’s an interesting idea”相当于汉语的“那可是个奇葩想法”。大家都知道，这里，奇葩的含义是怪异、离奇、不可思议。整个一句话的实际含义，并无表示赞同之意 ");
+					testbuffer
+							.append("。\r\n\r\n　　多数情况是，英美人对你所说的东西没有兴趣，但又不愿直白地让你扫兴，于是，便会说“It’s interesting.”或者“That’s an interesting idea.”显然， ");
+					testbuffer.append("这并不表示赞同、欣赏或夸奖，只是礼貌性的回应而已。\r\n\r\n　　“呵呵”，是笑声的拟声词，原本表示笑声。在网络聊天时，若对对方表示不满或者不知道该说什么，有网 ");
+					testbuffer.append("民会用“呵呵”应急敷衍。所以，在客套敷衍时，英美人用“interesting”词句，相当于中国网民用“呵呵”。\r\n\r\n　　当外国人听你讲了一堆他觉得很扯的东西，一般都会 ");
+					testbuffer.append("说“interesting”。如果你真觉得他表示感兴趣的话，那就错了，他们只是想表达“呵呵”而已。周末，分享一组超搞的创意，看外国怎么表达“呵呵”这个高贵冷艳的 ");
+					testbuffer
+							.append("词。\",\"Fav\":0,\"ID\":2,\"Link\":\"\",\"New\":0,\"Title\":\"你会用英文表达''呵呵'' 吗？\",\"Type\":0},{\"Fav\":0,\"FeedbackAttachementArray\": ");
+					testbuffer
+							.append("[],\"FeedbackContent\":\"\",\"ID\":1,\"LastChatMap\":{},\"New\":0,\"RequirementAttachementArray\":[],\"RequirementDescription\":\"录制一个5到10分钟的语音，描述一下今年冬天 ");
+					testbuffer.append("的第一场雪，可自行决定具体的场景。\",\"Title\":\"冬天的第一场雪\",\"Type\":1,\"UploadType\":0,\"UploadedContent\":\"\"}] ");
+					SharedPreferencesConfig.saveConfig(LoginActivity.this, Constant.USER_TEST, testbuffer.toString());
+
 					Intent intent = new Intent();
 					intent.setClass(LoginActivity.this, MainActivity.class);
 					startActivity(intent);
@@ -161,7 +200,7 @@ public class LoginActivity extends BaseActivity
 					inAbout.setClass(LoginActivity.this, AboutActivity.class);
 					inAbout.putExtra("fromLogin", "fromLogin");
 					startActivity(inAbout);
-//					ToastManager.getInstance(LoginActivity.this).showToast("关于.......");
+					// ToastManager.getInstance(LoginActivity.this).showToast("关于.......");
 
 					// cusDialog.show();
 					// customProgressDialog.show();
@@ -405,12 +444,23 @@ public class LoginActivity extends BaseActivity
 							StringUtil.Object2String(map[0].get("Title")));
 					SharedPreferencesConfig.saveConfig(LoginActivity.this, Constant.USER_TYPE,
 							StringUtil.Object2String(map[0].get("UserType")));
-					SharedPreferencesConfig.saveConfig(LoginActivity.this, Constant.USER_TYPE,
+					SharedPreferencesConfig.saveConfig(LoginActivity.this, Constant.USER_DIGEST,
 							StringUtil.Object2String(map[0].get("Digest")));
+					// TODO 课程待测
+					SharedPreferencesConfig.saveConfig(LoginActivity.this, Constant.USER_COURSEARRAY,
+							StringUtil.Object2String(map[0].get("CourseArray").toString()));
 
 					dismissProgress();
 					Intent intent = new Intent();
-					intent.setClass(LoginActivity.this, MainActivity.class);
+					if (StringUtil.isBlank(map[0].get("PhoneNumber").toString()))// PhoneNumber
+					{// 如果没有电话号码返回,跳转到个人资料填写
+						// TODO
+						intent.setClass(LoginActivity.this, UserInfoActivity.class);
+						intent.putExtra("", map[0].get("UserID").toString());
+					}
+					else
+						intent.setClass(LoginActivity.this, MainActivity.class);
+
 					startActivity(intent);
 					LoginActivity.this.finish();
 				}

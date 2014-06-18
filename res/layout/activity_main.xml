@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/bg_color" >
+    android:background="@color/bg_color"
+    android:orientation="vertical" >
 
     <include
         android:id="@+id/windowtitle"
@@ -11,116 +12,144 @@
         layout="@layout/windowtitle" >
     </include>
 
-    <LinearLayout
-        android:id="@+id/layout_search"
+    <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="59dp"
-        android:layout_below="@+id/windowtitle"
-        android:background="@color/top_bar"
-        android:orientation="horizontal"
-        android:padding="8dp" android:gravity="center"
-        android:visibility="gone" >
+        android:layout_height="wrap_content" >
 
-        <EditText  android:id="@+id/edit_search"
-            style="@style/login_black_16"
+        <LinearLayout
+            android:id="@+id/layout_search"
             android:layout_width="fill_parent"
-            android:layout_height="38dp"
-            android:layout_weight="0.15"
-            android:background="@drawable/shape_top_line"
-            android:drawableLeft="@drawable/top_search_small"
-            android:hint="  过滤及搜索"
-            android:paddingLeft="10dp"
-            android:paddingRight="5dp"
-            android:textColorHint="@color/edit_text_hint" />
+            android:layout_height="59dp"
+            android:layout_below="@+id/windowtitle"
+            android:background="@color/top_bar"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:visibility="gone" >
 
-        <Button
-            android:id="@+id/btn_cancel"
-            style="@style/textview_white16"
+            <EditText
+                android:id="@+id/edit_search"
+                style="@style/login_black_16"
+                android:layout_width="fill_parent"
+                android:layout_height="38dp"
+                android:layout_weight="0.15"
+                android:background="@drawable/shape_top_line"
+                android:drawableLeft="@drawable/top_search_small"
+                android:hint="  过滤及搜索"
+                android:paddingLeft="10dp"
+                android:paddingRight="5dp"
+                android:textColorHint="@color/edit_text_hint" />
+
+            <Button
+                android:id="@+id/btn_cancel"
+                style="@style/textview_white16"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="0.85"
+                android:background="@null"
+                android:text="@string/cancel" />
+        </LinearLayout>
+
+        <com.demo.jxdemo.ui.customviews.GuideGallery
+            android:id="@+id/image_wall_gallery"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="0.85"
-            android:background="@null"
-            android:text="@string/cancel" />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/layout_search"
+            android:fadingEdge="none"
+            android:spacing="1dip"
+            android:unselectedAlpha="1" >
+        </com.demo.jxdemo.ui.customviews.GuideGallery>
 
-    <com.demo.jxdemo.ui.customviews.GuideGallery
-        android:id="@+id/image_wall_gallery"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/layout_search"
-        android:fadingEdge="none"
-        android:spacing="1dip"
-        android:unselectedAlpha="1" >
-    </com.demo.jxdemo.ui.customviews.GuideGallery>
-
-    <LinearLayout
-        android:id="@+id/gallery_point_linear"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/image_wall_gallery"
-        android:gravity="center"
-        android:orientation="horizontal" >
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layout_tab_bottom"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/gallery_point_linear"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal" >
-
-        <Button
-            android:id="@+id/btn_1"
+        <LinearLayout
+            android:id="@+id/gallery_point_linear"
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:layout_weight="0.5"
-            android:background="@null"
-            android:drawableRight="@drawable/index_top_link"
-            android:text="全部" />
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/image_wall_gallery"
+            android:gravity="center"
+            android:orientation="horizontal" >
+        </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_2"
+        <LinearLayout
+            android:id="@+id/layout_tab_bottom"
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:layout_weight="0.5"
-            android:background="@null"
-            android:drawableRight="@drawable/index_top_link"
-            android:text="训练" />
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/gallery_point_linear"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal" >
 
-        <Button
-            android:id="@+id/btn_3"
+            <Button
+                android:id="@+id/btn_1"
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:layout_weight="0.5"
+                android:background="@null"
+                android:drawableRight="@drawable/index_top_link"
+                android:text="全部" />
+
+            <Button
+                android:id="@+id/btn_2"
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:layout_weight="0.5"
+                android:background="@null"
+                android:drawableRight="@drawable/index_top_link"
+                android:text="训练" />
+
+            <Button
+                android:id="@+id/btn_3"
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:layout_weight="0.5"
+                android:background="@null"
+                android:drawableRight="@drawable/index_top_link"
+                android:text="资料" />
+
+            <Button
+                android:id="@+id/btn_4"
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:layout_weight="0.5"
+                android:background="@null"
+                android:text="收藏" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_line"
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:layout_weight="0.5"
-            android:background="@null"
-            android:drawableRight="@drawable/index_top_link"
-            android:text="资料" />
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layout_tab_bottom"
+            android:background="@drawable/link_shi" />
 
-        <Button
-            android:id="@+id/btn_4"
+        <FrameLayout
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:layout_weight="0.5"
-            android:background="@null"
-            android:text="收藏" />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layout_line"
+            android:orientation="vertical" >
 
-    <LinearLayout
-        android:id="@+id/layout_line"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/layout_tab_bottom"
-        android:background="@drawable/link_shi" />
+            <com.demo.jxdemo.ui.customviews.MyViewPager
+                android:id="@+id/vPage_introduce"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:persistentDrawingCache="animation" />
 
-    <com.demo.jxdemo.ui.customviews.MyViewPager
-        android:id="@+id/vPage_introduce"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/layout_line"
-        android:layout_gravity="center"
-        android:persistentDrawingCache="animation" />
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
 
-</RelativeLayout>
+                <LinearLayout
+                    android:id="@+id/viewGroup"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="30dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal" >
+                </LinearLayout>
+            </LinearLayout>
+        </FrameLayout>
+    </RelativeLayout>
+
+</LinearLayout>

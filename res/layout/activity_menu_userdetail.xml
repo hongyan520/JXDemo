@@ -78,7 +78,7 @@
                 style="@style/textview_gray14"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
+                android:layout_marginLeft="32dp"
                 android:layout_marginTop="15dp"
                 android:singleLine="true"
                 android:text="所学课程" />

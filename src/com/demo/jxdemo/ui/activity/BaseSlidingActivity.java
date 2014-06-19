@@ -67,11 +67,11 @@ public abstract class BaseSlidingActivity extends SlidingActivity
 
 		int offset = screenWidth - bitmapOrg.getWidth();
 		float currentWidth = 0;
-		if (screenHight < bitmapOrg.getHeight())
-		{
+		//if (screenHight < bitmapOrg.getHeight())
+		//{
 			currentWidth = ((float) bitmapOrg.getWidth()) / (((float) bitmapOrg.getHeight()) / ((float) screenHight));
 			offset = (int) (screenWidth - currentWidth);
-		}
+		//}
 
 		SlidingMenu sm = getSlidingMenu();
 		sm.setShadowWidth(50);

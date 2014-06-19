@@ -70,6 +70,7 @@ public class SharedPreferencesConfig
 		configMap.put(Constant.LOOK_INTRDOUCE, sharedPreferences.getString(Constant.LOOK_INTRDOUCE, Constant.ZERO));
 		// 自动登录
 		configMap.put(Constant.ISAUTOLOGIN, sharedPreferences.getString(Constant.ISAUTOLOGIN, "OFF"));
+		configMap.put(Constant.CURRENT_LEFTMENU, sharedPreferences.getString(Constant.CURRENT_LEFTMENU, 0+""));
 
 		// // 和服务器通讯串文件（交互）
 		// configMap.put(

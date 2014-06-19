@@ -43,10 +43,16 @@ public class LeftFragment extends BaseFragment
 
 	private Map<String, OnClickListener> map = new HashMap<String, View.OnClickListener>();
 
+	private Map<String, String> configMap;
+
+	private int current = 0;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		// TODO 可以重写该方法对数据加载时dialog的一些属性进行设置
+		configMap = SharedPreferencesConfig.config(getActivity());
+		current = Integer.parseInt(configMap.get(Constant.CURRENT_LEFTMENU));
 		super.onCreate(savedInstanceState);
 	}
 
@@ -82,6 +88,7 @@ public class LeftFragment extends BaseFragment
 			{
 				// TODO Auto-generated method stub
 				// ToastManager.getInstance(getActivity()).showToast("第一个.....");
+				SharedPreferencesConfig.saveConfig(getActivity(), Constant.CURRENT_LEFTMENU, 0 + "");
 				Intent intent = new Intent();
 				ActivityTaskManager.getInstance().closeAllActivity();
 				intent.setClass(getActivity(), LoginActivity.class);
@@ -98,6 +105,14 @@ public class LeftFragment extends BaseFragment
 				cDialog.cancel();
 			}
 		});
+		if (current == 0)
+		{
+			((TextView) getActivity().findViewById(R.id.text_index)).setBackgroundResource(R.color.transparent_white_30);
+		}
+		else
+		{
+			((TextView) getActivity().findViewById(current)).setBackgroundResource(R.color.transparent_white_30);
+		}
 
 		initData();
 		setViewClick();
@@ -166,6 +181,8 @@ public class LeftFragment extends BaseFragment
 		public void onClickAvoidForce(View v)
 		{
 			Intent intent = new Intent();
+			onClickBgChange(v.getId());
+			SharedPreferencesConfig.saveConfig(getActivity(), Constant.CURRENT_LEFTMENU, v.getId() + "");
 			switch (v.getId())
 			{
 				case R.id.text_index:
@@ -199,11 +216,17 @@ public class LeftFragment extends BaseFragment
 					// intent.setClass(getActivity(), LoginActivity.class);
 				default:
 					break;
+
 			}
 			ActivityTaskManager.getInstance().closeAllActivity();
 			startActivity(intent);
 		}
 	};
+
+	private void onClickBgChange(int id)
+	{
+		((TextView) getActivity().findViewById(id)).setBackgroundResource(R.color.transparent_white_30);
+	}
 
 	private Handler mHandler = new Handler()
 	{

@@ -10,10 +10,13 @@ import java.util.TimerTask;
 import ui.listener.OnClickAvoidForceListener;
 import ui.listener.OnItemClickAvoidForceListener;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +26,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -358,8 +362,17 @@ public class MainActivity extends BaseSlidingActivity
 
 	private void init()
 	{
+		Bitmap bitmapOrg = BitmapFactory.decodeResource(getResources(), R.drawable.four);
+
+		DisplayMetrics dm = Utils.getDisplayMetrics(this);
+
+		// 窗口的宽度
+		int screenWidth = dm.widthPixels;
+		float currentHight = ((float)(bitmapOrg.getHeight()*screenWidth))/((float)bitmapOrg.getWidth());
+		
 		images_ga = (GuideGallery) findViewById(R.id.image_wall_gallery);
 		images_ga.setImageActivity(this);
+		images_ga.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.FILL_PARENT, (int)currentHight));
 
 		SwitherImageAdapter imageAdapter = new SwitherImageAdapter(this);
 		images_ga.setAdapter(imageAdapter);

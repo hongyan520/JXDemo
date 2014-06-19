@@ -113,7 +113,7 @@ public class SwitherImageAdapter extends BaseAdapter
 		imageView = (ImageView) convertView.findViewById(R.id.gallery_image);
 		imageView.setImageResource(imgs[position % imgs.length]);
 		// 设置缩放比例：保持原样
-		imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+		imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 		// textView.setText(position % imgs.length+" sdfsdfdsfdf");
 //		((SwitherImageActivity) context).changePointView(position % imgs.length);
 		((MainActivity) context).changePointView(position % imgs.length);

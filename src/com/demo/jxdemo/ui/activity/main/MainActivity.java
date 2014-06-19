@@ -37,6 +37,7 @@ import android.widget.TextView;
 import com.demo.base.global.ActivityTaskManager;
 import com.demo.base.util.JsonUtil;
 import com.demo.base.util.ScrollListViewUtil;
+import com.demo.base.util.StringUtil;
 import com.demo.base.util.Utils;
 import com.demo.jxdemo.R;
 import com.demo.jxdemo.application.SharedPreferencesConfig;
@@ -47,6 +48,7 @@ import com.demo.jxdemo.ui.adapter.MainTabPagerAdapter;
 import com.demo.jxdemo.ui.adapter.SwitherImageAdapter;
 import com.demo.jxdemo.ui.customviews.GuideGallery;
 import com.demo.jxdemo.ui.customviews.MyViewPager;
+import com.demo.jxdemo.ui.fragment.main.LeftFragment;
 import com.demo.jxdemo.utils.ToastManager;
 
 public class MainActivity extends BaseSlidingActivity
@@ -368,7 +370,7 @@ public class MainActivity extends BaseSlidingActivity
 	protected void onStart()
 	{
 		super.onStart();
-
+		
 	}
 
 	private void init()
@@ -477,6 +479,9 @@ public class MainActivity extends BaseSlidingActivity
 		// TODO Auto-generated method stub
 		super.onResume();
 		timeFlag = false;
+//		if(StringUtil.isBlank(getIntent().getStringExtra("courseTitle"))){ // 为了保证进入了此页面设置当前侧边栏选中
+//			SharedPreferencesConfig.saveConfig(getApplicationContext(), Constant.CURRENT_LEFTMENU, 0 + "");
+//		}
 	}
 
 	@Override

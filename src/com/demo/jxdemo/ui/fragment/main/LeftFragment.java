@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.demo.base.global.ActivityTaskManager;
 import com.demo.base.util.JsonUtil;
@@ -46,7 +47,7 @@ public class LeftFragment extends BaseFragment
 	private Map<String, String> configMap;
 
 	private int current = 0;
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -171,7 +172,7 @@ public class LeftFragment extends BaseFragment
 			});
 			courseLayout.addView(layout);
 		}
-		
+	
 		if (current == 0)
 		{
 			((TextView) getActivity().findViewById(R.id.text_index)).setBackgroundResource(R.color.transparent_white_30);

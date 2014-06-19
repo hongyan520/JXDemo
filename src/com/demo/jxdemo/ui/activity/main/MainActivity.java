@@ -20,6 +20,7 @@ import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -287,11 +288,21 @@ public class MainActivity extends BaseSlidingActivity
 					windowTitleLayout.setVisibility(View.GONE);
 					images_ga.setVisibility(View.GONE);
 					((LinearLayout) findViewById(R.id.gallery_point_linear)).setVisibility(View.GONE);
+					//创建一个LayoutParams对象  
+			        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);  
+			        //设置android:layout_below属性的值   
+			        layoutParams.addRule(RelativeLayout.BELOW, R.id.layout_search);
+					((LinearLayout) findViewById(R.id.layout_tab_bottom)).setLayoutParams(layoutParams);
 					searchLayout.setVisibility(View.VISIBLE);
 					// getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 					break;
 				case R.id.btn_cancel:
 					closeKeyboard();
+					//创建一个LayoutParams对象  
+			        RelativeLayout.LayoutParams layoutParams2 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);  
+			        //设置android:layout_below属性的值   
+			        layoutParams2.addRule(RelativeLayout.BELOW, R.id.gallery_point_linear);
+					((LinearLayout) findViewById(R.id.layout_tab_bottom)).setLayoutParams(layoutParams2);
 					windowTitleLayout.setVisibility(View.VISIBLE);
 					images_ga.setVisibility(View.VISIBLE);
 					((LinearLayout) findViewById(R.id.gallery_point_linear)).setVisibility(View.VISIBLE);

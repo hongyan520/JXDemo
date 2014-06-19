@@ -7,9 +7,13 @@ import java.util.Map;
 
 import ui.listener.OnClickAvoidForceListener;
 import ui.listener.OnItemClickAvoidForceListener;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -18,6 +22,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.demo.base.util.ScrollListViewUtil;
+import com.demo.base.util.Utils;
 import com.demo.jxdemo.R;
 import com.demo.jxdemo.ui.activity.BaseActivity;
 import com.demo.jxdemo.ui.adapter.AttachListAdapter;
@@ -64,6 +69,16 @@ public class LearningMaterialsActivity extends BaseActivity
 		attachListView = (ListView) findViewById(R.id.list_learn_attach);
 		commentLayout = (LinearLayout) findViewById(R.id.list_learn_comment);
 		// commentListView = (ListView) findViewById(R.id.list_learn_comment);
+		
+		Bitmap bitmapOrg = BitmapFactory.decodeResource(getResources(), R.drawable.four);
+
+		DisplayMetrics dm = Utils.getDisplayMetrics(this);
+
+		// 窗口的宽度
+		int screenWidth = dm.widthPixels;
+		float currentHight = ((float)(bitmapOrg.getHeight()*screenWidth))/((float)bitmapOrg.getWidth());
+		
+		((ImageView)findViewById(R.id.detail_top_image)).setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, (int) currentHight));
 	}
 
 	private void initData()

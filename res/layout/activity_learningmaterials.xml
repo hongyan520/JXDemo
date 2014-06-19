@@ -41,9 +41,11 @@
                     android:text="如何如何如何" />
 
                 <ImageView
+                    android:id="@+id/detail_top_image"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/test_pic" />
+                    android:scaleType="centerCrop"
+                    android:background="@drawable/four" />
 
                 <TextView
                     style="@style/set_about_black_14"

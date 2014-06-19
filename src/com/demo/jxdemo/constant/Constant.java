@@ -36,9 +36,9 @@ public class Constant
 	public final static String USER_INTRODUCTION = "USER_INTRODUCTION";
 
 	public final static String USER_DIGEST = "DIGEST";
-	
+
 	public final static String USER_COURSEARRAY = "USER_COURSEARRAY";
-	
+
 	public final static String USER_TEST = "USER_TEST";
 
 	public final static String OPTION = "OPTION";
@@ -105,31 +105,33 @@ public class Constant
 	/** 自动登录 */
 	public final static String ISAUTOLOGIN = "OFF";
 
-	public final static String CACHE_PATH = AllActivityListApplication.getInstance().getApplicationContext().getCacheDir().getPath()+ "/";
-	
+	public final static String CACHE_PATH = AllActivityListApplication.getInstance().getApplicationContext().getCacheDir().getPath() + "/";
+
 	/**
 	 * 缓存根目录
 	 */
 	public static final String BASE_CACHE_PATH = Environment.getExternalStorageDirectory().toString() + "/gixue/";
-	
+
 	/**
 	 * 静态缓存目录
 	 */
 	public static final String STATIC_PATH = "static/";
-	
+
 	/**
 	 * API动态缓存目录
 	 */
 	public static final String API_PATH = "Api/";
-	
+
 	/**
 	 * 后缀
 	 */
-	public static final String API_FILE_SUFFIX=".gixue";
-	
+	public static final String API_FILE_SUFFIX = ".gixue";
+
 	/**
 	 * 是否使用缓存
 	 */
 	public static final boolean isUseCache = true;
+
+	public static final String CURRENT_LEFTMENU = "CURRENT_LEFTMENU";
 
 }

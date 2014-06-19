@@ -163,6 +163,8 @@ public class LeftFragment extends BaseFragment
 				@Override
 				public void onClick(View v)
 				{
+//					onClickBgChange(v.getId());
+//					SharedPreferencesConfig.saveConfig(getActivity(), Constant.CURRENT_LEFTMENU, v.getId() + "");
 					Intent intent = new Intent();
 					intent.setClass(getActivity(), MainActivity.class);
 					intent.putExtra("courseTitle", textView.getText().toString());

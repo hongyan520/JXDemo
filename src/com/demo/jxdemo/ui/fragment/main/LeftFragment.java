@@ -9,14 +9,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.demo.base.global.ActivityTaskManager;
 import com.demo.base.util.JsonUtil;
@@ -47,7 +50,7 @@ public class LeftFragment extends BaseFragment
 	private Map<String, String> configMap;
 
 	private int current = 0;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -106,12 +109,10 @@ public class LeftFragment extends BaseFragment
 				cDialog.cancel();
 			}
 		});
-	
 
 		initData();
 		setViewClick();
-		
-		
+
 		return null;
 	}
 
@@ -144,6 +145,16 @@ public class LeftFragment extends BaseFragment
 		((TextView) getActivity().findViewById(R.id.text_option)).setOnClickListener(onClickAvoidForceListener);
 		((TextView) getActivity().findViewById(R.id.text_about)).setOnClickListener(onClickAvoidForceListener);
 		((TextView) getActivity().findViewById(R.id.text_logout)).setOnClickListener(onClickAvoidForceListener);
+
+		// ((TextView) getActivity().findViewById(R.id.text_index)).setOnTouchListener(onTouchListener);
+		// // ((TextView) getActivity().findViewById(R.id.text_speak)).setOnTouchListener(onTouchListener);
+		// // ((TextView) getActivity().findViewById(R.id.text_write)).setOnTouchListener(onTouchListener);
+		// ((TextView) getActivity().findViewById(R.id.text_manage)).setOnTouchListener(onTouchListener);
+		// ((TextView) getActivity().findViewById(R.id.text_self)).setOnTouchListener(onTouchListener);
+		// ((TextView) getActivity().findViewById(R.id.text_option)).setOnTouchListener(onTouchListener);
+		// ((TextView) getActivity().findViewById(R.id.text_about)).setOnTouchListener(onTouchListener);
+		// ((TextView) getActivity().findViewById(R.id.text_logout)).setOnTouchListener(onTouchListener);
+
 	}
 
 	private void initView()
@@ -153,15 +164,15 @@ public class LeftFragment extends BaseFragment
 			LinearLayout layout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.layout_left_course, null);
 			final TextView textView = (TextView) layout.findViewById(R.id.text_course);
 			textView.setText(StringUtil.Object2String(courseList.get(i).get("Title")));
-			textView.setId(i+1); // 设置id
+			textView.setId(i + 1); // 设置id
 			textView.setOnClickListener(new OnClickListener()
 			{
 
 				@Override
 				public void onClick(View v)
 				{
-					onClickBgChange(v.getId());
-					//v.setBackgroundResource(R.color.transparent_white_30);
+					// onClickBgChange(v.getId());
+					// v.setBackgroundResource(R.color.transparent_white_30);
 					SharedPreferencesConfig.saveConfig(getActivity(), Constant.CURRENT_LEFTMENU, v.getId() + "");
 					Intent intent = new Intent();
 					intent.setClass(getActivity(), MainActivity.class);
@@ -172,7 +183,7 @@ public class LeftFragment extends BaseFragment
 			});
 			courseLayout.addView(layout);
 		}
-	
+
 		if (current == 0)
 		{
 			((TextView) getActivity().findViewById(R.id.text_index)).setBackgroundResource(R.color.transparent_white_30);
@@ -190,7 +201,7 @@ public class LeftFragment extends BaseFragment
 		public void onClickAvoidForce(View v)
 		{
 			Intent intent = new Intent();
-			onClickBgChange(v.getId());
+			// onClickBgChange(v.getId());
 			SharedPreferencesConfig.saveConfig(getActivity(), Constant.CURRENT_LEFTMENU, v.getId() + "");
 			switch (v.getId())
 			{
@@ -232,10 +243,10 @@ public class LeftFragment extends BaseFragment
 		}
 	};
 
-	private void onClickBgChange(int id)
-	{
-		((TextView) getActivity().findViewById(id)).setBackgroundResource(R.color.transparent_white_30);
-	}
+	// private void onClickBgChange(int id)
+	// {
+	// ((TextView) getActivity().findViewById(id)).setBackgroundResource(R.color.transparent_white_30);
+	// }
 
 	private Handler mHandler = new Handler()
 	{

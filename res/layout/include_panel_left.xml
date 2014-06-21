@@ -4,7 +4,8 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <LinearLayout android:id="@+id/layout_leftfragment"
+    <LinearLayout
+        android:id="@+id/layout_leftfragment"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:background="@drawable/sidepanebackground"
@@ -48,49 +49,29 @@
                     android:layout_marginBottom="5dp"
                     android:layout_marginTop="10dp"
                     android:background="@color/transparent_white_30"
-                    android:orientation="vertical"
-                    android:paddingLeft="12dp" >
+                    android:orientation="vertical" >
 
                     <TextView
                         android:id="@+id/text_index"
-                        style="@style/textview_black16"
+                        style="@style/textview_black16_addbg"
                         android:layout_width="fill_parent"
                         android:layout_height="50dp"
                         android:drawableLeft="@drawable/icon_home"
                         android:gravity="center_vertical"
+                        android:paddingLeft="12dp"
                         android:text="@string/left_index" />
 
                     <ImageView
                         android:layout_width="fill_parent"
                         android:layout_height="0.5dp"
-                        android:background="@color/transparent_black_30" />
+                        android:background="@color/transparent_black_30"
+                        android:layout_marginLeft="12dp" />
 
-                    <LinearLayout   android:id="@+id/layout_left" android:layout_width="fill_parent"
-                        android:layout_height="wrap_content" android:orientation="vertical"/>
-                    
-                   <!--  <TextView
-                        android:id="@+id/text_speak"
-                        style="@style/textview_black16"
+                    <LinearLayout
+                        android:id="@+id/layout_left"
                         android:layout_width="fill_parent"
-                        android:layout_height="50dp"
-                        android:drawableLeft="@drawable/icon_about"
-                        android:gravity="center_vertical"
-                        android:text="@string/left_speak" />
-
-                    <ImageView
-                        android:layout_width="fill_parent"
-                        android:layout_height="0.5dp"
-                        android:background="@color/transparent_black_30" />
-
-                    <TextView
-                        android:id="@+id/text_write"
-                        style="@style/textview_black16"
-                        android:layout_width="fill_parent"
-                        android:layout_height="50dp"
-                        android:layout_marginBottom="3dp"
-                        android:drawableLeft="@drawable/icon_about"
-                        android:gravity="center_vertical"
-                        android:text="@string/left_write" /> -->
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -99,73 +80,80 @@
                     android:layout_marginBottom="15dp"
                     android:layout_marginTop="10dp"
                     android:background="@color/transparent_white_30"
-                    android:orientation="vertical"
-                    android:paddingLeft="12dp" >
+                    android:orientation="vertical" >
 
                     <TextView
                         android:id="@+id/text_manage"
-                        style="@style/textview_black16"
+                        style="@style/textview_black16_addbg"
                         android:layout_width="fill_parent"
                         android:layout_height="50dp"
                         android:drawableLeft="@drawable/icon_manage"
                         android:gravity="center_vertical"
+                        android:paddingLeft="12dp"
                         android:text="@string/left_manage" />
 
                     <ImageView
                         android:layout_width="fill_parent"
                         android:layout_height="0.5dp"
+                        android:layout_marginLeft="12dp"
                         android:background="@color/transparent_black_30" />
 
                     <TextView
                         android:id="@+id/text_self"
-                        style="@style/textview_black16"
+                        style="@style/textview_black16_addbg"
                         android:layout_width="fill_parent"
                         android:layout_height="50dp"
                         android:drawableLeft="@drawable/icon_self"
                         android:gravity="center_vertical"
+                        android:paddingLeft="12dp"
                         android:text="@string/left_self" />
 
                     <ImageView
                         android:layout_width="fill_parent"
                         android:layout_height="0.5dp"
-                        android:background="@color/transparent_black_30" />
+                        android:background="@color/transparent_black_30"
+                        android:layout_marginLeft="12dp" />
 
                     <TextView
                         android:id="@+id/text_option"
-                        style="@style/textview_black16"
+                        style="@style/textview_black16_addbg"
                         android:layout_width="fill_parent"
                         android:layout_height="50dp"
                         android:drawableLeft="@drawable/icon_option"
                         android:gravity="center_vertical"
+                        android:paddingLeft="12dp"
                         android:text="@string/left_option" />
 
                     <ImageView
                         android:layout_width="fill_parent"
                         android:layout_height="0.5dp"
-                        android:background="@color/transparent_black_30" />
+                        android:background="@color/transparent_black_30"
+                        android:layout_marginLeft="12dp" />
 
                     <TextView
                         android:id="@+id/text_about"
-                        style="@style/textview_black16"
+                        style="@style/textview_black16_addbg"
                         android:layout_width="fill_parent"
                         android:layout_height="50dp"
                         android:drawableLeft="@drawable/icon_about"
                         android:gravity="center_vertical"
+                        android:paddingLeft="12dp"
                         android:text="@string/left_about" />
 
                     <ImageView
                         android:layout_width="fill_parent"
                         android:layout_height="0.5dp"
-                        android:background="@color/transparent_black_30" />
+                        android:background="@color/transparent_black_30"
+                        android:layout_marginLeft="12dp" />
 
                     <TextView
                         android:id="@+id/text_logout"
-                        style="@style/textview_black16"
+                        style="@style/textview_black16_addbg"
                         android:layout_width="fill_parent"
                         android:layout_height="50dp"
-                        android:layout_marginBottom="3dp"
                         android:drawableLeft="@drawable/icon_logout"
                         android:gravity="center_vertical"
+                        android:paddingLeft="12dp"
                         android:text="@string/left_logout" />
                 </LinearLayout>
             </LinearLayout>

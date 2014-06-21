@@ -41,7 +41,7 @@ public class SplashActivity extends BaseActivity
 				startActivity(intent);
 				SplashActivity.this.finish();
 			}
-		}, 1000);// TODO 记住改为4秒
+		}, 4000);// TODO 记住改为4秒
 	}
 
 }

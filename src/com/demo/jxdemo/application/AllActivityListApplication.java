@@ -62,6 +62,8 @@ public class AllActivityListApplication extends Application
 		BaseConstants.STATIC_PATH = Constant.STATIC_PATH;
 		BaseConstants.API_PATH = Constant.API_PATH;
 		BaseConstants.API_FILE_SUFFIX = Constant.API_FILE_SUFFIX;
+		
+		SharedPreferencesConfig.saveConfig(getApplicationContext(), Constant.CURRENT_LEFTMENU, 0 + "");
 	}
 
 	public static void setInstance(AllActivityListApplication i)

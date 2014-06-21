@@ -6,16 +6,18 @@
 
     <TextView
         android:id="@+id/text_course"
-        style="@style/textview_black16"
+        style="@style/textview_black16_addbg"
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:drawableLeft="@drawable/icon_manage"
         android:gravity="center_vertical"
+        android:paddingLeft="12dp"
         android:text="@string/left_manage" />
 
     <ImageView
         android:layout_width="fill_parent"
         android:layout_height="0.5dp"
-        android:background="@color/transparent_black_30" />
+        android:background="@color/transparent_black_30"
+        android:layout_marginLeft="12dp" />
 
 </LinearLayout>

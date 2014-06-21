@@ -10,6 +10,8 @@ import ui.listener.OnItemClickAvoidForceListener;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -77,14 +79,14 @@ public class ManageActivity extends BaseSlidingActivity
 		lists.add(m2);
 		lists.add(m3);
 
-		//request();
+		// request();
 	}
 
 	private void request()
 	{
 
 		Map<String, Object> parasTemp = new HashMap<String, Object>();
-		parasTemp.put("UserToken", SharedPreferencesConfig.config(ManageActivity.this).get(Constant.USER_TEL));
+		parasTemp.put("UserToken", SharedPreferencesConfig.config(ManageActivity.this).get(Constant.USER_TOKEN));
 
 		new HttpPostAsync(ManageActivity.this)
 		{
@@ -153,9 +155,7 @@ public class ManageActivity extends BaseSlidingActivity
 			{
 				if (map != null)
 				{
-					SharedPreferencesConfig.saveConfig(ManageActivity.this, Constant.USER_TOKEN,
-							StringUtil.Object2String(map[0].get("UserToken")));
-
+					mHandler.sendEmptyMessage(1);
 					dismissProgress();
 				}
 				else
@@ -177,6 +177,24 @@ public class ManageActivity extends BaseSlidingActivity
 		}
 
 	}
+
+	private Handler mHandler = new Handler()
+	{
+
+		@Override
+		public void handleMessage(Message msg)
+		{
+			switch (msg.what)
+			{
+				case 1:
+					adapter = new ManageListAdapter(ManageActivity.this);
+					initView();
+					break;
+				default:
+					break;
+			}
+		}
+	};
 
 	private void initView()
 	{

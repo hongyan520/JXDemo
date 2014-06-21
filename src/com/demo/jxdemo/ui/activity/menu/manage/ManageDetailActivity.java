@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.demo.jxdemo.R;
@@ -46,6 +47,8 @@ public class ManageDetailActivity extends BaseActivity
 	private void setViewClick()
 	{
 		((LinearLayout) findViewById(R.id.layout_return)).setOnClickListener(onClickAvoidForceListener);
+		((RelativeLayout) findViewById(R.id.rlayout_kcxl)).setOnClickListener(onClickAvoidForceListener);
+		((RelativeLayout) findViewById(R.id.rlayout_dyzl)).setOnClickListener(onClickAvoidForceListener);
 	}
 
 	private OnClickAvoidForceListener onClickAvoidForceListener = new OnClickAvoidForceListener()
@@ -58,6 +61,10 @@ public class ManageDetailActivity extends BaseActivity
 			{
 				case R.id.layout_return:
 					finishMyActivity();
+					break;
+				case R.id.rlayout_kcxl:
+					break;
+				case R.id.rlayout_dyzl:
 					break;
 				default:
 					break;

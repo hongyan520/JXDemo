@@ -9,8 +9,11 @@ import ui.listener.OnClickAvoidForceListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,9 +25,13 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.demo.base.services.http.HttpPostAsync;
+import com.demo.base.support.BaseConstants;
+import com.demo.base.util.JsonUtil;
 import com.demo.base.util.StringUtil;
 import com.demo.jxdemo.R;
 import com.demo.jxdemo.application.SharedPreferencesConfig;
+import com.demo.jxdemo.constant.CommandConstants;
 import com.demo.jxdemo.constant.Constant;
 import com.demo.jxdemo.ui.activity.BaseSlidingActivity;
 import com.demo.jxdemo.ui.customviews.CustomDialog;
@@ -44,6 +51,8 @@ public class UserInfoActivity extends BaseSlidingActivity
 
 	/** 性别 */
 	private TextView userGenderTextView;
+
+	private TextView userGenderIdTextView;
 
 	/** 地区 */
 	private EditText userLocationEditText;
@@ -65,7 +74,7 @@ public class UserInfoActivity extends BaseSlidingActivity
 		loadMenu();
 
 		findViews();
-		initViews();
+		initViews(false);
 		setViewClick();
 	}
 
@@ -79,6 +88,7 @@ public class UserInfoActivity extends BaseSlidingActivity
 
 		iconImg = (ImageView) findViewById(R.id.img_self_icon);
 		userGenderTextView = (TextView) findViewById(R.id.text_gender);
+		userGenderIdTextView = (TextView) findViewById(R.id.text_gender_id);
 		userNameEditText = (EditText) findViewById(R.id.edit_username);
 		userTelEditText = (EditText) findViewById(R.id.edit_usertel);
 		userLocationEditText = (EditText) findViewById(R.id.edit_userlocation);
@@ -88,21 +98,166 @@ public class UserInfoActivity extends BaseSlidingActivity
 		cleanLayout = (RelativeLayout) findViewById(R.id.rlayout_cleancache);
 	}
 
-	private void initViews()
+	private void initViews(boolean isRequest)
 	{
-		if (!StringUtil.isBlank(SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_GENDER)))
-		{
-			String gender = SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_GENDER);
-			if ("0".equals(gender))
-				userGenderTextView.setText("未设置");
-			else if ("1".equals(gender))
-				userGenderTextView.setText("男");
-			else if ("2".equals(gender))
-				userGenderTextView.setText("女");
-		}
+		String gender = SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_GENDER);
+		String name = SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_NAME);
+		String tel = SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_TEL);
+		String location = SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_LOCATION);
+		String job = SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_JOB);
+		String introduce = SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_INTRODUCTION);
+
+		userGenderIdTextView.setText(gender);
+		if ("1".equals(gender))
+			userGenderTextView.setText("男");
+		else if ("2".equals(gender))
+			userGenderTextView.setText("女");
+		else
+			userGenderTextView.setText("未设置");
+
+		userNameEditText.setText(name);
+		userTelEditText.setText(tel);
+		userLocationEditText.setText(location);
+		userJobEditText.setText(job);
+		userIntroduceEditText.setText(introduce);
 
 		((ScrollView) findViewById(R.id.scrollView1)).setVisibility(View.VISIBLE);
+		// TODO
+		// if (!isRequest)
+		// request();
 	}
+
+	private void request()
+	{
+		Map<String, Object> parasTemp = new HashMap<String, Object>();
+		parasTemp.put("UserToken", SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_TOKEN));
+
+		new HttpPostAsync(UserInfoActivity.this)
+		{
+			@Override
+			public Object backResult(Object result)
+			{// 请求回调
+				System.out.println("UserProfile=" + result);
+				if (result == null || "".equals(result.toString()))
+				{
+					dismissProgress();
+					ToastManager.getInstance(UserInfoActivity.this).showToast("服务器异常，请联系管理员!");
+				}
+				else if (BaseConstants.HTTP_REQUEST_FAIL.equals(result.toString().trim()))
+				{
+					dismissProgress();
+					ToastManager.getInstance(UserInfoActivity.this).showToast("连接不上服务器");
+				}
+				else
+				{
+					Map<String, Object> mapstr = JsonUtil.getMapString(result.toString());
+					boolean isSuccess = false;
+					if (!mapstr.containsKey(CommandConstants.ERRCODE))
+						isSuccess = true;
+					String desc = (String) mapstr.get(CommandConstants.ERRCODE);
+					if (!isSuccess && !StringUtil.isBlank(desc))
+					{
+						dismissProgress();
+						ToastManager.getInstance(UserInfoActivity.this).showToast(desc);
+					}
+					else
+					{
+						loadSuccessDeal(mapstr);// 成功后处理
+					}
+				}
+				return "";
+			}
+		}.execute(BaseConstants.POST_KEYVALUE_DATA, CommandConstants.URL + CommandConstants.USERPROFILE, parasTemp);
+	}
+
+	@SuppressWarnings("unchecked")
+	private void loadSuccessDeal(Map<String, Object> map)
+	{
+		new LoadDealTask().execute(map);
+	}
+
+	class LoadDealTask extends AsyncTask<Map<String, Object>, Integer, Void>
+	{
+
+		@Override
+		protected void onPreExecute()
+		{
+			showProgress(2 * 60 * 1000);
+		}
+
+		@Override
+		protected void onProgressUpdate(Integer... progress)
+		{
+
+		}
+
+		@Override
+		protected Void doInBackground(Map<String, Object>... map)
+		{
+			try
+			{
+				if (map != null)
+				{
+
+					SharedPreferencesConfig.saveConfig(UserInfoActivity.this, Constant.USER_AVATAR,
+							StringUtil.Object2String(map[0].get("Avatar")));
+					SharedPreferencesConfig.saveConfig(UserInfoActivity.this, Constant.USER_INTRODUCTION,
+							StringUtil.Object2String(map[0].get("Introduction")));
+					SharedPreferencesConfig.saveConfig(UserInfoActivity.this, Constant.USER_JOB,
+							StringUtil.Object2String(map[0].get("Job")));
+					SharedPreferencesConfig.saveConfig(UserInfoActivity.this, Constant.USER_LOCATION,
+							StringUtil.Object2String(map[0].get("Location")));
+					SharedPreferencesConfig.saveConfig(UserInfoActivity.this, Constant.USER_GENDER,
+							StringUtil.Object2String(map[0].get("Sex")));
+					SharedPreferencesConfig.saveConfig(UserInfoActivity.this, Constant.USER_NAME,
+							StringUtil.Object2String(map[0].get("Title")));
+					SharedPreferencesConfig.saveConfig(UserInfoActivity.this, Constant.USER_TYPE,
+							StringUtil.Object2String(map[0].get("UserType")));
+					SharedPreferencesConfig.saveConfig(UserInfoActivity.this, Constant.USER_DIGEST,
+							StringUtil.Object2String(map[0].get("Digest")));
+					// TODO 课程待测
+					SharedPreferencesConfig.saveConfig(UserInfoActivity.this, Constant.USER_COURSEARRAY,
+							StringUtil.Object2String(map[0].get("CourseArray").toString()));
+
+					mHandler.sendEmptyMessage(1);
+					dismissProgress();
+				}
+				else
+					ToastManager.getInstance(UserInfoActivity.this).showToast("获取失败!");
+
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+				ToastManager.getInstance(UserInfoActivity.this).showToast("获取失败!");
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result)
+		{
+			dismissProgress();
+		}
+
+	}
+
+	private Handler mHandler = new Handler()
+	{
+
+		@Override
+		public void handleMessage(Message msg)
+		{
+			switch (msg.what)
+			{
+				case 1:
+					initViews(true);
+					break;
+				default:
+					break;
+			}
+		}
+	};
 
 	private void setViewClick()
 	{
@@ -130,6 +285,10 @@ public class UserInfoActivity extends BaseSlidingActivity
 					break;
 				case R.id.layout_remark:
 					ToastManager.getInstance(UserInfoActivity.this).showToast("保存.......");
+//					if (!StringUtil.isBlank(userTelEditText.getText().toString().trim()))
+//						saveInfo();
+//					else
+//						ToastManager.getInstance(UserInfoActivity.this).showToast("请填写手机号码!");
 					break;
 				case R.id.img_self_icon:
 					ShowPickDialog();
@@ -143,6 +302,61 @@ public class UserInfoActivity extends BaseSlidingActivity
 		}
 	};
 
+	private void saveInfo()
+	{
+		Map<String, Object> parasTemp = new HashMap<String, Object>();
+		parasTemp.put("UserToken", SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_TOKEN));
+		parasTemp.put("Avatar", null);
+		parasTemp.put("Title", userNameEditText.getText().toString());
+		parasTemp.put("PhoneNumber", userTelEditText.getText().toString());
+		parasTemp.put("AuthCode", "");// 验证码 当手机号码没有修改的时候,服务器端忽略此项。
+		parasTemp.put("Location", userLocationEditText.getText().toString());
+		parasTemp.put("Job", userJobEditText.getText().toString());
+		parasTemp.put("Introduction", userIntroduceEditText.getText().toString());
+		// 整数，代表性别。 0 －未设置 1 － 男 2 － 女
+		parasTemp.put("Sex", userGenderIdTextView.getText().toString());
+
+		new HttpPostAsync(UserInfoActivity.this)
+		{
+			@Override
+			public Object backResult(Object result)
+			{// 请求回调
+				System.out.println("UpdateUserProfile=" + result);
+				if (result == null || "".equals(result.toString()))
+				{
+					dismissProgress();
+					ToastManager.getInstance(UserInfoActivity.this).showToast("服务器异常，请联系管理员!");
+				}
+				else if (BaseConstants.HTTP_REQUEST_FAIL.equals(result.toString().trim()))
+				{
+					dismissProgress();
+					ToastManager.getInstance(UserInfoActivity.this).showToast("连接不上服务器");
+				}
+				else
+				{
+					Map<String, Object> mapstr = JsonUtil.getMapString(result.toString());
+					boolean isSuccess = false;
+					if (!mapstr.containsKey(CommandConstants.ERRCODE))
+						isSuccess = true;
+					String desc = (String) mapstr.get(CommandConstants.ERRCODE);
+					if (!isSuccess && !StringUtil.isBlank(desc))
+					{
+						dismissProgress();
+						ToastManager.getInstance(UserInfoActivity.this).showToast(desc);
+					}
+					else
+					{
+						// 成功后处理
+						dismissProgress();
+						ToastManager.getInstance(UserInfoActivity.this).showToast("保存成功!");
+					}
+				}
+				return "";
+			}
+		}.execute(BaseConstants.POST_KEYVALUE_DATA, CommandConstants.URL + CommandConstants.UPDATEUSERPROFILE, parasTemp);
+
+	}
+
 	private void initGender()
 	{
 		Map<String, OnClickListener> map = new HashMap<String, View.OnClickListener>();
@@ -154,6 +368,7 @@ public class UserInfoActivity extends BaseSlidingActivity
 			{
 				cDialog.cancel();
 				userGenderTextView.setText("男");
+				userGenderIdTextView.setText("1");
 			}
 		});
 		map.put("女", new OnClickListener()
@@ -164,6 +379,7 @@ public class UserInfoActivity extends BaseSlidingActivity
 			{
 				cDialog.cancel();
 				userGenderTextView.setText("女");
+				userGenderIdTextView.setText("2");
 			}
 		});
 		cDialog = new CustomDialog(this, "选择性别", map, "不设置", new OnClickListener()
@@ -174,6 +390,7 @@ public class UserInfoActivity extends BaseSlidingActivity
 			{
 				cDialog.cancel();
 				userGenderTextView.setText("未设置");
+				userGenderIdTextView.setText("0");
 			}
 		});
 		cDialog.show();

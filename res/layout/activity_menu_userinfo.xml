@@ -175,6 +175,12 @@
                         android:layout_toRightOf="@+id/text_gender_title"
                         android:gravity="right"
                         android:text="女" />
+
+                    <TextView
+                        android:id="@+id/text_gender_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone" />
                 </RelativeLayout>
 
                 <LinearLayout
@@ -243,7 +249,8 @@
                         android:singleLine="true"
                         android:text="@string/left_self_job" />
 
-                    <EditText  android:id="@+id/edit_userjob"
+                    <EditText
+                        android:id="@+id/edit_userjob"
                         style="@style/textview_gray14"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"

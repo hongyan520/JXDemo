@@ -1,5 +1,7 @@
 package com.demo.jxdemo.ui.activity.menu;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -16,8 +18,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.demo.base.services.http.HttpPostAsync;
+import com.demo.base.support.BaseConstants;
+import com.demo.base.util.JsonUtil;
+import com.demo.base.util.StringUtil;
 import com.demo.jxdemo.R;
 import com.demo.jxdemo.application.SharedPreferencesConfig;
+import com.demo.jxdemo.constant.CommandConstants;
 import com.demo.jxdemo.constant.Constant;
 import com.demo.jxdemo.ui.activity.BaseSlidingActivity;
 import com.demo.jxdemo.utils.ToastManager;
@@ -95,6 +102,51 @@ public class OptionActivity extends BaseSlidingActivity
 			}
 		}
 	};
+
+	private void request()
+	{
+		Map<String, Object> parasTemp = new HashMap<String, Object>();
+		parasTemp.put("UserToken", SharedPreferencesConfig.config(OptionActivity.this).get(Constant.USER_TOKEN));
+		parasTemp.put("Feedback", optionEditText.getText().toString());
+
+		new HttpPostAsync(OptionActivity.this)
+		{
+			@Override
+			public Object backResult(Object result)
+			{// 请求回调
+				System.out.println("SendFeedback=" + result);
+				if (result == null || "".equals(result.toString()))
+				{
+					dismissProgress();
+					ToastManager.getInstance(OptionActivity.this).showToast("服务器异常，请联系管理员!");
+				}
+				else if (BaseConstants.HTTP_REQUEST_FAIL.equals(result.toString().trim()))
+				{
+					dismissProgress();
+					ToastManager.getInstance(OptionActivity.this).showToast("连接不上服务器");
+				}
+				else
+				{
+					Map<String, Object> mapstr = JsonUtil.getMapString(result.toString());
+					boolean isSuccess = false;
+					if (!mapstr.containsKey(CommandConstants.ERRCODE))
+						isSuccess = true;
+					String desc = (String) mapstr.get(CommandConstants.ERRCODE);
+					if (!isSuccess && !StringUtil.isBlank(desc))
+					{
+						dismissProgress();
+						ToastManager.getInstance(OptionActivity.this).showToast(desc);
+					}
+					else
+					{
+						// 成功后处理
+						ToastManager.getInstance(OptionActivity.this).showToast("您的反馈意见已经成功发送，谢谢！");
+					}
+				}
+				return "";
+			}
+		}.execute(BaseConstants.POST_KEYVALUE_DATA, CommandConstants.URL + CommandConstants.SENDFEEDBACK, parasTemp);
+	}
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)

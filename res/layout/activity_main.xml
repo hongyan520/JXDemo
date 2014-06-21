@@ -35,7 +35,8 @@
                 android:layout_weight="0.15"
                 android:background="@drawable/shape_top_line"
                 android:drawableLeft="@drawable/top_search_small"
-                android:hint="  过滤及搜索"
+                android:drawablePadding="5dp"
+                android:hint="过滤及搜索"
                 android:paddingLeft="10dp"
                 android:paddingRight="5dp"
                 android:textColorHint="@color/edit_text_hint" />

@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.demo.base.global.ActivityTaskManager;
 import com.demo.base.util.JsonUtil;
@@ -46,7 +47,7 @@ public class LeftFragment extends BaseFragment
 	private Map<String, String> configMap;
 
 	private int current = 0;
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -105,17 +106,12 @@ public class LeftFragment extends BaseFragment
 				cDialog.cancel();
 			}
 		});
-		if (current == 0)
-		{
-			((TextView) getActivity().findViewById(R.id.text_index)).setBackgroundResource(R.color.transparent_white_30);
-		}
-		else
-		{
-			((TextView) getActivity().findViewById(current)).setBackgroundResource(R.color.transparent_white_30);
-		}
+	
 
 		initData();
 		setViewClick();
+		
+		
 		return null;
 	}
 
@@ -157,14 +153,16 @@ public class LeftFragment extends BaseFragment
 			LinearLayout layout = (LinearLayout) LayoutInflater.from(getActivity()).inflate(R.layout.layout_left_course, null);
 			final TextView textView = (TextView) layout.findViewById(R.id.text_course);
 			textView.setText(StringUtil.Object2String(courseList.get(i).get("Title")));
+			textView.setId(i+1); // 设置id
 			textView.setOnClickListener(new OnClickListener()
 			{
 
 				@Override
 				public void onClick(View v)
 				{
-//					onClickBgChange(v.getId());
-//					SharedPreferencesConfig.saveConfig(getActivity(), Constant.CURRENT_LEFTMENU, v.getId() + "");
+					onClickBgChange(v.getId());
+					//v.setBackgroundResource(R.color.transparent_white_30);
+					SharedPreferencesConfig.saveConfig(getActivity(), Constant.CURRENT_LEFTMENU, v.getId() + "");
 					Intent intent = new Intent();
 					intent.setClass(getActivity(), MainActivity.class);
 					intent.putExtra("courseTitle", textView.getText().toString());
@@ -173,6 +171,15 @@ public class LeftFragment extends BaseFragment
 				}
 			});
 			courseLayout.addView(layout);
+		}
+	
+		if (current == 0)
+		{
+			((TextView) getActivity().findViewById(R.id.text_index)).setBackgroundResource(R.color.transparent_white_30);
+		}
+		else
+		{
+			((TextView) getActivity().findViewById(current)).setBackgroundResource(R.color.transparent_white_30);
 		}
 	}
 

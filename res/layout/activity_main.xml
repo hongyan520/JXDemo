@@ -12,11 +12,21 @@
         layout="@layout/windowtitle" >
     </include>
     
-    <com.demo.jxdemo.ui.views.CustomScrollView
+      <TextView
+        android:id="@+id/tv_refresh"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" 
-        android:scrollbars="none"
-         >
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="下拉刷新"/>
+      
+   <com.handmark.pulltorefresh.library.PullToRefreshScrollView
+        xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/customscrollview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        ptr:ptrAnimationStyle="flip"
+        ptr:ptrMode="both" >
+         
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" 
@@ -131,7 +141,7 @@
             <com.demo.jxdemo.ui.customviews.MyViewPager
                 android:id="@+id/vPage_introduce"
                 android:layout_width="fill_parent"
-                android:layout_height="800dp"
+                android:layout_height="400dp"
                 android:layout_gravity="center"
                 android:persistentDrawingCache="animation" />
 
@@ -151,5 +161,5 @@
             </LinearLayout>
         </FrameLayout>
     </LinearLayout>
-    </com.demo.jxdemo.ui.views.CustomScrollView>
+    </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
 </LinearLayout>

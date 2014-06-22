@@ -8,36 +8,35 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import ui.listener.OnClickAvoidForceListener;
-import ui.listener.OnItemClickAvoidForceListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.demo.base.global.ActivityTaskManager;
 import com.demo.base.util.JsonUtil;
-import com.demo.base.util.ScrollListViewUtil;
-import com.demo.base.util.StringUtil;
 import com.demo.base.util.Utils;
 import com.demo.jxdemo.R;
 import com.demo.jxdemo.application.SharedPreferencesConfig;
@@ -48,8 +47,12 @@ import com.demo.jxdemo.ui.adapter.MainTabPagerAdapter;
 import com.demo.jxdemo.ui.adapter.SwitherImageAdapter;
 import com.demo.jxdemo.ui.customviews.GuideGallery;
 import com.demo.jxdemo.ui.customviews.MyViewPager;
-import com.demo.jxdemo.ui.fragment.main.LeftFragment;
+import com.demo.jxdemo.ui.views.CustomScrollView;
 import com.demo.jxdemo.utils.ToastManager;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 
 public class MainActivity extends BaseSlidingActivity
 {
@@ -105,6 +108,12 @@ public class MainActivity extends BaseSlidingActivity
 	private List<Map<String, Object>> tabList;
 
 	private ListView listView;
+	
+	private PullToRefreshScrollView csrcoll;
+
+	private TextView tvRefresh;
+
+	private ScrollView mScrollView;
 
 	/***************************/
 
@@ -185,7 +194,99 @@ public class MainActivity extends BaseSlidingActivity
 		viewPager = (MyViewPager) findViewById(R.id.vPage_introduce);
 		viewPager.setHorizontalScrollBarEnabled(false);
 		btn1.setTextColor(getResources().getColor(R.color.red));
+		csrcoll = (PullToRefreshScrollView)findViewById(R.id.customscrollview);
+		csrcoll.setMode(Mode.PULL_FROM_START); // 设置模式，只允许顶部下拉
+		csrcoll.setOnRefreshListener(new OnRefreshListener<ScrollView>() {
+
+			@Override
+			public void onRefresh(PullToRefreshBase<ScrollView> refreshView) {
+				String currentMode = refreshView.getCurrentMode().toString();
+				System.out.println("onRefresh===="+currentMode);
+				if(Mode.PULL_FROM_START.equals(currentMode)){
+					// 顶部下拉
+				}else if(Mode.PULL_FROM_END.equals(currentMode)){
+					// 底部上啦
+				}
+				new GetDataTask().execute();
+			}
+		});
+
+		mScrollView = csrcoll.getRefreshableView();
+//		csrcoll.setOnTouchListener((OnTouchListener) new TouchListenerImpl());
+//		tvRefresh = (TextView) findViewById(R.id.tv_refresh);
 	}
+	
+	private class GetDataTask extends AsyncTask<Void, Void, String[]> {
+
+		@Override
+		protected String[] doInBackground(Void... params) {
+			// Simulates a background job.
+			try {
+				Thread.sleep(4000);
+			} catch (InterruptedException e) {
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(String[] result) {
+			// Do some stuff here
+
+			// Call onRefreshComplete when the list has been refreshed.
+			csrcoll.onRefreshComplete();
+
+			super.onPostExecute(result);
+		}
+	}
+	
+//	private class TouchListenerImpl implements OnTouchListener{
+//        @Override
+//        public boolean onTouch(View view, MotionEvent motionEvent) {
+//            switch (motionEvent.getAction()) {
+//            case MotionEvent.ACTION_DOWN:
+// 
+//                break;
+//            case MotionEvent.ACTION_CANCEL:
+//            	System.out.println("ACTION_CANCEL。。");
+//            	break;
+//            case MotionEvent.ACTION_MOVE:
+//                 int scrollY=view.getScrollY();
+//                 int height=view.getHeight();
+//                 int scrollViewMeasuredHeight=csrcoll.getChildAt(0).getMeasuredHeight();
+//                 if(scrollY>=0){
+//                        System.out.println("滑动到了顶端 view.getScrollY()="+scrollY);
+////                      if(View.VISIBLE == tvRefresh.getVisibility()){
+////                        	 tvRefresh.setVisibility(View.GONE);
+////                        }
+//                       
+//                 }else if(scrollY < 0 && scrollY > -120){
+//                	 System.out.println("下拉刷新 view.getScrollY()="+scrollY);
+//                	 if(View.GONE == tvRefresh.getVisibility()){
+//                		 tvRefresh.setVisibility(View.VISIBLE);
+//                	 }
+//                	 if(View.VISIBLE == tvRefresh.getVisibility()){
+//                		 tvRefresh.setText("下拉刷新");
+//                	 }
+//                 } else if(scrollY < -120){
+//                	 if(View.VISIBLE == tvRefresh.getVisibility()){
+//                		 tvRefresh.setText("松开刷新");
+//                	 }
+//                 }
+//                 if((scrollY+height)==scrollViewMeasuredHeight){
+//                        System.out.println("滑动到了底部 scrollY="+scrollY);
+//                        System.out.println("滑动到了底部 height="+height);
+//                        System.out.println("滑动到了底部 scrollViewMeasuredHeight="+scrollViewMeasuredHeight);
+//                    }
+//                break;
+// 
+//            default:
+//                break;
+//            }
+//            return false;
+//        }
+//         
+//    };
+	
 
 	private void initData()
 	{

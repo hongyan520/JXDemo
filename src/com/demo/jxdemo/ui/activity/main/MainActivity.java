@@ -411,6 +411,9 @@ public class MainActivity extends BaseSlidingActivity
 					((LinearLayout) findViewById(R.id.gallery_point_linear)).setVisibility(View.VISIBLE);
 					searchLayout.setVisibility(View.GONE);
 					// getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+					images_ga.setFocusable(true);
+					images_ga.setFocusableInTouchMode(true);
+					images_ga.requestFocus();
 					break;
 				default:
 					break;

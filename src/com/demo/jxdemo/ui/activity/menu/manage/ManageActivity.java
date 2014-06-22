@@ -67,18 +67,20 @@ public class ManageActivity extends BaseSlidingActivity
 
 	private void initData()
 	{
-		Map<String, Object> m1 = new HashMap<String, Object>();
-		m1.put("11", "111");
-		Map<String, Object> m2 = new HashMap<String, Object>();
-		m2.put("11", "111");
-		Map<String, Object> m3 = new HashMap<String, Object>();
-		m3.put("11", "111");
+		// Map<String, Object> m1 = new HashMap<String, Object>();
+		// m1.put("11", "111");
+		// Map<String, Object> m2 = new HashMap<String, Object>();
+		// m2.put("11", "111");
+		// Map<String, Object> m3 = new HashMap<String, Object>();
+		// m3.put("11", "111");
+		//
+		// lists = new ArrayList<Map<String, Object>>();
+		// lists.add(m1);
+		// lists.add(m2);
+		// lists.add(m3);
 
-		lists = new ArrayList<Map<String, Object>>();
-		lists.add(m1);
-		lists.add(m2);
-		lists.add(m3);
-
+		String test = "[{\"Abstract\":\"让中国人摆脱哑巴英语的困境，让你面对老外时可以从容交谈，让你的英语演讲成竹在胸。\",\"AcceptMaterial\":0,\"AcceptTraining\":1,\"Aim\":\"日常沟通、英语演讲\",\"Banner\":\"/uploads/c21173741ee24c09/BannerSpoken.jpg\",\"Description\":\"\",\"ID\":1,\"Icon\":\"/uploads/dfceee24cb4f463f/IconSpoken.png\",\"Period\":\"3～6个月\",\"Requirements\":\"具备2000~3000单词量\",\"Title\":\"英语口语\"},{\"Abstract\":\"写作有法度和规范，写作有文化和习惯，积雪教你如何写出漂亮的英语文章。\",\"AcceptMaterial\":1,\"AcceptTraining\":1,\"Aim\":\"邮件、工作报告等书面交流\",\"Banner\":\"/uploads/06e3fcea7b264288/BannerWriting.jpg\",\"Description\":\"\",\"ID\":2,\"Icon\":\"/uploads/e0ed88dce6884ed8/IconWriting.png\",\"Period\":\"1～3个月\",\"Requirements\":\"具备2000~3000单词量\",\"Title\":\"英语写作\"}]";
+		lists = JsonUtil.getList(test);
 		// request();
 	}
 
@@ -155,6 +157,7 @@ public class ManageActivity extends BaseSlidingActivity
 			{
 				if (map != null)
 				{
+					lists = JsonUtil.getList(map[0].get("Courses").toString());
 					mHandler.sendEmptyMessage(1);
 					dismissProgress();
 				}
@@ -239,6 +242,12 @@ public class ManageActivity extends BaseSlidingActivity
 		{
 			Intent intent = new Intent();
 			intent.setClass(ManageActivity.this, ManageDetailActivity.class);
+			intent.putExtra("ID", (Integer) lists.get(arg2).get("ID"));// 学习资料
+			intent.putExtra("yaoQiu", StringUtil.Object2String(lists.get(arg2).get("Requirements")));
+			intent.putExtra("zhouQi", StringUtil.Object2String(lists.get(arg2).get("Period")));
+			intent.putExtra("muBiao", StringUtil.Object2String(lists.get(arg2).get("Aim")));
+			intent.putExtra("AcceptMaterial", (Integer) lists.get(arg2).get("AcceptMaterial"));// 学习资料
+			intent.putExtra("AcceptTraining", (Integer) lists.get(arg2).get("AcceptTraining"));// 训练项目
 			startActivity(intent);
 		}
 	};

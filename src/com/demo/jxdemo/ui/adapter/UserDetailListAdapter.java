@@ -104,45 +104,23 @@ public class UserDetailListAdapter extends BaseAdapter
 	private class UserDetailListHolder
 	{
 
-		// TextView textQi;
-		//
-		// TextView textMoney;
-		//
-		// TextView textDate;
-		//
-		// TextView textStatus;
-		//
-		// TextView textTitle;
-		//
-		// ImageView imageView;
+		TextView textTitle;
+
+		TextView textZq;
+
+		ImageView imageView;
 
 		private UserDetailListHolder(View convertView)
 		{
-			// textQi = (TextView) convertView.findViewById(R.id.text_qi);
-			// textMoney = (TextView) convertView.findViewById(R.id.text_money);
-			// textDate = (TextView) convertView.findViewById(R.id.text_date);
-			// textStatus = (TextView) convertView.findViewById(R.id.text_result);
-			// textTitle = (TextView) convertView.findViewById(R.id.text_title);
-			// imageView = (ImageView) convertView.findViewById(R.id.img_icon);
+			textTitle = (TextView) convertView.findViewById(R.id.text_title);
+			textZq = (TextView) convertView.findViewById(R.id.text_zq);
+			imageView = (ImageView) convertView.findViewById(R.id.img_icon);
 		}
 
 		private void setData(Map<String, Object> map)
 		{
-			// String money = StringUtil.Object2String(map.get("betting_amount"));
-			// String cpType = StringUtil.Object2String(map.get("lottery_type_name"));
-			// textQi.setText(StringUtil.Object2String("第" + map.get("order_nper")));// xx+1.0e-6 betting_amount
-			// textMoney.setText(money.substring(0, money.indexOf(".")) + "元");
-			// textDate.setText(StringUtil.Object2String(map.get("time")));// 订单日期
-			// textStatus.setText(StringUtil.Object2String(map.get("order_status_name")));// 状态
-			// textTitle.setText(cpType);
-			// if (context.getResources().getString(R.string.gc_dlt).equals(cpType))
-			// imageView.setBackgroundResource(R.drawable.logo_dlt_72);
-			// else if (context.getResources().getString(R.string.gc_qxc).equals(cpType))
-			// imageView.setBackgroundResource(R.drawable.logo_qxc_72);
-			// else if (context.getResources().getString(R.string.gc_pl3).equals(cpType))
-			// imageView.setBackgroundResource(R.drawable.logo_pl3_72);
-			// else if (context.getResources().getString(R.string.gc_pl5).equals(cpType))
-			// imageView.setBackgroundResource(R.drawable.logo_pl5_72);
+//			textTitle.setText(StringUtil.Object2String(map.get("Title")));
+//			textZq.setText(StringUtil.Object2String(map.get("Period")));
 		}
 	}
 

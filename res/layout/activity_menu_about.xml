@@ -66,7 +66,8 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="16dp"
-                        android:text="Version1.0" android:paddingRight="16dp" />
+                        android:paddingRight="16dp"
+                        android:text="Version1.0" />
                 </RelativeLayout>
 
                 <LinearLayout
@@ -99,7 +100,8 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="16dp"
-                        android:text="XXXXXXXXX"  android:paddingRight="16dp" />
+                        android:paddingRight="16dp"
+                        android:text="@string/left_about_type_1" />
                 </RelativeLayout>
 
                 <LinearLayout
@@ -132,7 +134,8 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="16dp"
-                        android:text="XXX"  android:paddingRight="16dp" />
+                        android:paddingRight="16dp"
+                        android:text="@string/left_about_user_1" />
                 </RelativeLayout>
 
                 <LinearLayout
@@ -218,24 +221,54 @@
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="45dp"
-                android:layout_margin="10dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
                 android:gravity="center"
                 android:orientation="vertical" >
 
                 <TextView
-                    style="@style/textview_black16"
+                    style="@style/textview_black16_bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
-                    android:text="XXXXX" />
+                    android:text="@string/left_about_jdjx" />
 
                 <TextView
                     style="@style/textview_gray14"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="积雪是积雪是积雪是积雪是积雪是积雪是积雪是积雪是积雪是积雪是积雪是积雪是积雪是积雪是积雪是积雪是" />
+                    android:layout_marginTop="8dp"
+                    android:text="@string/left_about_jdjx_content" />
+
+                <TextView
+                    style="@style/textview_black16_bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:singleLine="true"
+                    android:text="@string/left_about_bhdgs" />
+
+                <TextView
+                    style="@style/textview_gray14"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/left_about_bhdgs_content" />
+
+                <TextView
+                    style="@style/textview_black16_bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:singleLine="true"
+                    android:text="@string/left_about_szy" />
+
+                <TextView
+                    style="@style/textview_gray14"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/left_about_szy_content" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

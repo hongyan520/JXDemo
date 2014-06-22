@@ -35,6 +35,7 @@ import com.demo.jxdemo.ui.adapter.LearningMaterialCommentListAdapter;
  */
 public class LearningMaterialsActivity extends BaseActivity
 {
+	private TextView colTextView;
 
 	private ListView attachListView;
 
@@ -65,20 +66,24 @@ public class LearningMaterialsActivity extends BaseActivity
 		((TextView) findViewById(R.id.formTilte)).setText("详细信息");
 		((ImageView) findViewById(R.id.imgview_return)).setBackgroundResource(R.drawable.img_back);
 		((ImageView) findViewById(R.id.imgview_return)).setVisibility(View.VISIBLE);
+		colTextView = (TextView) findViewById(R.id.text_right);
+		colTextView.setText("收藏");
+		colTextView.setVisibility(View.VISIBLE);
 
 		attachListView = (ListView) findViewById(R.id.list_learn_attach);
 		commentLayout = (LinearLayout) findViewById(R.id.list_learn_comment);
 		// commentListView = (ListView) findViewById(R.id.list_learn_comment);
-		
+
 		Bitmap bitmapOrg = BitmapFactory.decodeResource(getResources(), R.drawable.four);
 
 		DisplayMetrics dm = Utils.getDisplayMetrics(this);
 
 		// 窗口的宽度
 		int screenWidth = dm.widthPixels;
-		float currentHight = ((float)(bitmapOrg.getHeight()*screenWidth))/((float)bitmapOrg.getWidth());
-		
-		((ImageView)findViewById(R.id.detail_top_image)).setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, (int) currentHight));
+		float currentHight = ((float) (bitmapOrg.getHeight() * screenWidth)) / ((float) bitmapOrg.getWidth());
+
+		((ImageView) findViewById(R.id.detail_top_image)).setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,
+				(int) currentHight));
 	}
 
 	private void initData()
@@ -113,7 +118,8 @@ public class LearningMaterialsActivity extends BaseActivity
 		{
 			for (int i = 0; i < lists.size(); i++)
 			{
-				LinearLayout layout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.activity_learningmaterials_item_comment, null);
+				LinearLayout layout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.activity_learningmaterials_item_comment,
+						null);
 				commentLayout.addView(layout);
 			}
 		}

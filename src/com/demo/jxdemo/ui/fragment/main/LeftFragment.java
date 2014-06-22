@@ -93,10 +93,9 @@ public class LeftFragment extends BaseFragment
 				// TODO Auto-generated method stub
 				// ToastManager.getInstance(getActivity()).showToast("第一个.....");
 				SharedPreferencesConfig.saveConfig(getActivity(), Constant.CURRENT_LEFTMENU, 0 + "");
+				ActivityTaskManager.getInstance().closeAllActivity();
 				Intent intent = new Intent();
-				ActivityTaskManager.getInstance().closeAllActivity();
 				intent.setClass(getActivity(), LoginActivity.class);
-				ActivityTaskManager.getInstance().closeAllActivity();
 				startActivity(intent);
 			}
 		});
@@ -181,6 +180,11 @@ public class LeftFragment extends BaseFragment
 					startActivity(intent);
 				}
 			});
+			if (i == courseList.size() - 1)
+			{
+				ImageView imageView = (ImageView) layout.findViewById(R.id.img_course);
+				imageView.setVisibility(View.GONE);
+			}
 			courseLayout.addView(layout);
 		}
 

@@ -16,6 +16,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -28,6 +29,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -49,6 +51,7 @@ import com.demo.jxdemo.ui.customviews.GuideGallery;
 import com.demo.jxdemo.ui.customviews.MyViewPager;
 import com.demo.jxdemo.ui.views.CustomScrollView;
 import com.demo.jxdemo.utils.ToastManager;
+import com.demo.jxdemo.utils.UIUtils;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
@@ -337,9 +340,26 @@ public class MainActivity extends BaseSlidingActivity
 		pagerAdapter = new MainTabPagerAdapter(this, pagerContents, 4, viewPager);
 		viewPager.setOnPageChangeListener(pagerAdapter);
 
+		// 动态设置ViewPager的高度（根据listView的数据量计算）
+		autoChangeViewPagerHeight(viewPager, listView);
+		
 		viewPager.setAdapter(pagerAdapter);
 		pagerAdapter.notifyDataSetChanged();
 
+	}
+	
+	/**
+	 *  动态设置ViewPager的高度（根据listView的数据量计算）
+	 * @param _viewPager
+	 * @param _listView
+	 */
+	private void autoChangeViewPagerHeight(ViewPager _viewPager,ListView _listView){
+		int totalHeight = UIUtils.getTotalHeightofListView(_listView);
+		if(totalHeight>0){
+			FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) _viewPager.getLayoutParams();
+			params.height = totalHeight;
+			_viewPager.setLayoutParams(params);
+		}
 	}
 
 	private void setViewClick()

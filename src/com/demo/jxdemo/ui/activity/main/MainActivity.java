@@ -111,7 +111,7 @@ public class MainActivity extends BaseSlidingActivity
 	private List<Map<String, Object>> tabList;
 
 	private ListView listView;
-	
+
 	private PullToRefreshScrollView csrcoll;
 
 	private TextView tvRefresh;
@@ -197,42 +197,55 @@ public class MainActivity extends BaseSlidingActivity
 		viewPager = (MyViewPager) findViewById(R.id.vPage_introduce);
 		viewPager.setHorizontalScrollBarEnabled(false);
 		btn1.setTextColor(getResources().getColor(R.color.red));
-		csrcoll = (PullToRefreshScrollView)findViewById(R.id.customscrollview);
+		csrcoll = (PullToRefreshScrollView) findViewById(R.id.customscrollview);
 		csrcoll.setMode(Mode.PULL_FROM_START); // 设置模式，只允许顶部下拉
-		csrcoll.setOnRefreshListener(new OnRefreshListener<ScrollView>() {
+		csrcoll.setOnRefreshListener(new OnRefreshListener<ScrollView>()
+		{
 
 			@Override
-			public void onRefresh(PullToRefreshBase<ScrollView> refreshView) {
+			public void onRefresh(PullToRefreshBase<ScrollView> refreshView)
+			{
 				String currentMode = refreshView.getCurrentMode().toString();
-				System.out.println("onRefresh===="+currentMode);
-				if(Mode.PULL_FROM_START.equals(currentMode)){
+				System.out.println("onRefresh====" + currentMode);
+				if (Mode.PULL_FROM_START.equals(currentMode))
+				{
 					// 顶部下拉
-				}else if(Mode.PULL_FROM_END.equals(currentMode)){
+
+				}
+				else if (Mode.PULL_FROM_END.equals(currentMode))
+				{
 					// 底部上啦
+
 				}
 				new GetDataTask().execute();
 			}
 		});
 
 		mScrollView = csrcoll.getRefreshableView();
-//		csrcoll.setOnTouchListener((OnTouchListener) new TouchListenerImpl());
-//		tvRefresh = (TextView) findViewById(R.id.tv_refresh);
+		// csrcoll.setOnTouchListener((OnTouchListener) new TouchListenerImpl());
+		// tvRefresh = (TextView) findViewById(R.id.tv_refresh);
 	}
-	
-	private class GetDataTask extends AsyncTask<Void, Void, String[]> {
+
+	private class GetDataTask extends AsyncTask<Void, Void, String[]>
+	{
 
 		@Override
-		protected String[] doInBackground(Void... params) {
+		protected String[] doInBackground(Void... params)
+		{
 			// Simulates a background job.
-			try {
+			try
+			{
 				Thread.sleep(4000);
-			} catch (InterruptedException e) {
+			}
+			catch (InterruptedException e)
+			{
 			}
 			return null;
 		}
 
 		@Override
-		protected void onPostExecute(String[] result) {
+		protected void onPostExecute(String[] result)
+		{
 			// Do some stuff here
 
 			// Call onRefreshComplete when the list has been refreshed.
@@ -241,55 +254,54 @@ public class MainActivity extends BaseSlidingActivity
 			super.onPostExecute(result);
 		}
 	}
-	
-//	private class TouchListenerImpl implements OnTouchListener{
-//        @Override
-//        public boolean onTouch(View view, MotionEvent motionEvent) {
-//            switch (motionEvent.getAction()) {
-//            case MotionEvent.ACTION_DOWN:
-// 
-//                break;
-//            case MotionEvent.ACTION_CANCEL:
-//            	System.out.println("ACTION_CANCEL。。");
-//            	break;
-//            case MotionEvent.ACTION_MOVE:
-//                 int scrollY=view.getScrollY();
-//                 int height=view.getHeight();
-//                 int scrollViewMeasuredHeight=csrcoll.getChildAt(0).getMeasuredHeight();
-//                 if(scrollY>=0){
-//                        System.out.println("滑动到了顶端 view.getScrollY()="+scrollY);
-////                      if(View.VISIBLE == tvRefresh.getVisibility()){
-////                        	 tvRefresh.setVisibility(View.GONE);
-////                        }
-//                       
-//                 }else if(scrollY < 0 && scrollY > -120){
-//                	 System.out.println("下拉刷新 view.getScrollY()="+scrollY);
-//                	 if(View.GONE == tvRefresh.getVisibility()){
-//                		 tvRefresh.setVisibility(View.VISIBLE);
-//                	 }
-//                	 if(View.VISIBLE == tvRefresh.getVisibility()){
-//                		 tvRefresh.setText("下拉刷新");
-//                	 }
-//                 } else if(scrollY < -120){
-//                	 if(View.VISIBLE == tvRefresh.getVisibility()){
-//                		 tvRefresh.setText("松开刷新");
-//                	 }
-//                 }
-//                 if((scrollY+height)==scrollViewMeasuredHeight){
-//                        System.out.println("滑动到了底部 scrollY="+scrollY);
-//                        System.out.println("滑动到了底部 height="+height);
-//                        System.out.println("滑动到了底部 scrollViewMeasuredHeight="+scrollViewMeasuredHeight);
-//                    }
-//                break;
-// 
-//            default:
-//                break;
-//            }
-//            return false;
-//        }
-//         
-//    };
-	
+
+	// private class TouchListenerImpl implements OnTouchListener{
+	// @Override
+	// public boolean onTouch(View view, MotionEvent motionEvent) {
+	// switch (motionEvent.getAction()) {
+	// case MotionEvent.ACTION_DOWN:
+	//
+	// break;
+	// case MotionEvent.ACTION_CANCEL:
+	// System.out.println("ACTION_CANCEL。。");
+	// break;
+	// case MotionEvent.ACTION_MOVE:
+	// int scrollY=view.getScrollY();
+	// int height=view.getHeight();
+	// int scrollViewMeasuredHeight=csrcoll.getChildAt(0).getMeasuredHeight();
+	// if(scrollY>=0){
+	// System.out.println("滑动到了顶端 view.getScrollY()="+scrollY);
+	// // if(View.VISIBLE == tvRefresh.getVisibility()){
+	// // tvRefresh.setVisibility(View.GONE);
+	// // }
+	//
+	// }else if(scrollY < 0 && scrollY > -120){
+	// System.out.println("下拉刷新 view.getScrollY()="+scrollY);
+	// if(View.GONE == tvRefresh.getVisibility()){
+	// tvRefresh.setVisibility(View.VISIBLE);
+	// }
+	// if(View.VISIBLE == tvRefresh.getVisibility()){
+	// tvRefresh.setText("下拉刷新");
+	// }
+	// } else if(scrollY < -120){
+	// if(View.VISIBLE == tvRefresh.getVisibility()){
+	// tvRefresh.setText("松开刷新");
+	// }
+	// }
+	// if((scrollY+height)==scrollViewMeasuredHeight){
+	// System.out.println("滑动到了底部 scrollY="+scrollY);
+	// System.out.println("滑动到了底部 height="+height);
+	// System.out.println("滑动到了底部 scrollViewMeasuredHeight="+scrollViewMeasuredHeight);
+	// }
+	// break;
+	//
+	// default:
+	// break;
+	// }
+	// return false;
+	// }
+	//
+	// };
 
 	private void initData()
 	{
@@ -342,20 +354,23 @@ public class MainActivity extends BaseSlidingActivity
 
 		// 动态设置ViewPager的高度（根据listView的数据量计算）
 		autoChangeViewPagerHeight(viewPager, listView);
-		
+
 		viewPager.setAdapter(pagerAdapter);
 		pagerAdapter.notifyDataSetChanged();
 
 	}
-	
+
 	/**
-	 *  动态设置ViewPager的高度（根据listView的数据量计算）
+	 * 动态设置ViewPager的高度（根据listView的数据量计算）
+	 * 
 	 * @param _viewPager
 	 * @param _listView
 	 */
-	private void autoChangeViewPagerHeight(ViewPager _viewPager,ListView _listView){
+	private void autoChangeViewPagerHeight(ViewPager _viewPager, ListView _listView)
+	{
 		int totalHeight = UIUtils.getTotalHeightofListView(_listView);
-		if(totalHeight>0){
+		if (totalHeight > 0)
+		{
 			FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) _viewPager.getLayoutParams();
 			params.height = totalHeight + listView.getAdapter().getCount() * 40;
 			_viewPager.setLayoutParams(params);
@@ -411,21 +426,26 @@ public class MainActivity extends BaseSlidingActivity
 					windowTitleLayout.setVisibility(View.GONE);
 					images_ga.setVisibility(View.GONE);
 					((LinearLayout) findViewById(R.id.gallery_point_linear)).setVisibility(View.GONE);
-//					//创建一个LayoutParams对象  
-//			        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);  
-//			        //设置android:layout_below属性的值   
-//			        layoutParams.addRule(RelativeLayout.BELOW, R.id.layout_search);
-//					((LinearLayout) findViewById(R.id.layout_tab_bottom)).setLayoutParams(layoutParams);
+					// //创建一个LayoutParams对象
+					// RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
+					// ViewGroup.LayoutParams.WRAP_CONTENT);
+					// //设置android:layout_below属性的值
+					// layoutParams.addRule(RelativeLayout.BELOW, R.id.layout_search);
+					// ((LinearLayout) findViewById(R.id.layout_tab_bottom)).setLayoutParams(layoutParams);
 					searchLayout.setVisibility(View.VISIBLE);
+					searchLayout.setFocusable(true);
+					searchLayout.setFocusableInTouchMode(true);
+					searchLayout.requestFocus();
 					// getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 					break;
 				case R.id.btn_cancel:
 					closeKeyboard();
-					//创建一个LayoutParams对象  
-//			        RelativeLayout.LayoutParams layoutParams2 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);  
-//			        //设置android:layout_below属性的值   
-//			        layoutParams2.addRule(RelativeLayout.BELOW, R.id.gallery_point_linear);
-//					((LinearLayout) findViewById(R.id.layout_tab_bottom)).setLayoutParams(layoutParams2);
+					// 创建一个LayoutParams对象
+					// RelativeLayout.LayoutParams layoutParams2 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
+					// ViewGroup.LayoutParams.WRAP_CONTENT);
+					// //设置android:layout_below属性的值
+					// layoutParams2.addRule(RelativeLayout.BELOW, R.id.gallery_point_linear);
+					// ((LinearLayout) findViewById(R.id.layout_tab_bottom)).setLayoutParams(layoutParams2);
 					windowTitleLayout.setVisibility(View.VISIBLE);
 					images_ga.setVisibility(View.VISIBLE);
 					((LinearLayout) findViewById(R.id.gallery_point_linear)).setVisibility(View.VISIBLE);
@@ -494,7 +514,7 @@ public class MainActivity extends BaseSlidingActivity
 	protected void onStart()
 	{
 		super.onStart();
-		
+
 	}
 
 	private void init()
@@ -505,11 +525,11 @@ public class MainActivity extends BaseSlidingActivity
 
 		// 窗口的宽度
 		int screenWidth = dm.widthPixels;
-		float currentHight = ((float)(bitmapOrg.getHeight()*screenWidth))/((float)bitmapOrg.getWidth());
-		
+		float currentHight = ((float) (bitmapOrg.getHeight() * screenWidth)) / ((float) bitmapOrg.getWidth());
+
 		images_ga = (GuideGallery) findViewById(R.id.image_wall_gallery);
 		images_ga.setImageActivity(this);
-		images_ga.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, (int)currentHight));
+		images_ga.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, (int) currentHight));
 
 		SwitherImageAdapter imageAdapter = new SwitherImageAdapter(this);
 		images_ga.setAdapter(imageAdapter);
@@ -565,7 +585,7 @@ public class MainActivity extends BaseSlidingActivity
 
 			}
 		});
-		
+
 		images_ga.setFocusable(true);
 		images_ga.setFocusableInTouchMode(true);
 		images_ga.requestFocus();
@@ -607,9 +627,9 @@ public class MainActivity extends BaseSlidingActivity
 		// TODO Auto-generated method stub
 		super.onResume();
 		timeFlag = false;
-//		if(StringUtil.isBlank(getIntent().getStringExtra("courseTitle"))){ // 为了保证进入了此页面设置当前侧边栏选中
-//			SharedPreferencesConfig.saveConfig(getApplicationContext(), Constant.CURRENT_LEFTMENU, 0 + "");
-//		}
+		// if(StringUtil.isBlank(getIntent().getStringExtra("courseTitle"))){ // 为了保证进入了此页面设置当前侧边栏选中
+		// SharedPreferencesConfig.saveConfig(getApplicationContext(), Constant.CURRENT_LEFTMENU, 0 + "");
+		// }
 	}
 
 	@Override

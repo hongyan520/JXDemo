@@ -357,7 +357,7 @@ public class MainActivity extends BaseSlidingActivity
 		int totalHeight = UIUtils.getTotalHeightofListView(_listView);
 		if(totalHeight>0){
 			FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) _viewPager.getLayoutParams();
-			params.height = totalHeight;
+			params.height = totalHeight + listView.getAdapter().getCount() * 40;
 			_viewPager.setLayoutParams(params);
 		}
 	}

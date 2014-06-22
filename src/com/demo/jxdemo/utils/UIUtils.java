@@ -25,7 +25,7 @@ public class UIUtils {
 	        Log.w("HEIGHT" + i, String.valueOf(totalHeight));
 	    }
 //	    ViewGroup.LayoutParams params = listView.getLayoutParams();
-	    int totalH = totalHeight           + (listView.getDividerHeight() * (mAdapter.getCount() - 1));
+	    int totalH = totalHeight           + (listView.getDividerHeight() * (mAdapter.getCount()-1));
 //	    params.height = totalH;
 //	    listView.setLayoutParams(params);
 //	    listView.requestLayout();    

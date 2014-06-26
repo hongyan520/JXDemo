@@ -11,6 +11,7 @@ import ui.listener.OnClickAvoidForceListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,9 +21,7 @@ import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -38,10 +37,14 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.demo.base.global.ActivityTaskManager;
+import com.demo.base.services.http.HttpPostAsync;
+import com.demo.base.support.BaseConstants;
 import com.demo.base.util.JsonUtil;
+import com.demo.base.util.StringUtil;
 import com.demo.base.util.Utils;
 import com.demo.jxdemo.R;
 import com.demo.jxdemo.application.SharedPreferencesConfig;
+import com.demo.jxdemo.constant.CommandConstants;
 import com.demo.jxdemo.constant.Constant;
 import com.demo.jxdemo.ui.activity.BaseSlidingActivity;
 import com.demo.jxdemo.ui.adapter.MainListAdapter;
@@ -49,7 +52,6 @@ import com.demo.jxdemo.ui.adapter.MainTabPagerAdapter;
 import com.demo.jxdemo.ui.adapter.SwitherImageAdapter;
 import com.demo.jxdemo.ui.customviews.GuideGallery;
 import com.demo.jxdemo.ui.customviews.MyViewPager;
-import com.demo.jxdemo.ui.views.CustomScrollView;
 import com.demo.jxdemo.utils.ToastManager;
 import com.demo.jxdemo.utils.UIUtils;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -117,6 +119,22 @@ public class MainActivity extends BaseSlidingActivity
 	private TextView tvRefresh;
 
 	private ScrollView mScrollView;
+
+	private int pageSize = 10;
+
+	private MainListAdapter mainListAdapter = null;
+
+	private List<Map<String, Object>> myList;
+
+	private List<Map<String, Object>> mOrderResult = new ArrayList<Map<String, Object>>();
+
+	public static int offset; // 间隔
+
+	public static int cursorWidth; // 游标的长度
+
+	public static ImageView cursor = null;
+
+	public static int cruurentItem = 0;
 
 	/***************************/
 
@@ -198,7 +216,7 @@ public class MainActivity extends BaseSlidingActivity
 		viewPager.setHorizontalScrollBarEnabled(false);
 		btn1.setTextColor(getResources().getColor(R.color.red));
 		csrcoll = (PullToRefreshScrollView) findViewById(R.id.customscrollview);
-		csrcoll.setMode(Mode.PULL_FROM_START); // 设置模式，只允许顶部下拉
+		csrcoll.setMode(Mode.BOTH); // 设置模式，只允许顶部下拉PULL_FROM_START
 		csrcoll.setOnRefreshListener(new OnRefreshListener<ScrollView>()
 		{
 
@@ -210,14 +228,14 @@ public class MainActivity extends BaseSlidingActivity
 				if (Mode.PULL_FROM_START.equals(currentMode))
 				{
 					// 顶部下拉
-
+					new GetDataTask().execute();
 				}
-				else if (Mode.PULL_FROM_END.equals(currentMode))
+				else
+				// if (Mode.PULL_FROM_END.equals(currentMode))
 				{
 					// 底部上啦
-
+					new GetOldDataTask().execute();
 				}
-				new GetDataTask().execute();
 			}
 		});
 
@@ -235,9 +253,11 @@ public class MainActivity extends BaseSlidingActivity
 			// Simulates a background job.
 			try
 			{
-				Thread.sleep(4000);
+				// Thread.sleep(4000);
+				mOrderResult = getMyListData(tabList, 0, true);
+				mainListAdapter.setDataList(mOrderResult);
 			}
-			catch (InterruptedException e)
+			catch (Exception e)
 			{
 			}
 			return null;
@@ -250,7 +270,48 @@ public class MainActivity extends BaseSlidingActivity
 
 			// Call onRefreshComplete when the list has been refreshed.
 			csrcoll.onRefreshComplete();
+			mainListAdapter.notifyDataSetChanged();
+			// 动态设置ViewPager的高度（根据listView的数据量计算）
+			autoChangeViewPagerHeight(viewPager, listView);
+			super.onPostExecute(result);
+		}
+	}
 
+	private class GetOldDataTask extends AsyncTask<Void, Void, String[]>
+	{
+		boolean isNoMore = false;
+
+		@Override
+		protected String[] doInBackground(Void... params)
+		{
+			// Simulates a background job.
+			try
+			{
+				List<Map<String, Object>> my = getMyListData(tabList, mainListAdapter.getCount(), false);
+				if (my != null && my.size() > 0)
+					mOrderResult.addAll(my);
+				else
+					isNoMore = true;
+
+			}
+			catch (Exception e)
+			{
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(String[] result)
+		{
+			// Do some stuff here
+
+			// Call onRefreshComplete when the list has been refreshed.
+			csrcoll.onRefreshComplete();
+			if (isNoMore)
+				((LinearLayout) findViewById(R.id.layout_nomore)).setVisibility(View.VISIBLE);
+			mainListAdapter.notifyDataSetChanged();
+			// 动态设置ViewPager的高度（根据listView的数据量计算）
+			autoChangeViewPagerHeight(viewPager, listView);
 			super.onPostExecute(result);
 		}
 	}
@@ -303,15 +364,113 @@ public class MainActivity extends BaseSlidingActivity
 	//
 	// };
 
+	public void initCursor(int tagNum)
+	{
+		cursorWidth = BitmapFactory.decodeResource(getResources(), R.drawable.cursor).getWidth();
+		DisplayMetrics dm = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(dm);
+		offset = ((dm.widthPixels / tagNum) - cursorWidth) / 2;
+
+		cursor = (ImageView) findViewById(R.id.ivCursor);
+		Matrix matrix = new Matrix();
+		matrix.setTranslate(offset, 0);
+		cursor.setImageMatrix(matrix);
+	}
+
 	private void initData()
 	{
 		String test = SharedPreferencesConfig.config(this).get(Constant.USER_TEST);
 		tabList = JsonUtil.getList(test);
 		mHandler.sendEmptyMessage(1);
+		// request();
+	}
+
+	private void request()
+	{
+
+		Map<String, Object> parasTemp = new HashMap<String, Object>();
+		parasTemp.put("UserToken", SharedPreferencesConfig.config(MainActivity.this).get(Constant.USER_TOKEN));
+
+		new HttpPostAsync(MainActivity.this)
+		{
+			@Override
+			public Object backResult(Object result)
+			{// 请求回调
+				System.out.println("CourseList=" + result);
+				if (result == null || "".equals(result.toString()))
+				{
+					dismissProgress();
+					ToastManager.getInstance(MainActivity.this).showToast("服务器异常，请联系管理员!");
+				}
+				else if (BaseConstants.HTTP_REQUEST_FAIL.equals(result.toString().trim()))
+				{
+					dismissProgress();
+					ToastManager.getInstance(MainActivity.this).showToast("连接不上服务器");
+				}
+				else
+				{
+					Map<String, Object> mapstr = JsonUtil.getMapString(result.toString());
+					boolean isSuccess = false;
+					if (!mapstr.containsKey(CommandConstants.ERRCODE))
+						isSuccess = true;
+					String desc = (String) mapstr.get(CommandConstants.ERRCODE);
+					if (!isSuccess && !StringUtil.isBlank(desc))
+					{
+						dismissProgress();
+						ToastManager.getInstance(MainActivity.this).showToast(desc);
+					}
+					else
+					{
+						// 成功后处理
+						String data = mapstr.get("Fragments").toString().replace("\"", "\\\"");
+						tabList = JsonUtil.getList(data);
+						mHandler.sendEmptyMessage(1);
+						dismissProgress();
+					}
+				}
+				return "";
+			}
+		}.execute(BaseConstants.POST_KEYVALUE_DATA, CommandConstants.URL + CommandConstants.LEARNINGFRAGMENTS, parasTemp);
+
+	}
+
+	@SuppressWarnings("unused")
+	private List<Map<String, Object>> getMyListData(List<Map<String, Object>> lists, int currentPage, boolean isFirst)
+	{
+		myList = new ArrayList<Map<String, Object>>();
+		if (isFirst)
+		{
+			for (int i = currentPage; i < lists.size(); i++)
+			{
+				Map<String, Object> map = lists.get(i);
+				myList.add(map);
+			}
+		}
+		else
+		{
+			if (currentPage + pageSize <= lists.size())
+			{
+				for (int i = currentPage + 1; i < currentPage + 10; i++)
+				{
+					Map<String, Object> map = lists.get(i);
+					myList.add(map);
+				}
+			}
+			else
+			{
+				for (int i = currentPage; i <= lists.size(); i++)
+				{
+					Map<String, Object> map = lists.get(i);
+					myList.add(map);
+				}
+			}
+		}
+		return myList;
 	}
 
 	private void initView()
 	{
+		initCursor(4);
 		((TextView) findViewById(R.id.formTilte)).setText(courseTitle);
 	}
 
@@ -323,11 +482,11 @@ public class MainActivity extends BaseSlidingActivity
 			for (int i = 0; i < 4; i++)
 			{
 				LinearLayout layout = null;
-				MainListAdapter mainListAdapter = null;
 				if (i == 0)
 				{
 					mainListAdapter = new MainListAdapter(this);
-					mainListAdapter.setDataList(tabList);
+					mOrderResult = getMyListData(tabList, 0, true);
+					mainListAdapter.setDataList(mOrderResult);
 					listView.setAdapter(mainListAdapter);
 					pagerContents.add(listView);
 				}
@@ -348,12 +507,10 @@ public class MainActivity extends BaseSlidingActivity
 				}
 			}
 		}
-
-		pagerAdapter = new MainTabPagerAdapter(this, pagerContents, 4, viewPager);
-		viewPager.setOnPageChangeListener(pagerAdapter);
-
 		// 动态设置ViewPager的高度（根据listView的数据量计算）
 		autoChangeViewPagerHeight(viewPager, listView);
+		pagerAdapter = new MainTabPagerAdapter(this, pagerContents, 4, viewPager);
+		viewPager.setOnPageChangeListener(pagerAdapter);
 
 		viewPager.setAdapter(pagerAdapter);
 		pagerAdapter.notifyDataSetChanged();
@@ -372,17 +529,17 @@ public class MainActivity extends BaseSlidingActivity
 		if (totalHeight > 0)
 		{
 			FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) _viewPager.getLayoutParams();
-			params.height = totalHeight + listView.getAdapter().getCount() * 40;
+			params.height = totalHeight + listView.getAdapter().getCount() * UIUtils.px2dip(this, 40);
 			_viewPager.setLayoutParams(params);
 		}
 	}
 
 	private void setViewClick()
 	{
-		btn3.setOnClickListener(onClickAvoidForceListener);
-		btn2.setOnClickListener(onClickAvoidForceListener);
-		btn1.setOnClickListener(onClickAvoidForceListener);
-		btn4.setOnClickListener(onClickAvoidForceListener);
+		// btn3.setOnClickListener(onClickAvoidForceListener);
+		// btn2.setOnClickListener(onClickAvoidForceListener);
+		// btn1.setOnClickListener(onClickAvoidForceListener);
+		// btn4.setOnClickListener(onClickAvoidForceListener);
 		((LinearLayout) findViewById(R.id.layout_return)).setOnClickListener(onClickAvoidForceListener);
 		((LinearLayout) findViewById(R.id.layout_remark)).setOnClickListener(onClickAvoidForceListener);
 		((Button) findViewById(R.id.btn_cancel)).setOnClickListener(onClickAvoidForceListener);
@@ -395,29 +552,29 @@ public class MainActivity extends BaseSlidingActivity
 		public void onClickAvoidForce(View v)
 		{
 
-			int currentPage = pagerAdapter.cruurentItem;
+			int currentPage = cruurentItem;
 			// Intent intent = new Intent();
 			switch (v.getId())
 			{
 				case R.id.btn_4:
 					pagerAdapter.onPageSelected(3);
-					pagerAdapter.setBtnColor(btn4);
+					// pagerAdapter.setBtnColor(btn4);
 					break;
 				case R.id.btn_3:
 					pagerAdapter.onPageSelected(2);
-					pagerAdapter.setBtnColor(btn3);
+					// pagerAdapter.setBtnColor(btn3);
 					// intent.setClass(MainActivity.this, LearningMaterialsActivity.class);
 					// startActivity(intent);
 					break;
 				case R.id.btn_2:
 					pagerAdapter.onPageSelected(1);
-					pagerAdapter.setBtnColor(btn2);
+					// pagerAdapter.setBtnColor(btn2);
 					// intent.setClass(MainActivity.this, TrainingActivity.class);
 					// startActivity(intent);
 					break;
 				case R.id.btn_1:
 					pagerAdapter.onPageSelected(0);
-					pagerAdapter.setBtnColor(btn1);
+					// pagerAdapter.setBtnColor(btn1);
 					break;
 				case R.id.layout_return:
 					getSlidingMenu().toggle();
@@ -458,7 +615,7 @@ public class MainActivity extends BaseSlidingActivity
 				default:
 					break;
 			}
-			pagerAdapter.cruurentItem = currentPage;
+			cruurentItem = currentPage;
 
 		}
 	};
@@ -557,30 +714,10 @@ public class MainActivity extends BaseSlidingActivity
 			{
 				System.out.println(arg2 + "arg2");
 				/*
-				 * switch (arg2) {
-				 * case 0:
-				 * uri = Uri.parse("http://www.36939.net/");
-				 * intent = new Intent(Intent.ACTION_VIEW, uri);
-				 * startActivity(intent);
-				 * break;
-				 * case 1:
-				 * uri = Uri.parse("http://www.jiqunejia.com/default.aspx");
-				 * intent = new Intent(Intent.ACTION_VIEW, uri);
-				 * startActivity(intent);
-				 * break;
-				 * case 2:
-				 * uri = Uri.parse("http://www.jiqunejia.tv/");
-				 * intent = new Intent(Intent.ACTION_VIEW, uri);
-				 * startActivity(intent);
-				 * break;
-				 * case 3:
-				 * uri = Uri.parse("http://city.4000100006.com/");
-				 * intent = new Intent(Intent.ACTION_VIEW, uri);
-				 * startActivity(intent);
-				 * break;
-				 * default:
-				 * break;
-				 * }
+				 * switch (arg2) { case 0: uri = Uri.parse("http://www.36939.net/"); intent = new Intent(Intent.ACTION_VIEW, uri); startActivity(intent); break;
+				 * case 1: uri = Uri.parse("http://www.jiqunejia.com/default.aspx"); intent = new Intent(Intent.ACTION_VIEW, uri); startActivity(intent); break;
+				 * case 2: uri = Uri.parse("http://www.jiqunejia.tv/"); intent = new Intent(Intent.ACTION_VIEW, uri); startActivity(intent); break; case 3: uri
+				 * = Uri.parse("http://city.4000100006.com/"); intent = new Intent(Intent.ACTION_VIEW, uri); startActivity(intent); break; default: break; }
 				 */
 
 			}
@@ -710,15 +847,6 @@ public class MainActivity extends BaseSlidingActivity
 				e.printStackTrace();
 			}
 		}
-	}
-
-	public void refreshData(String courseTitle)
-	{
-		this.courseTitle = courseTitle;
-		loadMenu();
-		findViews();
-		initData();
-		initView();
 	}
 
 }

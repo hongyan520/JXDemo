@@ -14,6 +14,7 @@ import android.view.Window;
 
 import com.demo.base.global.ActivityTaskManager;
 import com.demo.jxdemo.R;
+import com.demo.jxdemo.ui.customviews.CustomProgressDialog;
 
 public abstract class BaseActivity extends Activity
 {
@@ -27,7 +28,7 @@ public abstract class BaseActivity extends Activity
 	/**
 	 * 加载等待圈
 	 */
-	private ProgressDialog myProgressDialog;
+	private CustomProgressDialog myProgressDialog;
 
 	/**
 	 * 显示等待框
@@ -39,7 +40,7 @@ public abstract class BaseActivity extends Activity
 	 */
 	private static final int DISMISS_PROGRESS = 11;
 
-	private  String VERSION_NAME = "1.0";
+	private String VERSION_NAME = "1.0";
 
 	private Object object;
 
@@ -127,11 +128,9 @@ public abstract class BaseActivity extends Activity
 					{
 						if (myProgressDialog == null)
 						{
-							myProgressDialog = new ProgressDialog(BaseActivity.this);
-							myProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-							myProgressDialog.setMessage(getResources().getString(R.string.dealing));
-							myProgressDialog.setCancelable(true);
-							myProgressDialog.setCanceledOnTouchOutside(false);
+							myProgressDialog = new CustomProgressDialog(BaseActivity.this);
+							myProgressDialog.createDialog(BaseActivity.this);
+							myProgressDialog.gettView().setText(getResources().getString(R.string.dealing));
 						}
 
 						if (!myProgressDialog.isShowing())

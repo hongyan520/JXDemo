@@ -119,8 +119,8 @@ public class UserDetailListAdapter extends BaseAdapter
 
 		private void setData(Map<String, Object> map)
 		{
-//			textTitle.setText(StringUtil.Object2String(map.get("Title")));
-//			textZq.setText(StringUtil.Object2String(map.get("Period")));
+			textTitle.setText(StringUtil.Object2String(map.get("Title")));
+			textZq.setText(StringUtil.Object2String(map.get("Period")));
 		}
 	}
 

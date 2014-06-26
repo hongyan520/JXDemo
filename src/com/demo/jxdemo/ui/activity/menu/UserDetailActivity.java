@@ -62,7 +62,7 @@ public class UserDetailActivity extends BaseActivity
 
 		adapter = new UserDetailListAdapter(UserDetailActivity.this);
 		findViews();
-		initData();// 记得去掉
+//		initData();// 记得去掉
 		initView(false);
 		initListView(false);
 		setViewClick();
@@ -107,19 +107,19 @@ public class UserDetailActivity extends BaseActivity
 		String userIcon = SharedPreferencesConfig.config(UserDetailActivity.this).get(Constant.USER_AVATAR);
 
 		// ////打开下面两块
-		// if ("1".equals(gender))
-		// genderImageView.setBackgroundResource(R.drawable.icon_male);
-		// else if ("2".equals(gender))
-		// genderImageView.setBackgroundResource(R.drawable.icon_female);
-		// else
-		// genderImageView.setVisibility(View.INVISIBLE);
-		//
-		// nameTextView.setText(name);
-		// locationTextView.setText(location);
-		// introduceTextView.setText(introduce);
+		if ("1".equals(gender))
+			genderImageView.setBackgroundResource(R.drawable.icon_male);
+		else if ("2".equals(gender))
+			genderImageView.setBackgroundResource(R.drawable.icon_female);
+		else
+			genderImageView.setVisibility(View.INVISIBLE);
 
-		// if (!isRequest)
-		// request(CommandConstants.USERPROFILE);
+		nameTextView.setText(name);
+		locationTextView.setText(location);
+		introduceTextView.setText(introduce);
+
+		if (!isRequest)
+			request(CommandConstants.USERPROFILE);
 	}
 
 	private void initListView(boolean isRequest)
@@ -129,14 +129,15 @@ public class UserDetailActivity extends BaseActivity
 		ScrollListViewUtil.setListViewHeightBasedOnChildren(listView);
 		listView.setOnItemClickListener(onItemClickAvoidForceListener);
 		// 打开下面一块
-		// if (!isRequest)
-		// request(CommandConstants.COURSELIST);
+		if (!isRequest)
+			request(CommandConstants.COURSELIST);
 	}
 
 	private void request(final String cmd)
 	{
 		Map<String, Object> parasTemp = new HashMap<String, Object>();
 		parasTemp.put("UserToken", SharedPreferencesConfig.config(UserDetailActivity.this).get(Constant.USER_TOKEN));
+		parasTemp.put("UserID", SharedPreferencesConfig.config(UserDetailActivity.this).get(Constant.USER_ID));
 
 		new HttpPostAsync(UserDetailActivity.this)
 		{
@@ -248,6 +249,13 @@ public class UserDetailActivity extends BaseActivity
 		{
 			Intent intent = new Intent();
 			intent.setClass(UserDetailActivity.this, ManageDetailActivity.class);
+			intent.putExtra("ID", (Integer) lists.get(arg2).get("ID"));// 学习资料
+			intent.putExtra("Title", StringUtil.Object2String(lists.get(arg2).get("Title")));
+			intent.putExtra("yaoQiu", StringUtil.Object2String(lists.get(arg2).get("Requirements")));
+			intent.putExtra("zhouQi", StringUtil.Object2String(lists.get(arg2).get("Period")));
+			intent.putExtra("muBiao", StringUtil.Object2String(lists.get(arg2).get("Aim")));
+			intent.putExtra("AcceptMaterial", (Integer) lists.get(arg2).get("AcceptMaterial"));// 学习资料
+			intent.putExtra("AcceptTraining", (Integer) lists.get(arg2).get("AcceptTraining"));// 训练项目
 			startActivity(intent);
 		}
 	};

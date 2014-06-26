@@ -110,15 +110,30 @@ public class ManageListAdapter extends BaseAdapter
 
 		ImageView imageView;
 
+		ImageView dyImageView;
+
+		ImageView xlImageView;
+
 		private ManageListHolder(View convertView)
 		{
 			textTitle = (TextView) convertView.findViewById(R.id.text_title);
 			textContent = (TextView) convertView.findViewById(R.id.text_content);
 			imageView = (ImageView) convertView.findViewById(R.id.img_icon);
+			dyImageView = (ImageView) convertView.findViewById(R.id.img_dy);
+			xlImageView = (ImageView) convertView.findViewById(R.id.img_xl);
 		}
 
 		private void setData(Map<String, Object> map)
 		{
+			if ((Integer) map.get("AcceptMaterial") == 1)
+				dyImageView.setBackgroundResource(R.drawable.icon_ok);
+			else if ((Integer) map.get("AcceptTraining") == 1)
+				xlImageView.setBackgroundResource(R.drawable.icon_ok);
+			else if ((Integer) map.get("AcceptTraining") == 0)
+				xlImageView.setBackgroundResource(R.drawable.icon_ok_gray);
+			else
+				dyImageView.setBackgroundResource(R.drawable.icon_ok_gray);
+
 			textTitle.setText(StringUtil.Object2String(map.get("Title")));
 			textContent.setText(StringUtil.Object2String(map.get("Abstract")));
 		}

@@ -11,12 +11,13 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 
 import com.demo.jxdemo.R;
 import com.demo.jxdemo.constant.Constant;
 import com.demo.jxdemo.ui.activity.main.MainActivity;
-import com.demo.jxdemo.ui.customviews.MyViewPager;
 
 /**
  * ViewPager适配器
@@ -30,9 +31,11 @@ public class MainTabPagerAdapter extends PagerAdapter implements OnPageChangeLis
 
 	private int pageNum;
 
-	public int cruurentItem = 0;
+	// public int cruurentItem = 0;
 
 	private ViewPager viewPager;
+
+	private Animation animation = null;
 
 	public MainTabPagerAdapter(Context context, List<View> mListViews, int pageNum, ViewPager viewPager)
 	{
@@ -152,53 +155,131 @@ public class MainTabPagerAdapter extends PagerAdapter implements OnPageChangeLis
 	@Override
 	public void onPageSelected(int arg0)
 	{
-		cruurentItem = arg0; // 减去左边的空白页
-		Constant.PAGENUMHOW = cruurentItem; // 减去左边的空白页
+		Constant.PAGENUMHOW = MainActivity.cruurentItem; // 减去左边的空白页
 		viewPager.setCurrentItem(arg0);// 第一屏向左滑动的话.
 
-		if (arg0 == 0)
+		int one = 2 * MainActivity.offset + MainActivity.cursorWidth;
+		int two = 2 * one;
+		int three = 3 * one;
+
+		switch (MainActivity.cruurentItem)
 		{
-			// // 第一个
-			setBtnColor(MainActivity.btn1);
-		}
-		else if (arg0 == pageNum - 1)
-		{
-			// 最后一个
-			setBtnColor(MainActivity.btn4);
-		}
-		else if (arg0 == pageNum - 2)
-		{
-			// 倒数第二个
-			setBtnColor(MainActivity.btn3);
-		}
-		else
-		{
-			// 中间的
-			setBtnColor(MainActivity.btn2);
+			case 0:
+				if (arg0 == 0)
+				{
+					setBtnColor(MainActivity.btn1);
+					animation = new TranslateAnimation(0, 0, 0, 0);
+				}
+				if (arg0 == 1)
+				{
+					setBtnColor(MainActivity.btn2);
+					animation = new TranslateAnimation(0, one, 0, 0);
+				}
+				break;
+			case 1:
+				if (arg0 == 2)
+				{
+					setBtnColor(MainActivity.btn3);
+					animation = new TranslateAnimation(one, two, 0, 0);
+				}
+				if (arg0 == 1)
+				{
+					setBtnColor(MainActivity.btn2);
+					animation = new TranslateAnimation(0, one, 0, 0);
+				}
+				if (arg0 == 0)
+				{
+					setBtnColor(MainActivity.btn1);
+					animation = new TranslateAnimation(0, 0, 0, 0);
+				}
+				break;
+			case 2:
+				if (arg0 == 3)
+				{
+					setBtnColor(MainActivity.btn4);
+					animation = new TranslateAnimation(two, three, 0, 0);
+				}
+				if (arg0 == 2)
+				{
+					setBtnColor(MainActivity.btn3);
+					animation = new TranslateAnimation(one, two, 0, 0);
+				}
+				if (arg0 == 1)
+				{
+					setBtnColor(MainActivity.btn2);
+					animation = new TranslateAnimation(two, one, 0, 0);
+				}
+				break;
+			case 3:
+				if (arg0 == 2)
+				{
+					setBtnColor(MainActivity.btn3);
+					animation = new TranslateAnimation(three, two, 0, 0);
+				}
+//				if (arg0 == 3)
+//				{
+//					setBtnColor(MainActivity.btn4);
+//					animation = new TranslateAnimation(two, three, 0, 0);
+//				}
+				break;
+
+			default:
+				break;
 		}
 
+		// if (arg0 == 0)
+		// {
+		// // // 第一个
+		// setBtnColor(MainActivity.btn1);
+		// animation = new TranslateAnimation(0, 0, 0, 0);
+		// }
+		// else if (arg0 == 1)
+		// {
+		// // 中间的
+		// setBtnColor(MainActivity.btn2);
+		// animation = new TranslateAnimation(0, one, 0, 0);
+		//
+		// }
+		// else if (arg0 == 2)
+		// {
+		// // 倒数第二个
+		// setBtnColor(MainActivity.btn3);
+		// animation = new TranslateAnimation(one, two, 0, 0);
+		//
+		// }
+		// else if (arg0 == 3)
+		// {
+		// // 最后一个
+		// setBtnColor(MainActivity.btn4);
+		// animation = new TranslateAnimation(two, three, 0, 0);
+		// }
+		//
+		animation.setFillAfter(true);
+		animation.setDuration(300);
+		MainActivity.cursor.startAnimation(animation);
+		MainActivity.cruurentItem = arg0; // 减去左边的空白页
 		initBottomBar();
 	}
 
 	public void setBtnColor(Button btn)
 	{
-		MainActivity.btn1.setTextColor(context.getResources().getColor(R.color.black));
-		MainActivity.btn2.setTextColor(context.getResources().getColor(R.color.black));
-		MainActivity.btn3.setTextColor(context.getResources().getColor(R.color.black));
-		MainActivity.btn4.setTextColor(context.getResources().getColor(R.color.black));
+		MainActivity.btn1.setTextAppearance(context, R.style.textview_gray16_717171);
+		MainActivity.btn2.setTextAppearance(context, R.style.textview_gray16_717171);
+		MainActivity.btn3.setTextAppearance(context, R.style.textview_gray16_717171);
+		MainActivity.btn4.setTextAppearance(context, R.style.textview_gray16_717171);
 		switch (btn.getId())
 		{
 			case R.id.btn_1:
-				MainActivity.btn1.setTextColor(context.getResources().getColor(R.color.red));
+				MainActivity.btn1.setTextAppearance(context, R.style.textview_red16_ee4136);
 				break;
 			case R.id.btn_2:
-				MainActivity.btn2.setTextColor(context.getResources().getColor(R.color.red));
+				MainActivity.btn2.setTextAppearance(context, R.style.textview_red16_ee4136);
 				break;
 			case R.id.btn_3:
-				MainActivity.btn3.setTextColor(context.getResources().getColor(R.color.red));
+				MainActivity.btn3.setTextAppearance(context, R.style.textview_red16_ee4136);
 				break;
 			case R.id.btn_4:
-				MainActivity.btn4.setTextColor(context.getResources().getColor(R.color.red));
+				MainActivity.btn4.setTextAppearance(context, R.style.textview_red16_ee4136);
 				break;
 			default:
 				break;

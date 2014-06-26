@@ -93,7 +93,9 @@
                         android:layout_toRightOf="@+id/text_username"
                         android:background="@null"
                         android:gravity="right"
-                        android:text="haaha" />
+                        android:hint="@string/left_self_name_hint"
+                        android:text=""
+                        android:textColorHint="@color/edit_text_hint" />
                 </RelativeLayout>
 
                 <LinearLayout
@@ -133,9 +135,11 @@
                         android:layout_toRightOf="@+id/text_usertel"
                         android:background="@null"
                         android:gravity="right"
+                        android:hint="@string/left_self_phonenum_hint"
                         android:inputType="number"
                         android:maxLength="11"
-                        android:text="18692208509" />
+                        android:text="18692208509"
+                        android:textColorHint="@color/edit_text_hint" />
                 </RelativeLayout>
 
                 <LinearLayout
@@ -220,7 +224,9 @@
                         android:layout_toRightOf="@+id/text_userlocation"
                         android:background="@null"
                         android:gravity="right"
-                        android:text="湖南长沙" />
+                        android:hint="@string/left_self_area_hint"
+                        android:text="湖南长沙"
+                        android:textColorHint="@color/edit_text_hint" />
                 </RelativeLayout>
 
                 <LinearLayout
@@ -260,7 +266,9 @@
                         android:layout_toRightOf="@+id/text_userjob"
                         android:background="@null"
                         android:gravity="right"
-                        android:text="haaha" />
+                        android:hint="@string/left_self_job_hint"
+                        android:text="haaha"
+                        android:textColorHint="@color/edit_text_hint" />
                 </RelativeLayout>
 
                 <LinearLayout
@@ -295,7 +303,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:background="@null"
-                        android:text="个人介绍哦啊个人介绍哦个人介绍哦个人介绍哦个人介绍哦个人介绍哦个人介绍哦个人介绍哦个人介绍哦个人介绍哦个人介绍哦" />
+                        android:hint="@string/left_self_introduce_hint"
+                        android:text="个人介绍哦啊个人介绍哦个人介绍哦个人介绍哦个人介绍哦个人介绍哦个人介绍哦个人介绍哦个人介绍哦个人介绍哦个人介绍哦"
+                        android:textColorHint="@color/edit_text_hint" />
                 </LinearLayout>
             </LinearLayout>
 

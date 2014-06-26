@@ -11,155 +11,199 @@
         android:layout_height="59dp"
         layout="@layout/windowtitle" >
     </include>
-    
-      <TextView
+
+    <TextView
         android:id="@+id/tv_refresh"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:text="下拉刷新"/>
-      
-   <com.handmark.pulltorefresh.library.PullToRefreshScrollView
+        android:text="下拉刷新"
+        android:visibility="gone" />
+
+    <com.handmark.pulltorefresh.library.PullToRefreshScrollView
         xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/customscrollview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         ptr:ptrAnimationStyle="flip"
         ptr:ptrMode="both" >
-         
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" 
-        android:orientation="vertical"
-        >
 
         <LinearLayout
-            android:id="@+id/layout_search"
-            android:layout_width="fill_parent"
-            android:layout_height="59dp"
-            android:background="@color/top_bar"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:padding="8dp"
-            android:visibility="gone" >
-
-            <EditText
-                android:id="@+id/edit_search"
-                style="@style/login_black_16"
-                android:layout_width="fill_parent"
-                android:layout_height="38dp"
-                android:layout_weight="0.15"
-                android:background="@drawable/shape_top_line"
-                android:drawableLeft="@drawable/top_search_small"
-                android:drawablePadding="5dp"
-                android:hint="过滤及搜索"
-                android:paddingLeft="10dp"
-                android:paddingRight="5dp"
-                android:textColorHint="@color/edit_text_hint" />
-
-            <Button
-                android:id="@+id/btn_cancel"
-                style="@style/textview_white16"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="0.85"
-                android:background="@null"
-                android:text="@string/cancel" />
-        </LinearLayout>
-
-        <com.demo.jxdemo.ui.customviews.GuideGallery
-            android:id="@+id/image_wall_gallery"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:fadingEdge="none"
-            android:spacing="1dip"
-            android:unselectedAlpha="1" >
-        </com.demo.jxdemo.ui.customviews.GuideGallery>
-
-        <LinearLayout
-            android:id="@+id/gallery_point_linear"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal" >
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layout_tab_bottom"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal" >
-
-            <Button
-                android:id="@+id/btn_1"
-                android:layout_width="fill_parent"
-                android:layout_height="50dp"
-                android:layout_weight="0.5"
-                android:background="@null"
-                android:drawableRight="@drawable/index_top_link"
-                android:text="全部" />
-
-            <Button
-                android:id="@+id/btn_2"
-                android:layout_width="fill_parent"
-                android:layout_height="50dp"
-                android:layout_weight="0.5"
-                android:background="@null"
-                android:drawableRight="@drawable/index_top_link"
-                android:text="训练" />
-
-            <Button
-                android:id="@+id/btn_3"
-                android:layout_width="fill_parent"
-                android:layout_height="50dp"
-                android:layout_weight="0.5"
-                android:background="@null"
-                android:drawableRight="@drawable/index_top_link"
-                android:text="资料" />
-
-            <Button
-                android:id="@+id/btn_4"
-                android:layout_width="fill_parent"
-                android:layout_height="50dp"
-                android:layout_weight="0.5"
-                android:background="@null"
-                android:text="收藏" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layout_line"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/link_shi" />
-
-        <FrameLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
-            <com.demo.jxdemo.ui.customviews.MyViewPager
-                android:id="@+id/vPage_introduce"
+            <LinearLayout
+                android:id="@+id/layout_search"
                 android:layout_width="fill_parent"
-                android:layout_height="400dp"
-                android:layout_gravity="center"
-                android:persistentDrawingCache="animation" />
+                android:layout_height="59dp"
+                android:background="@color/top_bar"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="8dp"
+                android:visibility="gone" >
+
+                <EditText
+                    android:id="@+id/edit_search"
+                    style="@style/login_black_16"
+                    android:layout_width="fill_parent"
+                    android:layout_height="38dp"
+                    android:layout_weight="0.15"
+                    android:background="@drawable/shape_top_line"
+                    android:drawableLeft="@drawable/top_search_small"
+                    android:drawablePadding="5dp"
+                    android:hint="过滤及搜索"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="5dp"
+                    android:textColorHint="@color/edit_text_hint" />
+
+                <Button
+                    android:id="@+id/btn_cancel"
+                    style="@style/textview_white16"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="0.85"
+                    android:background="@null"
+                    android:text="@string/cancel" />
+            </LinearLayout>
+
+            <com.demo.jxdemo.ui.customviews.GuideGallery
+                android:id="@+id/image_wall_gallery"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:fadingEdge="none"
+                android:spacing="0dip"
+                android:unselectedAlpha="1" >
+            </com.demo.jxdemo.ui.customviews.GuideGallery>
 
             <LinearLayout
+                android:id="@+id/gallery_point_linear"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal" >
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_tab_bottom"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:id="@+id/btn_1"
+                    style="@style/textview_gray16_717171"
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:layout_weight="0.5"
+                    android:background="@null"
+                    android:drawableRight="@drawable/index_top_link"
+                    android:text="全部" />
+
+                <Button
+                    android:id="@+id/btn_2"
+                    style="@style/textview_gray16_717171"
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:layout_weight="0.5"
+                    android:background="@null"
+                    android:drawableRight="@drawable/index_top_link"
+                    android:text="训练" />
+
+                <Button
+                    android:id="@+id/btn_3"
+                    style="@style/textview_gray16_717171"
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:layout_weight="0.5"
+                    android:background="@null"
+                    android:drawableRight="@drawable/index_top_link"
+                    android:text="资料" />
+
+                <Button
+                    android:id="@+id/btn_4"
+                    style="@style/textview_gray16_717171"
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:layout_weight="0.5"
+                    android:background="@null"
+                    android:text="收藏" />
+            </LinearLayout>
+
+            <ImageView 
+                android:id="@+id/ivCursor"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="matrix"
+                android:src="@drawable/cursor" />
+
+            <LinearLayout
+                android:id="@+id/layout_line"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/link_shi" />
+
+            <FrameLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
 
+                <com.demo.jxdemo.ui.customviews.MyViewPager
+                    android:id="@+id/vPage_introduce"
+                    android:layout_width="fill_parent"
+                    android:layout_height="400dp"
+                    android:layout_gravity="center"
+                    android:persistentDrawingCache="animation" />
+
                 <LinearLayout
-                    android:id="@+id/viewGroup"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="30dp"
-                    android:gravity="center_horizontal"
-                    android:orientation="horizontal" >
+                    android:orientation="vertical" >
+
+                    <LinearLayout
+                        android:id="@+id/viewGroup"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="30dp"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal" >
+                    </LinearLayout>
                 </LinearLayout>
+            </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_nomore"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingBottom="22dp"
+                android:paddingTop="24dp"
+                android:visibility="invisible" >
+
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:background="@drawable/link_shi_qian" />
+
+                <TextView
+                    style="@style/textview_gray16_cccccc"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="22dp"
+                    android:layout_marginRight="22dp"
+                    android:layout_weight="0.4"
+                    android:gravity="center"
+                    android:text="没有更多了" />
+
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:background="@drawable/link_shi_qian" />
             </LinearLayout>
-        </FrameLayout>
-    </LinearLayout>
+        </LinearLayout>
     </com.handmark.pulltorefresh.library.PullToRefreshScrollView>
+
 </LinearLayout>

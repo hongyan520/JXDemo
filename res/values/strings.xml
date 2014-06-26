@@ -46,11 +46,16 @@
     <string name="left_self_cleancache">清除缓存</string>
     <string name="left_self_icon">头像</string>
     <string name="left_self_name">名字</string>
+    <string name="left_self_name_hint">请输入名字</string>
     <string name="left_self_phonenum">手机号</string>
+    <string name="left_self_phonenum_hint">请输入手机号</string>
     <string name="left_self_gender">性别</string>
     <string name="left_self_area">地区</string>
+    <string name="left_self_area_hint">请输入地区</string>
     <string name="left_self_job">职业</string>
+    <string name="left_self_job_hint">请输入职业</string>
     <string name="left_self_introduce">个人介绍</string>
+    <string name="left_self_introduce_hint">请输入个人介绍</string>
 
     <!-- 关于 -->
     <string name="left_about_version">版本</string>

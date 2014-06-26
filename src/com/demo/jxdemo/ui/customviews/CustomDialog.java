@@ -5,6 +5,7 @@ import java.util.Map;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,6 +84,10 @@ public class CustomDialog extends Dialog
 			Button btn = (Button) childView.findViewById(R.id.btn_custom_dynamic);
 			btn.setText(key);
 			btn.setOnClickListener((android.view.View.OnClickListener) btnMap.get(key));
+
+			ImageView img = (ImageView) childView.findViewById(R.id.img_custom_line);
+			if (!iterator.hasNext())
+				img.setVisibility(View.GONE);
 			customBtnsView.addView(childView);
 		}
 

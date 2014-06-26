@@ -30,6 +30,8 @@ public class ManageDetailActivity extends BaseActivity
 {
 	private int id;
 
+	private String title;
+
 	private String yaoQiu;
 
 	private String zhouQi;
@@ -52,6 +54,7 @@ public class ManageDetailActivity extends BaseActivity
 		setContentView(R.layout.activity_menu_manage_detail);
 
 		id = getIntent().getIntExtra("ID", id);
+		title = getIntent().getStringExtra("Title");
 		yaoQiu = getIntent().getStringExtra("yaoQiu");
 		zhouQi = getIntent().getStringExtra("zhouQi");
 		muBiao = getIntent().getStringExtra("muBiao");
@@ -65,7 +68,7 @@ public class ManageDetailActivity extends BaseActivity
 
 	private void findViews()
 	{
-		((TextView) findViewById(R.id.formTilte)).setText("英语口语");
+		((TextView) findViewById(R.id.formTilte)).setText(title);
 		((ImageView) findViewById(R.id.imgview_return)).setBackgroundResource(R.drawable.img_back);
 		((ImageView) findViewById(R.id.imgview_return)).setVisibility(View.VISIBLE);
 
@@ -115,10 +118,10 @@ public class ManageDetailActivity extends BaseActivity
 					finishMyActivity();
 					break;
 				case R.id.rlayout_kcxl:
-					// request(CommandConstants.LEARNCOURSE);
+					request(CommandConstants.LEARNCOURSE);
 					break;
 				case R.id.rlayout_dyzl:
-					// request(CommandConstants.ENGAGECOURSE);
+					request(CommandConstants.ENGAGECOURSE);
 					break;
 				default:
 					break;

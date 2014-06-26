@@ -114,6 +114,10 @@ public class UserInfoActivity extends BaseSlidingActivity
 		String job = SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_JOB);
 		String introduce = SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_INTRODUCTION);
 
+		// Bitmap bm = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + "/gixueIcon.jpg");
+		// bm = toRoundBitmap(bm);
+		// iconImg.setImageBitmap(bm);
+
 		userGenderIdTextView.setText(gender);
 		if ("1".equals(gender))
 			userGenderTextView.setText("男");
@@ -123,21 +127,28 @@ public class UserInfoActivity extends BaseSlidingActivity
 			userGenderTextView.setText("未设置");
 
 		userNameEditText.setText(name);
-		userTelEditText.setText(tel);
+		userTelEditText.setText(tel.replace(" ", ""));
 		userLocationEditText.setText(location);
 		userJobEditText.setText(job);
 		userIntroduceEditText.setText(introduce);
 
+		userNameEditText.setSelection(name.length());
+		userTelEditText.setSelection(tel.length() - 3);
+		userLocationEditText.setSelection(location.length());
+		userJobEditText.setSelection(job.length());
+		userIntroduceEditText.setSelection(introduce.length());
+
 		((ScrollView) findViewById(R.id.scrollView1)).setVisibility(View.VISIBLE);
 		// TODO
-		// if (!isRequest)
-		// request();
+		if (!isRequest)
+			request();
 	}
 
 	private void request()
 	{
 		Map<String, Object> parasTemp = new HashMap<String, Object>();
 		parasTemp.put("UserToken", SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_TOKEN));
+		parasTemp.put("UserID", SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_ID));
 
 		new HttpPostAsync(UserInfoActivity.this)
 		{
@@ -291,7 +302,9 @@ public class UserInfoActivity extends BaseSlidingActivity
 					ToastManager.getInstance(UserInfoActivity.this).showToast("清除........");
 					break;
 				case R.id.layout_remark:
-					ToastManager.getInstance(UserInfoActivity.this).showToast("保存.......");
+					showProgress(5 * 60 * 1000);
+					saveInfo();
+					// ToastManager.getInstance(UserInfoActivity.this).showToast("保存.......");
 					// if (!StringUtil.isBlank(userTelEditText.getText().toString().trim()))
 					// saveInfo();
 					// else
@@ -451,7 +464,8 @@ public class UserInfoActivity extends BaseSlidingActivity
 		{
 		// 如果是直接从相册获取
 			case 1:
-				startPhotoZoom(data.getData());
+				if (data != null)
+					startPhotoZoom(data.getData());
 				break;
 			// 如果是调用相机拍照时
 			case 2:
@@ -505,22 +519,14 @@ public class UserInfoActivity extends BaseSlidingActivity
 		{
 
 			/**
-			 * 下面注释的方法是将裁剪之后的图片以Base64Coder的字符方式上
-			 * 传到服务器，QQ头像上传采用的方法跟这个类似
+			 * 下面注释的方法是将裁剪之后的图片以Base64Coder的字符方式上 传到服务器，QQ头像上传采用的方法跟这个类似
 			 */
 
 			/*
-			 * ByteArrayOutputStream stream = new ByteArrayOutputStream();
-			 * photo.compress(Bitmap.CompressFormat.JPEG, 60, stream);
-			 * byte[] b = stream.toByteArray();
-			 * // 将图片流以字符串形式存储下来
-			 * tp = new String(Base64Coder.encodeLines(b));
-			 * 这个地方大家可以写下给服务器上传图片的实现，直接把tp直接上传就可以了，
-			 * 服务器处理的方法是服务器那边的事了，吼吼
-			 * 如果下载到的服务器的数据还是以Base64Coder的形式的话，可以用以下方式转换
-			 * 为我们可以用的图片类型就OK啦...吼吼
-			 * Bitmap dBitmap = BitmapFactory.decodeFile(tp);
-			 * Drawable drawable = new BitmapDrawable(dBitmap);
+			 * ByteArrayOutputStream stream = new ByteArrayOutputStream(); photo.compress(Bitmap.CompressFormat.JPEG, 60, stream); byte[] b =
+			 * stream.toByteArray(); // 将图片流以字符串形式存储下来 tp = new String(Base64Coder.encodeLines(b)); 这个地方大家可以写下给服务器上传图片的实现，直接把tp直接上传就可以了， 服务器处理的方法是服务器那边的事了，吼吼
+			 * 如果下载到的服务器的数据还是以Base64Coder的形式的话，可以用以下方式转换 为我们可以用的图片类型就OK啦...吼吼 Bitmap dBitmap = BitmapFactory.decodeFile(tp); Drawable drawable = new
+			 * BitmapDrawable(dBitmap);
 			 */
 			Bitmap photo = extras.getParcelable("data");
 			ByteArrayOutputStream stream = new ByteArrayOutputStream();

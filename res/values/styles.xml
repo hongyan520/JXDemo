@@ -227,7 +227,11 @@
         <item name="android:textColor">@color/top_bar</item>
         <item name="android:textStyle">bold</item>
     </style>
-
+    <!-- 字体 红色16 ee4136 -->
+    <style name="textview_red16_ee4136">
+        <item name="android:textSize">16.0sp</item>
+        <item name="android:textColor">#ee4136</item>
+    </style>
     <!-- 字体 灰色 16 -->
     <style name="textview_gray16">
         <item name="android:textSize">16.0sp</item>
@@ -302,6 +306,16 @@
     <style name="textview_gray16_545454">
         <item name="android:textSize">16.0sp</item>
         <item name="android:textColor">#545454</item>
+    </style>
+    <!-- 字体 灰色 16 cccccc -->
+    <style name="textview_gray16_cccccc">
+        <item name="android:textSize">16.0sp</item>
+        <item name="android:textColor">#cccccc</item>
+    </style>
+     <!-- 字体 灰色 16 717171 -->
+    <style name="textview_gray16_717171">
+        <item name="android:textSize">16.0sp</item>
+        <item name="android:textColor">#717171</item>
     </style>
     <!-- 设置 关于 黑色 16 -->
     <style name="set_about_black_16" parent="@android:style/TextAppearance">

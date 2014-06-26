@@ -95,7 +95,8 @@ public class OptionActivity extends BaseSlidingActivity
 					getSlidingMenu().toggle();
 					break;
 				case R.id.btn_option:
-					ToastManager.getInstance(OptionActivity.this).showToast("提交........");
+					showProgress(5 * 60 * 1000);
+					request();
 					break;
 				default:
 					break;
@@ -139,8 +140,10 @@ public class OptionActivity extends BaseSlidingActivity
 					}
 					else
 					{
+						dismissProgress();
 						// 成功后处理
 						ToastManager.getInstance(OptionActivity.this).showToast("您的反馈意见已经成功发送，谢谢！");
+						optionEditText.setText("");
 					}
 				}
 				return "";

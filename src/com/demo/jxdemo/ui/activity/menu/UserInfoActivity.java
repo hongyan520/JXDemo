@@ -22,6 +22,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -32,6 +33,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.demo.base.global.ActivityTaskManager;
 import com.demo.base.services.http.HttpPostAsync;
 import com.demo.base.support.BaseConstants;
 import com.demo.base.util.JsonUtil;
@@ -41,6 +43,7 @@ import com.demo.jxdemo.application.SharedPreferencesConfig;
 import com.demo.jxdemo.constant.CommandConstants;
 import com.demo.jxdemo.constant.Constant;
 import com.demo.jxdemo.ui.activity.BaseSlidingActivity;
+import com.demo.jxdemo.ui.activity.main.MainActivity;
 import com.demo.jxdemo.ui.customviews.CustomDialog;
 import com.demo.jxdemo.utils.ToastManager;
 
@@ -72,14 +75,16 @@ public class UserInfoActivity extends BaseSlidingActivity
 
 	private CustomDialog cDialog = null;
 
+	private String fromLoginString;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_menu_userinfo);
-		loadMenu();
 
+		fromLoginString = StringUtil.Object2String(getIntent().getStringExtra("fromLogin"));
 		findViews();
 		initViews(false);
 		setViewClick();
@@ -88,7 +93,17 @@ public class UserInfoActivity extends BaseSlidingActivity
 	private void findViews()
 	{
 		((TextView) findViewById(R.id.formTilte)).setText(getResources().getString(R.string.left_self));
-		((ImageView) findViewById(R.id.imgview_return)).setBackgroundResource(R.drawable.top_left);
+		if (StringUtil.isBlank(fromLoginString))
+		{
+			((ImageView) findViewById(R.id.imgview_return)).setBackgroundResource(R.drawable.top_left);
+			loadMenu();
+		}
+		else
+		{
+			((ImageView) findViewById(R.id.imgview_return)).setBackgroundResource(R.drawable.img_back);
+			setBehindContentView(R.layout.slidemenu_back_content); // 后面的布局(机构)
+		}
+		
 		((ImageView) findViewById(R.id.imgview_return)).setVisibility(View.VISIBLE);
 		((TextView) findViewById(R.id.text_right)).setText(getResources().getString(R.string.left_self_save));
 		((TextView) findViewById(R.id.text_right)).setVisibility(View.VISIBLE);
@@ -271,6 +286,16 @@ public class UserInfoActivity extends BaseSlidingActivity
 				case 1:
 					initViews(true);
 					break;
+				case 2:
+					// 保存成功
+					if (!StringUtil.isBlank(fromLoginString)){
+						// 跳转到首页
+						Intent intent = new Intent();
+						intent.setClass(UserInfoActivity.this, MainActivity.class);
+						ActivityTaskManager.getInstance().closeAllActivity();
+						startActivity(intent);
+					}
+					break;
 				default:
 					break;
 			}
@@ -295,14 +320,18 @@ public class UserInfoActivity extends BaseSlidingActivity
 			switch (v.getId())
 			{
 				case R.id.layout_return:
-					closeKeyboard();
-					getSlidingMenu().toggle();
+					if (StringUtil.isBlank(fromLoginString))
+					{
+						closeKeyboard();
+						getSlidingMenu().toggle();
+					}
+					else
+						finish();
 					break;
 				case R.id.rlayout_cleancache:
 					ToastManager.getInstance(UserInfoActivity.this).showToast("清除........");
 					break;
 				case R.id.layout_remark:
-					showProgress(5 * 60 * 1000);
 					saveInfo();
 					// ToastManager.getInstance(UserInfoActivity.this).showToast("保存.......");
 					// if (!StringUtil.isBlank(userTelEditText.getText().toString().trim()))
@@ -324,6 +353,15 @@ public class UserInfoActivity extends BaseSlidingActivity
 
 	private void saveInfo()
 	{
+		if(StringUtil.isBlank(userNameEditText.getText().toString())){
+			ToastManager.getInstance(UserInfoActivity.this).showToast("请输入名字");
+			return;
+		}
+		if(StringUtil.isBlank(userTelEditText.getText().toString())){
+			ToastManager.getInstance(UserInfoActivity.this).showToast("请输入手机号");
+			return;
+		}
+		showProgress(5 * 60 * 1000);
 		Map<String, Object> parasTemp = new HashMap<String, Object>();
 		parasTemp.put("UserToken", SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_TOKEN));
 		parasTemp.put("Avatar", null);
@@ -367,8 +405,9 @@ public class UserInfoActivity extends BaseSlidingActivity
 					else
 					{
 						// 成功后处理
-						dismissProgress();
+						request();
 						ToastManager.getInstance(UserInfoActivity.this).showToast("保存成功!");
+						mHandler.sendEmptyMessage(2);
 					}
 				}
 				return "";
@@ -588,6 +627,21 @@ public class UserInfoActivity extends BaseSlidingActivity
 		paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
 		canvas.drawBitmap(bitmap, src, dst, paint);
 		return output;
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event)
+	{
+		if (keyCode == KeyEvent.KEYCODE_BACK)
+		{// 屏幕返回键处理
+			if (!StringUtil.isBlank(fromLoginString))
+			{
+				finish();
+			}
+			else
+				return super.onKeyDown(keyCode, event);
+		}
+		return false;
 	}
 
 }

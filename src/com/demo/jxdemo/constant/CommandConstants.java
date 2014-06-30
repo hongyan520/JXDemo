@@ -2,6 +2,9 @@ package com.demo.jxdemo.constant;
 
 public class CommandConstants
 {
+	
+	public static final String URL_ROOT = "http://dev.gixue.com";
+	
 	/** Url */
 	public static final String URL = "http://dev.gixue.com/Api/";
 

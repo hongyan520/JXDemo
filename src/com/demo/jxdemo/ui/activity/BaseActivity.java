@@ -128,7 +128,7 @@ public abstract class BaseActivity extends Activity
 					{
 						if (myProgressDialog == null)
 						{
-							myProgressDialog = new CustomProgressDialog(BaseActivity.this);
+							myProgressDialog = new CustomProgressDialog(BaseActivity.this,R.style.CustomProgressDialog);
 							myProgressDialog.createDialog(BaseActivity.this);
 							myProgressDialog.gettView().setText(getResources().getString(R.string.dealing));
 						}

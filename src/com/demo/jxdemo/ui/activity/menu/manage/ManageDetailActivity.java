@@ -4,11 +4,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ui.listener.OnClickAvoidForceListener;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.DisplayMetrics;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -19,6 +24,7 @@ import com.demo.base.services.http.HttpPostAsync;
 import com.demo.base.support.BaseConstants;
 import com.demo.base.util.JsonUtil;
 import com.demo.base.util.StringUtil;
+import com.demo.base.util.Utils;
 import com.demo.jxdemo.R;
 import com.demo.jxdemo.application.SharedPreferencesConfig;
 import com.demo.jxdemo.constant.CommandConstants;
@@ -45,6 +51,8 @@ public class ManageDetailActivity extends BaseActivity
 	private ImageView materialImageView;
 
 	private ImageView trainingImageView;
+	
+	private boolean isChange = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -72,12 +80,23 @@ public class ManageDetailActivity extends BaseActivity
 		((ImageView) findViewById(R.id.imgview_return)).setBackgroundResource(R.drawable.img_back);
 		((ImageView) findViewById(R.id.imgview_return)).setVisibility(View.VISIBLE);
 
-		materialImageView = (ImageView) findViewById(R.id.img_xl);
-		trainingImageView = (ImageView) findViewById(R.id.img_dy);
+		 trainingImageView = (ImageView) findViewById(R.id.img_xl);
+		 materialImageView = (ImageView) findViewById(R.id.img_dy);
 	}
 
 	private void initView()
 	{
+		Bitmap bitmapOrg = BitmapFactory.decodeResource(getResources(), R.drawable.four);
+
+		DisplayMetrics dm = Utils.getDisplayMetrics(this);
+
+		// 窗口的宽度
+		int screenWidth = dm.widthPixels;
+		float currentHight = ((float) (bitmapOrg.getHeight() * screenWidth)) / ((float) bitmapOrg.getWidth());
+
+		((ImageView) findViewById(R.id.manage_detail_top_img)).setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,
+				(int) currentHight));
+		
 		((TextView) findViewById(R.id.text_manage_yq)).setText(yaoQiu);
 		((TextView) findViewById(R.id.text_manage_zq)).setText(zhouQi);
 		((TextView) findViewById(R.id.text_manage_mb)).setText(muBiao);
@@ -115,6 +134,9 @@ public class ManageDetailActivity extends BaseActivity
 			switch (v.getId())
 			{
 				case R.id.layout_return:
+					if(isChange){
+						setResult(RESULT_OK);
+					}
 					finishMyActivity();
 					break;
 				case R.id.rlayout_kcxl:
@@ -131,9 +153,10 @@ public class ManageDetailActivity extends BaseActivity
 
 	private void request(final String cmd)
 	{
+		isChange  = true;
 		Map<String, Object> parasTemp = new HashMap<String, Object>();
 		parasTemp.put("UserToken", SharedPreferencesConfig.config(ManageDetailActivity.this).get(Constant.USER_TOKEN));
-		parasTemp.put("CourseID", id);
+		parasTemp.put("CourseID", id+"");
 
 		new HttpPostAsync(ManageDetailActivity.this)
 		{
@@ -166,14 +189,14 @@ public class ManageDetailActivity extends BaseActivity
 					else
 					{
 						// 成功后处理
-						if (CommandConstants.LEARNCOURSE.equals(cmd))
+						if (CommandConstants.ENGAGECOURSE.equals(cmd))
 						{
-							acceptMaterial = (Integer) mapstr.get("Status");
+							acceptMaterial = Integer.parseInt(mapstr.get("Status")+"");
 							mHandler.sendEmptyMessage(1);
 						}
-						else if (CommandConstants.ENGAGECOURSE.equals(cmd))
+						else if (CommandConstants.LEARNCOURSE.equals(cmd))
 						{
-							acceptTraining = (Integer) mapstr.get("Status");
+							acceptTraining = Integer.parseInt(mapstr.get("Status")+"");
 							mHandler.sendEmptyMessage(2);
 						}
 						dismissProgress();
@@ -201,4 +224,20 @@ public class ManageDetailActivity extends BaseActivity
 			}
 		}
 	};
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event)
+	{
+		if (keyCode == KeyEvent.KEYCODE_BACK)
+		{// 屏幕返回键处理
+			if (isChange)
+			{
+				setResult(RESULT_OK);
+				finishMyActivity();
+			}
+			else
+				return super.onKeyDown(keyCode, event);
+		}
+		return false;
+	}
 }

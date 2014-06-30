@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.WindowManager;
 
 import com.demo.base.support.BaseConstants;
+import com.demo.base.util.FileUtils;
 import com.demo.jxdemo.R;
 import com.demo.jxdemo.constant.Constant;
 import com.demo.jxdemo.ui.activity.main.MainActivity;
@@ -64,6 +65,10 @@ public class AllActivityListApplication extends Application
 		BaseConstants.API_FILE_SUFFIX = Constant.API_FILE_SUFFIX;
 		
 		SharedPreferencesConfig.saveConfig(getApplicationContext(), Constant.CURRENT_LEFTMENU, 0 + "");
+		
+		// 创建目录
+		FileUtils.makeRootDirectory(Constant.BASE_CACHE_PATH+Constant.STATIC_PATH);
+		FileUtils.makeRootDirectory(Constant.BASE_CACHE_PATH+Constant.API_PATH);
 	}
 
 	public static void setInstance(AllActivityListApplication i)

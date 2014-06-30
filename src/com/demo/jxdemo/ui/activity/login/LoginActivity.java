@@ -435,17 +435,20 @@ public class LoginActivity extends BaseActivity
 
 					dismissProgress();
 					Intent intent = new Intent();
-					if (StringUtil.isBlank(map[0].get("PhoneNumber").toString()))// PhoneNumber
+					if (StringUtil.isBlank(map[0].get("PhoneNumber").toString()) || StringUtil.isBlank(map[0].get("Title").toString()))// PhoneNumber
 					{// 如果没有电话号码返回,跳转到个人资料填写
 						// TODO
 						intent.setClass(LoginActivity.this, UserInfoActivity.class);
 						intent.putExtra("", map[0].get("UserID").toString());
+						intent.putExtra("fromLogin", "fromLogin");
+						startActivity(intent);
 					}
-					else
+					else{
 						intent.setClass(LoginActivity.this, MainActivity.class);
-
-					startActivity(intent);
-					LoginActivity.this.finish();
+						startActivity(intent);
+						LoginActivity.this.finish();
+					}
+					
 				}
 				else
 					ToastManager.getInstance(LoginActivity.this).showToast("登录失败!");

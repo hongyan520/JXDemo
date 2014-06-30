@@ -28,8 +28,10 @@
                 android:orientation="vertical" >
 
                 <ImageView
+                    android:id="@+id/manage_detail_top_img"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:scaleType="centerCrop"
                     android:background="@drawable/one" />
 
                 <LinearLayout

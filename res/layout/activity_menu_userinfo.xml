@@ -95,6 +95,7 @@
                         android:gravity="right"
                         android:hint="@string/left_self_name_hint"
                         android:text=""
+                        android:singleLine="true"
                         android:textColorHint="@color/edit_text_hint" />
                 </RelativeLayout>
 
@@ -226,6 +227,7 @@
                         android:gravity="right"
                         android:hint="@string/left_self_area_hint"
                         android:text="湖南长沙"
+                        android:singleLine="true"
                         android:textColorHint="@color/edit_text_hint" />
                 </RelativeLayout>
 
@@ -268,6 +270,7 @@
                         android:gravity="right"
                         android:hint="@string/left_self_job_hint"
                         android:text="haaha"
+                        android:singleLine="true"
                         android:textColorHint="@color/edit_text_hint" />
                 </RelativeLayout>
 

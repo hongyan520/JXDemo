@@ -3,7 +3,10 @@ package com.demo.jxdemo.ui.adapter;
 import java.util.List;
 import java.util.Map;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +14,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.demo.base.support.CacheSupport;
+import com.demo.base.util.FileUtils;
+import com.demo.base.util.HttpUtils;
 import com.demo.base.util.StringUtil;
 import com.demo.jxdemo.R;
+import com.demo.jxdemo.constant.CommandConstants;
 
 public class ManageListAdapter extends BaseAdapter
 {
@@ -125,17 +132,31 @@ public class ManageListAdapter extends BaseAdapter
 
 		private void setData(Map<String, Object> map)
 		{
-			if ((Integer) map.get("AcceptMaterial") == 1)
+			if ((Integer) map.get("AcceptMaterial") == 1){
 				dyImageView.setBackgroundResource(R.drawable.icon_ok);
-			else if ((Integer) map.get("AcceptTraining") == 1)
-				xlImageView.setBackgroundResource(R.drawable.icon_ok);
-			else if ((Integer) map.get("AcceptTraining") == 0)
-				xlImageView.setBackgroundResource(R.drawable.icon_ok_gray);
-			else
+			} else{
 				dyImageView.setBackgroundResource(R.drawable.icon_ok_gray);
+			}
+			if ((Integer) map.get("AcceptTraining") == 1){
+				xlImageView.setBackgroundResource(R.drawable.icon_ok);
+			} else{
+				xlImageView.setBackgroundResource(R.drawable.icon_ok_gray);
+			}
 
 			textTitle.setText(StringUtil.Object2String(map.get("Title")));
 			textContent.setText(StringUtil.Object2String(map.get("Abstract")));
+			
+			// 动态设置drawableLeft图标，（先下载到本地缓存，再读取本地缓存）
+			// TODO
+			String iconUrlStr = StringUtil.Object2String(map.get("Icon"));
+			final String serverUrl = CommandConstants.URL_ROOT+iconUrlStr;
+			final String localUrl = CacheSupport.staticServerUrlConvertToCachePath(serverUrl);
+			// 下载成功
+			//（file转bitmap转Drawable）
+			Drawable db = FileUtils.imgPathToDrawable(localUrl, context,60,60);
+			if(db != null){
+				imageView.setBackgroundDrawable(db);
+			}
 		}
 	}
 

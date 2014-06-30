@@ -96,12 +96,15 @@ public class AboutActivity extends BaseSlidingActivity
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
-		if (!StringUtil.isBlank(fromLoginString))
-		{
-			finish();
-			return false;
+		if (keyCode == KeyEvent.KEYCODE_BACK)
+		{// 屏幕返回键处理
+			if (!StringUtil.isBlank(fromLoginString))
+			{
+				finish();
+			}
+			else
+				return super.onKeyDown(keyCode, event);
 		}
-		else
-			return super.onKeyDown(keyCode, event);
+		return false;
 	}
 }

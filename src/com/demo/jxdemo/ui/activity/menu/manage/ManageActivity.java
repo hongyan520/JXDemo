@@ -21,6 +21,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.demo.base.services.http.HttpPostAsync;
+import com.demo.base.services.http.HttpPostSync;
 import com.demo.base.support.BaseConstants;
 import com.demo.base.util.JsonUtil;
 import com.demo.base.util.StringUtil;
@@ -29,6 +30,7 @@ import com.demo.jxdemo.application.SharedPreferencesConfig;
 import com.demo.jxdemo.constant.CommandConstants;
 import com.demo.jxdemo.constant.Constant;
 import com.demo.jxdemo.ui.activity.BaseSlidingActivity;
+import com.demo.jxdemo.ui.activity.menu.UserInfoActivity;
 import com.demo.jxdemo.ui.adapter.ManageListAdapter;
 import com.demo.jxdemo.utils.ToastManager;
 
@@ -82,15 +84,16 @@ public class ManageActivity extends BaseSlidingActivity
 		// String test =
 		// "[{\"Abstract\":\"让中国人摆脱哑巴英语的困境，让你面对老外时可以从容交谈，让你的英语演讲成竹在胸。\",\"AcceptMaterial\":0,\"AcceptTraining\":1,\"Aim\":\"日常沟通、英语演讲\",\"Banner\":\"/uploads/c21173741ee24c09/BannerSpoken.jpg\",\"Description\":\"\",\"ID\":1,\"Icon\":\"/uploads/dfceee24cb4f463f/IconSpoken.png\",\"Period\":\"3～6个月\",\"Requirements\":\"具备2000~3000单词量\",\"Title\":\"英语口语\"},{\"Abstract\":\"写作有法度和规范，写作有文化和习惯，积雪教你如何写出漂亮的英语文章。\",\"AcceptMaterial\":1,\"AcceptTraining\":1,\"Aim\":\"邮件、工作报告等书面交流\",\"Banner\":\"/uploads/06e3fcea7b264288/BannerWriting.jpg\",\"Description\":\"\",\"ID\":2,\"Icon\":\"/uploads/e0ed88dce6884ed8/IconWriting.png\",\"Period\":\"1～3个月\",\"Requirements\":\"具备2000~3000单词量\",\"Title\":\"英语写作\"}]";
 		// lists = JsonUtil.getList(test);
-		request();
+		request(false);
 	}
 
-	private void request()
+	private void request(final boolean isrefreshUserCourse)
 	{
 
 		Map<String, Object> parasTemp = new HashMap<String, Object>();
 		parasTemp.put("UserToken", SharedPreferencesConfig.config(ManageActivity.this).get(Constant.USER_TOKEN));
-
+		parasTemp.put("UserID", SharedPreferencesConfig.config(ManageActivity.this).get(Constant.USER_ID));
+		
 		new HttpPostAsync(ManageActivity.this)
 		{
 			@Override
@@ -121,7 +124,7 @@ public class ManageActivity extends BaseSlidingActivity
 					}
 					else
 					{
-						loadSuccessDeal(mapstr);// 成功后处理
+						loadSuccessDeal(mapstr,isrefreshUserCourse);// 成功后处理
 					}
 				}
 				return "";
@@ -131,13 +134,17 @@ public class ManageActivity extends BaseSlidingActivity
 	}
 
 	@SuppressWarnings("unchecked")
-	private void loadSuccessDeal(Map<String, Object> map)
+	private void loadSuccessDeal(Map<String, Object> map,boolean isrefreshUserCourse)
 	{
-		new LoadDealTask().execute(map);
+		new LoadDealTask(isrefreshUserCourse).execute(map);
 	}
 
 	class LoadDealTask extends AsyncTask<Map<String, Object>, Integer, Void>
 	{
+		private boolean isrefreshUserCourse  = false;
+		public LoadDealTask(boolean isrefreshUserCourse){
+			this.isrefreshUserCourse = isrefreshUserCourse;
+		}
 
 		@Override
 		protected void onPreExecute()
@@ -160,6 +167,22 @@ public class ManageActivity extends BaseSlidingActivity
 				{
 					lists = JsonUtil.getList(map[0].get("Courses").toString());
 					mHandler.sendEmptyMessage(1);
+					if(isrefreshUserCourse){
+						Map<String, Object> parasTemp = new HashMap<String, Object>();
+						parasTemp.put("UserToken", SharedPreferencesConfig.config(ManageActivity.this).get(Constant.USER_TOKEN));
+						parasTemp.put("UserID", SharedPreferencesConfig.config(ManageActivity.this).get(Constant.USER_ID));
+						Object userInfoObj = new HttpPostSync(ManageActivity.this).executePost(BaseConstants.POST_KEYVALUE_DATA, CommandConstants.URL + CommandConstants.USERPROFILE, parasTemp);
+						String userInfo = StringUtil.Object2String(userInfoObj);
+						if(BaseConstants.HTTP_REQUEST_FAIL.equals(userInfo) || userInfo == null || "".equals(userInfo.toString())){
+							
+						}else{
+							Map<String, Object> userInfomapstr = JsonUtil.getMapString(userInfo.toString());
+							if(userInfomapstr !=null ){ // 刷新用户的课程信息
+								SharedPreferencesConfig.saveConfig(ManageActivity.this, Constant.USER_COURSEARRAY,
+										StringUtil.Object2String(userInfomapstr.get("CourseArray").toString()));
+							}
+						}
+					}
 					dismissProgress();
 				}
 				else
@@ -177,6 +200,9 @@ public class ManageActivity extends BaseSlidingActivity
 		@Override
 		protected void onPostExecute(Void result)
 		{
+			if(isrefreshUserCourse){ // 变化更新侧边栏数据
+				loadMenu();
+			}
 			dismissProgress();
 		}
 
@@ -250,7 +276,23 @@ public class ManageActivity extends BaseSlidingActivity
 			intent.putExtra("muBiao", StringUtil.Object2String(lists.get(arg2).get("Aim")));
 			intent.putExtra("AcceptMaterial", (Integer) lists.get(arg2).get("AcceptMaterial"));// 学习资料
 			intent.putExtra("AcceptTraining", (Integer) lists.get(arg2).get("AcceptTraining"));// 训练项目
-			startActivity(intent);
+			//startActivity(intent);
+			startActivityForResult(intent, 1);
+		}
+	};
+	
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (RESULT_OK == resultCode) {
+			switch (requestCode) {
+				case 1 :
+					// 详情课程改变则刷新列表
+					showProgress(4 * 1000);
+					request(true);
+					break;
+				default:
+					break;
+			}
 		}
 	};
 

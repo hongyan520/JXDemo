@@ -2,6 +2,7 @@ package com.demo.jxdemo.ui.customviews;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +45,10 @@ public class CustomProgressDialog extends Dialog
 		super(context);
 		this.mContext = context;
 	}
+	
+	public CustomProgressDialog(Context context, int theme) {
+        super(context, theme);
+    }
 
 	/**
 	 * 创建DIALOG
@@ -53,9 +58,11 @@ public class CustomProgressDialog extends Dialog
 	 */
 	public CustomProgressDialog createDialog(Context context)
 	{
+		
 		view = LayoutInflater.from(context).inflate(R.layout.custom_progress_dialog, null);
 		tView = (TextView) view.findViewById(R.id.tv_loadingmsg);
 		this.setDialogView(view);
+		
 //		this.setDialogGravity(Gravity.CENTER);
 //		this.setDialogLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 

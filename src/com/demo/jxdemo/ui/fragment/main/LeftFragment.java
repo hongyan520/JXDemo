@@ -6,6 +6,7 @@ import java.util.Map;
 
 import ui.listener.OnClickAvoidForceListener;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,10 +23,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.demo.base.global.ActivityTaskManager;
+import com.demo.base.support.BaseConstants;
+import com.demo.base.support.CacheSupport;
+import com.demo.base.util.FileUtils;
+import com.demo.base.util.HttpUtils;
 import com.demo.base.util.JsonUtil;
 import com.demo.base.util.StringUtil;
 import com.demo.jxdemo.R;
 import com.demo.jxdemo.application.SharedPreferencesConfig;
+import com.demo.jxdemo.constant.CommandConstants;
 import com.demo.jxdemo.constant.Constant;
 import com.demo.jxdemo.ui.activity.login.LoginActivity;
 import com.demo.jxdemo.ui.activity.main.MainActivity;
@@ -36,6 +42,7 @@ import com.demo.jxdemo.ui.activity.menu.UserInfoActivity;
 import com.demo.jxdemo.ui.activity.menu.manage.ManageActivity;
 import com.demo.jxdemo.ui.customviews.CustomDialog;
 import com.demo.jxdemo.ui.fragment.BaseFragment;
+import com.demo.jxdemo.utils.UIUtils;
 
 public class LeftFragment extends BaseFragment
 {
@@ -82,7 +89,7 @@ public class LeftFragment extends BaseFragment
 		// Bitmap bitmapOrg = BitmapFactory.decodeResource(getResources(),R.drawable.sidepanebackground);
 		// BitmapUtils.scaleBitmap(bitmapOrg, getActivity());
 		// ((LinearLayout)getActivity().findViewById(R.id.layout_leftfragment)).setBackgroundDrawable(BitmapUtils.scaleBitmap(bitmapOrg, getActivity()));
-		showProgress();
+		//showProgress();
 
 		map.put("确定", new OnClickListener()
 		{
@@ -164,6 +171,7 @@ public class LeftFragment extends BaseFragment
 			final TextView textView = (TextView) layout.findViewById(R.id.text_course);
 			textView.setText(StringUtil.Object2String(courseList.get(i).get("Title")));
 			textView.setId(i + 1); // 设置id
+			
 			textView.setOnClickListener(new OnClickListener()
 			{
 
@@ -186,6 +194,23 @@ public class LeftFragment extends BaseFragment
 				imageView.setVisibility(View.GONE);
 			}
 			courseLayout.addView(layout);
+			
+			// 动态设置drawableLeft图标，（先下载到本地缓存，再读取本地缓存）
+			// TODO
+			String iconUrlStr = StringUtil.Object2String(courseList.get(i).get("Icon"));
+			final String serverUrl = CommandConstants.URL_ROOT+iconUrlStr;
+			final String localUrl = CacheSupport.staticServerUrlConvertToCachePath(serverUrl);
+			new Thread(){
+				public void run() {
+					if(HttpUtils.downloadFile(serverUrl,localUrl)){
+						Message msg = new Message();
+						msg.what = 2;
+						msg.obj = localUrl;
+						msg.arg1 = textView.getId();
+						mHandler.sendMessage(msg);
+					}
+				};
+			}.start();
 		}
 
 		if (current == 0)
@@ -251,7 +276,7 @@ public class LeftFragment extends BaseFragment
 	// {
 	// ((TextView) getActivity().findViewById(id)).setBackgroundResource(R.color.transparent_white_30);
 	// }
-
+	
 	private Handler mHandler = new Handler()
 	{
 
@@ -264,6 +289,15 @@ public class LeftFragment extends BaseFragment
 					closeProgress();
 					if (courseList != null)
 						initView();
+					break;
+				case 2:
+					// 下载成功
+					//（file转bitmap转Drawable）
+					Drawable db = FileUtils.imgPathToDrawable(msg.obj.toString(), getActivity(),UIUtils.dip2px(getActivity(), 34),UIUtils.dip2px(getActivity(), 34));
+					if(db != null){
+						db.setBounds(0, 0, db.getMinimumWidth(), db.getMinimumHeight());
+						((TextView)(courseLayout.findViewById(msg.arg1))).setCompoundDrawables(db,null,null,null);
+					}
 					break;
 				default:
 					break;

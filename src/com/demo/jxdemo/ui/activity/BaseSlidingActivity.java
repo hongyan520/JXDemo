@@ -144,7 +144,7 @@ public abstract class BaseSlidingActivity extends SlidingActivity
 					{
 						if (myProgressDialog == null)
 						{
-							myProgressDialog = new CustomProgressDialog(BaseSlidingActivity.this);
+							myProgressDialog = new CustomProgressDialog(BaseSlidingActivity.this,R.style.CustomProgressDialog);
 							myProgressDialog.createDialog(BaseSlidingActivity.this);
 							myProgressDialog.gettView().setText(getResources().getString(R.string.dealing));
 						}

@@ -171,7 +171,17 @@ public class LeftFragment extends BaseFragment
 			final TextView textView = (TextView) layout.findViewById(R.id.text_course);
 			textView.setText(StringUtil.Object2String(courseList.get(i).get("Title")));
 			textView.setId(i + 1); // 设置id
-			
+			Drawable db = null;
+			if(textView.getText().toString().contains("口语")){
+				db = getActivity().getResources().getDrawable(R.drawable.iconspokenmin);
+				
+			}else if(textView.getText().toString().contains("写作")){
+				db = getActivity().getResources().getDrawable(R.drawable.iconwritingmin);
+			}
+			if(db != null){
+				db.setBounds(0, 0, db.getMinimumWidth(), db.getMinimumHeight());
+				textView.setCompoundDrawables(db,null,null,null);
+			}
 			textView.setOnClickListener(new OnClickListener()
 			{
 
@@ -197,20 +207,20 @@ public class LeftFragment extends BaseFragment
 			
 			// 动态设置drawableLeft图标，（先下载到本地缓存，再读取本地缓存）
 			// TODO
-			String iconUrlStr = StringUtil.Object2String(courseList.get(i).get("Icon"));
-			final String serverUrl = CommandConstants.URL_ROOT+iconUrlStr;
-			final String localUrl = CacheSupport.staticServerUrlConvertToCachePath(serverUrl);
-			new Thread(){
-				public void run() {
-					if(HttpUtils.downloadFile(serverUrl,localUrl)){
-						Message msg = new Message();
-						msg.what = 2;
-						msg.obj = localUrl;
-						msg.arg1 = textView.getId();
-						mHandler.sendMessage(msg);
-					}
-				};
-			}.start();
+//			String iconUrlStr = StringUtil.Object2String(courseList.get(i).get("Icon"));
+//			final String serverUrl = CommandConstants.URL_ROOT+iconUrlStr;
+//			final String localUrl = CacheSupport.staticServerUrlConvertToCachePath(serverUrl);
+//			new Thread(){
+//				public void run() {
+//					if(HttpUtils.downloadFile(serverUrl,localUrl)){
+//						Message msg = new Message();
+//						msg.what = 2;
+//						msg.obj = localUrl;
+//						msg.arg1 = textView.getId();
+//						mHandler.sendMessage(msg);
+//					}
+//				};
+//			}.start();
 		}
 
 		if (current == 0)

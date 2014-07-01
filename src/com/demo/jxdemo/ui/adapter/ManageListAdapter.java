@@ -146,17 +146,23 @@ public class ManageListAdapter extends BaseAdapter
 			textTitle.setText(StringUtil.Object2String(map.get("Title")));
 			textContent.setText(StringUtil.Object2String(map.get("Abstract")));
 			
+			if(textTitle.getText().toString().contains("口语")){
+				imageView.setBackgroundResource(R.drawable.iconspoken);
+			}else if(textTitle.getText().toString().contains("写作")){
+				imageView.setBackgroundResource(R.drawable.iconwriting);
+			}
+			
 			// 动态设置drawableLeft图标，（先下载到本地缓存，再读取本地缓存）
 			// TODO
-			String iconUrlStr = StringUtil.Object2String(map.get("Icon"));
-			final String serverUrl = CommandConstants.URL_ROOT+iconUrlStr;
-			final String localUrl = CacheSupport.staticServerUrlConvertToCachePath(serverUrl);
-			// 下载成功
-			//（file转bitmap转Drawable）
-			Drawable db = FileUtils.imgPathToDrawable(localUrl, context,60,60);
-			if(db != null){
-				imageView.setBackgroundDrawable(db);
-			}
+//			String iconUrlStr = StringUtil.Object2String(map.get("Icon"));
+//			final String serverUrl = CommandConstants.URL_ROOT+iconUrlStr;
+//			final String localUrl = CacheSupport.staticServerUrlConvertToCachePath(serverUrl);
+//			// 下载成功
+//			//（file转bitmap转Drawable）
+//			Drawable db = FileUtils.imgPathToDrawable(localUrl, context,60,60);
+//			if(db != null){
+//				imageView.setBackgroundDrawable(db);
+//			}
 		}
 	}
 

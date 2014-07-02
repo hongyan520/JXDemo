@@ -29,6 +29,7 @@ import com.demo.jxdemo.application.SharedPreferencesConfig;
 import com.demo.jxdemo.constant.CommandConstants;
 import com.demo.jxdemo.constant.Constant;
 import com.demo.jxdemo.ui.activity.BaseActivity;
+import com.demo.jxdemo.ui.activity.login.LoginActivity;
 import com.demo.jxdemo.ui.activity.menu.manage.ManageDetailActivity;
 import com.demo.jxdemo.ui.adapter.UserDetailListAdapter;
 import com.demo.jxdemo.utils.ToastManager;
@@ -62,9 +63,8 @@ public class UserDetailActivity extends BaseActivity
 
 		adapter = new UserDetailListAdapter(UserDetailActivity.this);
 		findViews();
-//		initData();// 记得去掉
+		// initData();// 记得去掉
 		initView(false);
-		initListView(false);
 		setViewClick();
 	}
 
@@ -118,12 +118,15 @@ public class UserDetailActivity extends BaseActivity
 		locationTextView.setText(location);
 		introduceTextView.setText(introduce);
 
+		initListView(false);
+
 		if (!isRequest)
 			request(CommandConstants.USERPROFILE);
 	}
 
 	private void initListView(boolean isRequest)
 	{
+		// lists = JsonUtil.getList(SharedPreferencesConfig.config(UserDetailActivity.this).get(Constant.USER_COURSEARRAY).toString());
 		adapter.setDataList(lists);
 		listView.setAdapter(adapter);
 		ScrollListViewUtil.setListViewHeightBasedOnChildren(listView);
@@ -211,6 +214,8 @@ public class UserDetailActivity extends BaseActivity
 					initView(true);
 					break;
 				case 2:
+					// SharedPreferencesConfig.saveConfig(UserDetailActivity.this, Constant.USER_COURSEARRAY,
+					// StringUtil.Object2String(lists.toString()));
 					initListView(true);
 					break;
 				default:

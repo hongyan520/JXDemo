@@ -1,12 +1,14 @@
 package com.demo.jxdemo.ui.activity.menu;
 
 import ui.listener.OnClickAvoidForceListener;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.demo.base.util.StringUtil;
@@ -68,6 +70,8 @@ public class AboutActivity extends BaseSlidingActivity
 	private void setViewClick()
 	{
 		((LinearLayout) findViewById(R.id.layout_return)).setOnClickListener(onClickAvoidForceListener);
+		((RelativeLayout) findViewById(R.id.rlayout_about_url)).setOnClickListener(onClickAvoidForceListener);
+		((RelativeLayout) findViewById(R.id.rlayout_about_company)).setOnClickListener(onClickAvoidForceListener);
 	}
 
 	private OnClickAvoidForceListener onClickAvoidForceListener = new OnClickAvoidForceListener()
@@ -86,6 +90,18 @@ public class AboutActivity extends BaseSlidingActivity
 					}
 					else
 						finish();
+					break;
+				case R.id.rlayout_about_url:
+					Intent i = new Intent();
+					i.setClass(AboutActivity.this, ViewWebViewActivity.class);
+					i.putExtra("url", getResources().getString(R.string.left_about_url1));
+					startActivity(i);
+					break;
+				case R.id.rlayout_about_company:
+					Intent ii = new Intent();
+					ii.setClass(AboutActivity.this, ViewWebViewActivity.class);
+					ii.putExtra("url", getResources().getString(R.string.left_about_company2));
+					startActivity(ii);
 					break;
 				default:
 					break;

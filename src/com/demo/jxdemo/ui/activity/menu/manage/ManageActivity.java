@@ -93,7 +93,7 @@ public class ManageActivity extends BaseSlidingActivity
 		Map<String, Object> parasTemp = new HashMap<String, Object>();
 		parasTemp.put("UserToken", SharedPreferencesConfig.config(ManageActivity.this).get(Constant.USER_TOKEN));
 		parasTemp.put("UserID", SharedPreferencesConfig.config(ManageActivity.this).get(Constant.USER_ID));
-		
+
 		new HttpPostAsync(ManageActivity.this)
 		{
 			@Override
@@ -124,7 +124,7 @@ public class ManageActivity extends BaseSlidingActivity
 					}
 					else
 					{
-						loadSuccessDeal(mapstr,isrefreshUserCourse);// 成功后处理
+						loadSuccessDeal(mapstr, isrefreshUserCourse);// 成功后处理
 					}
 				}
 				return "";
@@ -134,15 +134,17 @@ public class ManageActivity extends BaseSlidingActivity
 	}
 
 	@SuppressWarnings("unchecked")
-	private void loadSuccessDeal(Map<String, Object> map,boolean isrefreshUserCourse)
+	private void loadSuccessDeal(Map<String, Object> map, boolean isrefreshUserCourse)
 	{
 		new LoadDealTask(isrefreshUserCourse).execute(map);
 	}
 
 	class LoadDealTask extends AsyncTask<Map<String, Object>, Integer, Void>
 	{
-		private boolean isrefreshUserCourse  = false;
-		public LoadDealTask(boolean isrefreshUserCourse){
+		private boolean isrefreshUserCourse = false;
+
+		public LoadDealTask(boolean isrefreshUserCourse)
+		{
 			this.isrefreshUserCourse = isrefreshUserCourse;
 		}
 
@@ -167,17 +169,23 @@ public class ManageActivity extends BaseSlidingActivity
 				{
 					lists = JsonUtil.getList(map[0].get("Courses").toString());
 					mHandler.sendEmptyMessage(1);
-					if(isrefreshUserCourse){
+					if (isrefreshUserCourse)
+					{
 						Map<String, Object> parasTemp = new HashMap<String, Object>();
 						parasTemp.put("UserToken", SharedPreferencesConfig.config(ManageActivity.this).get(Constant.USER_TOKEN));
 						parasTemp.put("UserID", SharedPreferencesConfig.config(ManageActivity.this).get(Constant.USER_ID));
-						Object userInfoObj = new HttpPostSync(ManageActivity.this).executePost(BaseConstants.POST_KEYVALUE_DATA, CommandConstants.URL + CommandConstants.USERPROFILE, parasTemp);
+						Object userInfoObj = new HttpPostSync(ManageActivity.this).executePost(BaseConstants.POST_KEYVALUE_DATA,
+								CommandConstants.URL + CommandConstants.USERPROFILE, parasTemp);
 						String userInfo = StringUtil.Object2String(userInfoObj);
-						if(BaseConstants.HTTP_REQUEST_FAIL.equals(userInfo) || userInfo == null || "".equals(userInfo.toString())){
-							
-						}else{
+						if (BaseConstants.HTTP_REQUEST_FAIL.equals(userInfo) || userInfo == null || "".equals(userInfo.toString()))
+						{
+
+						}
+						else
+						{
 							Map<String, Object> userInfomapstr = JsonUtil.getMapString(userInfo.toString());
-							if(userInfomapstr !=null ){ // 刷新用户的课程信息
+							if (userInfomapstr != null)
+							{ // 刷新用户的课程信息
 								SharedPreferencesConfig.saveConfig(ManageActivity.this, Constant.USER_COURSEARRAY,
 										StringUtil.Object2String(userInfomapstr.get("CourseArray").toString()));
 							}
@@ -200,7 +208,8 @@ public class ManageActivity extends BaseSlidingActivity
 		@Override
 		protected void onPostExecute(Void result)
 		{
-			if(isrefreshUserCourse){ // 变化更新侧边栏数据
+			if (isrefreshUserCourse)
+			{ // 变化更新侧边栏数据
 				loadMenu();
 			}
 			dismissProgress();
@@ -276,16 +285,19 @@ public class ManageActivity extends BaseSlidingActivity
 			intent.putExtra("muBiao", StringUtil.Object2String(lists.get(arg2).get("Aim")));
 			intent.putExtra("AcceptMaterial", (Integer) lists.get(arg2).get("AcceptMaterial"));// 学习资料
 			intent.putExtra("AcceptTraining", (Integer) lists.get(arg2).get("AcceptTraining"));// 训练项目
-			//startActivity(intent);
+			// startActivity(intent);
 			startActivityForResult(intent, 1);
 		}
 	};
-	
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
 		super.onActivityResult(requestCode, resultCode, data);
-		if (RESULT_OK == resultCode) {
-			switch (requestCode) {
-				case 1 :
+		if (RESULT_OK == resultCode)
+		{
+			switch (requestCode)
+			{
+				case 1:
 					// 详情课程改变则刷新列表
 					showProgress(4 * 1000);
 					request(true);

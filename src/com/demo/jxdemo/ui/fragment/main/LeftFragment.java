@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import ui.listener.OnClickAvoidForceListener;
+import android.R.raw;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -89,7 +90,7 @@ public class LeftFragment extends BaseFragment
 		// Bitmap bitmapOrg = BitmapFactory.decodeResource(getResources(),R.drawable.sidepanebackground);
 		// BitmapUtils.scaleBitmap(bitmapOrg, getActivity());
 		// ((LinearLayout)getActivity().findViewById(R.id.layout_leftfragment)).setBackgroundDrawable(BitmapUtils.scaleBitmap(bitmapOrg, getActivity()));
-		//showProgress();
+		// showProgress();
 
 		map.put("确定", new OnClickListener()
 		{
@@ -172,15 +173,19 @@ public class LeftFragment extends BaseFragment
 			textView.setText(StringUtil.Object2String(courseList.get(i).get("Title")));
 			textView.setId(i + 1); // 设置id
 			Drawable db = null;
-			if(textView.getText().toString().contains("口语")){
+			if (textView.getText().toString().contains("口语"))
+			{
 				db = getActivity().getResources().getDrawable(R.drawable.iconspokenmin);
-				
-			}else if(textView.getText().toString().contains("写作")){
+
+			}
+			else if (textView.getText().toString().contains("写作"))
+			{
 				db = getActivity().getResources().getDrawable(R.drawable.iconwritingmin);
 			}
-			if(db != null){
+			if (db != null)
+			{
 				db.setBounds(0, 0, db.getMinimumWidth(), db.getMinimumHeight());
-				textView.setCompoundDrawables(db,null,null,null);
+				textView.setCompoundDrawables(db, null, null, null);
 			}
 			textView.setOnClickListener(new OnClickListener()
 			{
@@ -204,23 +209,23 @@ public class LeftFragment extends BaseFragment
 				imageView.setVisibility(View.GONE);
 			}
 			courseLayout.addView(layout);
-			
+
 			// 动态设置drawableLeft图标，（先下载到本地缓存，再读取本地缓存）
 			// TODO
-//			String iconUrlStr = StringUtil.Object2String(courseList.get(i).get("Icon"));
-//			final String serverUrl = CommandConstants.URL_ROOT+iconUrlStr;
-//			final String localUrl = CacheSupport.staticServerUrlConvertToCachePath(serverUrl);
-//			new Thread(){
-//				public void run() {
-//					if(HttpUtils.downloadFile(serverUrl,localUrl)){
-//						Message msg = new Message();
-//						msg.what = 2;
-//						msg.obj = localUrl;
-//						msg.arg1 = textView.getId();
-//						mHandler.sendMessage(msg);
-//					}
-//				};
-//			}.start();
+			// String iconUrlStr = StringUtil.Object2String(courseList.get(i).get("Icon"));
+			// final String serverUrl = CommandConstants.URL_ROOT+iconUrlStr;
+			// final String localUrl = CacheSupport.staticServerUrlConvertToCachePath(serverUrl);
+			// new Thread(){
+			// public void run() {
+			// if(HttpUtils.downloadFile(serverUrl,localUrl)){
+			// Message msg = new Message();
+			// msg.what = 2;
+			// msg.obj = localUrl;
+			// msg.arg1 = textView.getId();
+			// mHandler.sendMessage(msg);
+			// }
+			// };
+			// }.start();
 		}
 
 		if (current == 0)
@@ -286,7 +291,7 @@ public class LeftFragment extends BaseFragment
 	// {
 	// ((TextView) getActivity().findViewById(id)).setBackgroundResource(R.color.transparent_white_30);
 	// }
-	
+
 	private Handler mHandler = new Handler()
 	{
 
@@ -297,16 +302,19 @@ public class LeftFragment extends BaseFragment
 			{
 				case 1:
 					closeProgress();
+					((TextView) getActivity().findViewById(R.id.text_user)).setText(configMap.get(Constant.USER_NAME));
 					if (courseList != null)
 						initView();
 					break;
 				case 2:
 					// 下载成功
-					//（file转bitmap转Drawable）
-					Drawable db = FileUtils.imgPathToDrawable(msg.obj.toString(), getActivity(),UIUtils.dip2px(getActivity(), 34),UIUtils.dip2px(getActivity(), 34));
-					if(db != null){
+					// （file转bitmap转Drawable）
+					Drawable db = FileUtils.imgPathToDrawable(msg.obj.toString(), getActivity(), UIUtils.dip2px(getActivity(), 34),
+							UIUtils.dip2px(getActivity(), 34));
+					if (db != null)
+					{
 						db.setBounds(0, 0, db.getMinimumWidth(), db.getMinimumHeight());
-						((TextView)(courseLayout.findViewById(msg.arg1))).setCompoundDrawables(db,null,null,null);
+						((TextView) (courseLayout.findViewById(msg.arg1))).setCompoundDrawables(db, null, null, null);
 					}
 					break;
 				default:
@@ -325,10 +333,21 @@ public class LeftFragment extends BaseFragment
 	}
 
 	@Override
-	protected void onBaseResume()
+	public void setUserVisibleHint(boolean isVisibleToUser)
 	{
 		// TODO Auto-generated method stub
-		super.onBaseResume();
+		if (isVisibleToUser)
+		{
+			// 相当于Fragment的onResume
+			((TextView) getActivity().findViewById(R.id.text_user)).setText(configMap.get(Constant.USER_NAME));
+		}
+		else
+		{
+			// 相当于Fragment的onPause
+			((TextView) getActivity().findViewById(R.id.text_user)).setText(configMap.get(Constant.USER_NAME));
+		}
+
+		super.setUserVisibleHint(isVisibleToUser);
 	}
 
 }

@@ -7,7 +7,7 @@
     <TextView
         android:id="@+id/text_course"
         style="@style/textview_black16_addbg"
-        android:layout_width="fill_parent"
+        android:layout_width="fill_parent" android:drawablePadding="5dp"
         android:layout_height="50dp"
         android:drawableLeft="@drawable/icon_manage"
         android:gravity="center_vertical"

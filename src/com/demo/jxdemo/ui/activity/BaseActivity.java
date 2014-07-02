@@ -122,15 +122,19 @@ public abstract class BaseActivity extends Activity
 			{
 				if (msg != null)
 				{
-					int what = msg.what;
 
+					// Bundle b = msg.getData();
+					// int what = b.getInt("id") == 0 ? msg.what : b.getInt("id");// msg.what;
+					// String mess = b.getString("mess");
+					int what = msg.what;
 					if (what == SHOW_PROGRESS_DIALOG)
 					{
 						if (myProgressDialog == null)
 						{
-							myProgressDialog = new CustomProgressDialog(BaseActivity.this,R.style.CustomProgressDialog);
+							myProgressDialog = new CustomProgressDialog(BaseActivity.this, R.style.CustomProgressDialog);
 							myProgressDialog.createDialog(BaseActivity.this);
 							myProgressDialog.gettView().setText(getResources().getString(R.string.dealing));
+							// myProgressDialog.gettView().setText(mess);// (getResources().getString(R.string.dealing));
 						}
 
 						if (!myProgressDialog.isShowing())
@@ -158,6 +162,13 @@ public abstract class BaseActivity extends Activity
 	 */
 	public void showProgress()
 	{
+		// Message msg = Message.obtain();
+		// Bundle b = new Bundle();
+		// b.putString("mess", mess);
+		// b.putInt("id", SHOW_PROGRESS_DIALOG);
+		// msg.setData(b);
+		// progressHandler.sendMessage(msg);
+
 		progressHandler.sendEmptyMessage(SHOW_PROGRESS_DIALOG);
 		// 10秒后自动关闭等待框
 		progressHandler.sendEmptyMessageDelayed(DISMISS_PROGRESS, 10 * 1000);
@@ -171,6 +182,12 @@ public abstract class BaseActivity extends Activity
 	 */
 	public void showProgress(long waittime)
 	{
+		// Message msg = Message.obtain();
+		// Bundle b = new Bundle();
+		// b.putString("mess", mess);
+		// b.putInt("id", SHOW_PROGRESS_DIALOG);
+		// msg.setData(b);
+		// progressHandler.sendMessage(msg);
 		progressHandler.sendEmptyMessage(SHOW_PROGRESS_DIALOG);
 		// waittime后自动关闭等待框
 		progressHandler.sendEmptyMessageDelayed(DISMISS_PROGRESS, waittime);

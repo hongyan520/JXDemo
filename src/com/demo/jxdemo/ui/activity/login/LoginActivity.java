@@ -166,7 +166,7 @@ public class LoginActivity extends BaseActivity
 
 					if (isPassCheck(1))
 					{
-						showProgress(5 * 60 * 1000);
+						showProgress();
 						login();
 					}
 					break;
@@ -274,6 +274,7 @@ public class LoginActivity extends BaseActivity
 					}
 					else
 					{
+						ToastManager.getInstance(LoginActivity.this).showToast("验证码短信已发送，请注意查收");
 						checkCodeSuccessDeal(mapstr);// 成功后处理
 					}
 				}
@@ -309,13 +310,18 @@ public class LoginActivity extends BaseActivity
 		{
 			try
 			{
-				if (map != null)
-				{
-					// checkCode = "1234";// StringUtil.Object2String(map[0].get(""));
-					ToastManager.getInstance(LoginActivity.this).showToast("请查看验证码!");
-				}
-				else
-					ToastManager.getInstance(LoginActivity.this).showToast("获取验证码失败!");
+				// if (map != null)
+				// {
+				// // checkCode = "1234";// StringUtil.Object2String(map[0].get(""));
+				// ToastManager.getInstance(LoginActivity.this).showToast("验证码短信已发送，请注意查收");
+				// }
+				// else
+				// ToastManager.getInstance(LoginActivity.this).showToast("获取验证码失败!");
+				numEditText.setFocusable(false);
+				numEditText.setFocusableInTouchMode(false);
+				checkEditText.setFocusable(true);
+				checkEditText.setFocusableInTouchMode(true);
+				// checkEditText.requestFocus();
 			}
 			catch (Exception e)
 			{
@@ -443,12 +449,13 @@ public class LoginActivity extends BaseActivity
 						intent.putExtra("fromLogin", "fromLogin");
 						startActivity(intent);
 					}
-					else{
+					else
+					{
 						intent.setClass(LoginActivity.this, MainActivity.class);
 						startActivity(intent);
 						LoginActivity.this.finish();
 					}
-					
+
 				}
 				else
 					ToastManager.getInstance(LoginActivity.this).showToast("登录失败!");

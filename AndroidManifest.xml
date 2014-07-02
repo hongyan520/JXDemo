@@ -108,6 +108,13 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" >
         </activity>
+         <activity
+            android:name=".ui.activity.menu.ViewWebViewActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+        </activity>
         <activity
             android:name=".ui.activity.menu.manage.ManageActivity"
             android:configChanges="orientation|keyboardHidden|navigation"

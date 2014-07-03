@@ -16,7 +16,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginRight="32dp"
+        android:layout_marginRight="34dp"
         android:layout_marginTop="8dp"
         android:gravity="right"
         android:orientation="horizontal" >
@@ -25,7 +25,7 @@
             style="@style/textview_gray14_888888"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="15dp"
+            android:layout_marginRight="13dp"
             android:text="@string/left_manage_xl" />
 
         <TextView

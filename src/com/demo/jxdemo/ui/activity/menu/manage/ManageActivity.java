@@ -62,7 +62,7 @@ public class ManageActivity extends BaseSlidingActivity
 		((ImageView) findViewById(R.id.imgview_return)).setBackgroundResource(R.drawable.top_left);
 		((ImageView) findViewById(R.id.imgview_return)).setVisibility(View.VISIBLE);
 		((TextView) findViewById(R.id.text_right)).setText(getResources().getString(R.string.left_manage_success));
-		((TextView) findViewById(R.id.text_right)).setVisibility(View.VISIBLE);
+		((TextView) findViewById(R.id.text_right)).setVisibility(View.GONE); // 屏蔽完成按钮
 
 		listView = (ListView) findViewById(R.id.list_manage);
 	}

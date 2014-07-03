@@ -66,6 +66,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:paddingTop="5dp"
+            android:minLines="2"
             android:text="沙湖大道的哈的哈尽快哈坎打算的拉动快哈坎打算的拉动 " />
     </LinearLayout>
 

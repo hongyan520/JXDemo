@@ -15,6 +15,7 @@ import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -36,6 +37,9 @@ import android.widget.TextView;
 import com.demo.base.global.ActivityTaskManager;
 import com.demo.base.services.http.HttpPostAsync;
 import com.demo.base.support.BaseConstants;
+import com.demo.base.support.CacheSupport;
+import com.demo.base.util.FileUtils;
+import com.demo.base.util.HttpUtils;
 import com.demo.base.util.JsonUtil;
 import com.demo.base.util.StringUtil;
 import com.demo.jxdemo.R;
@@ -76,6 +80,12 @@ public class UserInfoActivity extends BaseSlidingActivity
 	private CustomDialog cDialog = null;
 
 	private String fromLoginString;
+	
+	private String userImageStr;
+	
+	private TextView tvCacheSize;
+	
+	private String cacheRoot = BaseConstants.BASE_CACHE_PATH;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -116,6 +126,8 @@ public class UserInfoActivity extends BaseSlidingActivity
 		userLocationEditText = (EditText) findViewById(R.id.edit_userlocation);
 		userJobEditText = (EditText) findViewById(R.id.edit_userjob);
 		userIntroduceEditText = (EditText) findViewById(R.id.edit_userintroduce);
+		
+		tvCacheSize = (TextView) findViewById(R.id.tv_cache_size);
 
 		cleanLayout = (RelativeLayout) findViewById(R.id.rlayout_cleancache);
 	}
@@ -128,11 +140,28 @@ public class UserInfoActivity extends BaseSlidingActivity
 		String location = SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_LOCATION);
 		String job = SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_JOB);
 		String introduce = SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_INTRODUCTION);
-
+		String userAvatar = SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_AVATAR); 
+		
 		// Bitmap bm = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + "/gixueIcon.jpg");
 		// bm = toRoundBitmap(bm);
 		// iconImg.setImageBitmap(bm);
-
+		if(!StringUtil.isBlank(userAvatar)){
+			 final String serverUrl = CommandConstants.URL_ROOT+userAvatar;
+			 final String localUrl = CacheSupport.staticServerUrlConvertToCachePath(serverUrl);
+			 new Thread(){
+			 public void run() {
+				 if(HttpUtils.downloadFile(serverUrl,localUrl)){
+					 Message msg = new Message();
+					 msg.what = 3;
+					 msg.obj = localUrl;
+					 mHandler.sendMessage(msg);
+				 }
+			 };
+			 }.start();
+		}
+		
+		refreshCacheSize();// 刷新缓存大小
+		
 		userGenderIdTextView.setText(gender);
 		if ("1".equals(gender))
 			userGenderTextView.setText("男");
@@ -157,6 +186,11 @@ public class UserInfoActivity extends BaseSlidingActivity
 		// TODO
 		if (!isRequest)
 			request();
+	}
+	
+	private void refreshCacheSize(){
+		String cachesize = FileUtils.calculatePathSize(cacheRoot);
+		tvCacheSize.setText(cachesize);
 	}
 
 	private void request()
@@ -296,6 +330,14 @@ public class UserInfoActivity extends BaseSlidingActivity
 						startActivity(intent);
 					}
 					break;
+				case 3:
+					// 下载成功
+					//（file转bitmap转Drawable）
+					Drawable db = FileUtils.imgPathToDrawable(msg.obj.toString(), UserInfoActivity.this,60,60);
+					if(db != null){
+						iconImg.setBackgroundDrawable(db);
+					}
+					break;
 				default:
 					break;
 			}
@@ -329,7 +371,9 @@ public class UserInfoActivity extends BaseSlidingActivity
 						finish();
 					break;
 				case R.id.rlayout_cleancache:
-					ToastManager.getInstance(UserInfoActivity.this).showToast("清除........");
+					ToastManager.getInstance(UserInfoActivity.this).showToast("清除成功");
+					FileUtils.deleteFilesByPath(cacheRoot,false);
+					refreshCacheSize();// 刷新缓存大小
 					break;
 				case R.id.layout_remark:
 					saveInfo();
@@ -364,7 +408,7 @@ public class UserInfoActivity extends BaseSlidingActivity
 		showProgress(5 * 60 * 1000);
 		Map<String, Object> parasTemp = new HashMap<String, Object>();
 		parasTemp.put("UserToken", SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_TOKEN));
-		parasTemp.put("Avatar", null);
+		parasTemp.put("Avatar", userImageStr);
 		parasTemp.put("Title", userNameEditText.getText().toString());
 		parasTemp.put("PhoneNumber", userTelEditText.getText().toString());
 		parasTemp.put("AuthCode", "");// 验证码 当手机号码没有修改的时候,服务器端忽略此项。
@@ -572,6 +616,7 @@ public class UserInfoActivity extends BaseSlidingActivity
 			photo.compress(Bitmap.CompressFormat.JPEG, 75, stream);// (0 - 100)压缩文件
 			photo = toRoundBitmap(photo);
 			iconImg.setImageBitmap(photo);
+			userImageStr = stream.toString();
 		}
 	}
 

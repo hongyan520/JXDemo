@@ -317,11 +317,14 @@ public class LoginActivity extends BaseActivity
 				// }
 				// else
 				// ToastManager.getInstance(LoginActivity.this).showToast("获取验证码失败!");
-				numEditText.setFocusable(false);
-				numEditText.setFocusableInTouchMode(false);
-				checkEditText.setFocusable(true);
-				checkEditText.setFocusableInTouchMode(true);
-				// checkEditText.requestFocus();
+//				numEditText.setFocusable(false);
+//				numEditText.setFocusableInTouchMode(false);
+//				checkEditText.setFocusable(true);
+//				checkEditText.setFocusableInTouchMode(true);
+//				checkEditText.setSelectAllOnFocus(true);
+//				checkEditText.setCursorVisible(true);
+//				checkEditText.requestFocus();
+//				checkEditText.setSelection(0);
 			}
 			catch (Exception e)
 			{
@@ -334,6 +337,14 @@ public class LoginActivity extends BaseActivity
 		@Override
 		protected void onPostExecute(Void result)
 		{
+			//numEditText.setFocusable(false);
+			//numEditText.setFocusableInTouchMode(false);
+			checkEditText.setFocusable(true);
+			checkEditText.setFocusableInTouchMode(true);
+			checkEditText.setSelectAllOnFocus(true);
+			checkEditText.setCursorVisible(true);
+			checkEditText.requestFocus();
+			checkEditText.setSelection(0);
 			dismissProgress();
 		}
 

@@ -8,6 +8,7 @@ import java.util.Map;
 import ui.listener.OnClickAvoidForceListener;
 import ui.listener.OnItemClickAvoidForceListener;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,6 +22,10 @@ import android.widget.TextView;
 
 import com.demo.base.services.http.HttpPostAsync;
 import com.demo.base.support.BaseConstants;
+import com.demo.base.support.CacheSupport;
+import com.demo.base.util.BitmapUtils;
+import com.demo.base.util.FileUtils;
+import com.demo.base.util.HttpUtils;
 import com.demo.base.util.JsonUtil;
 import com.demo.base.util.ScrollListViewUtil;
 import com.demo.base.util.StringUtil;
@@ -106,6 +111,21 @@ public class UserDetailActivity extends BaseActivity
 		String gender = SharedPreferencesConfig.config(UserDetailActivity.this).get(Constant.USER_GENDER);
 		String userIcon = SharedPreferencesConfig.config(UserDetailActivity.this).get(Constant.USER_AVATAR);
 
+		if(!StringUtil.isBlank(userIcon)){
+			 final String serverUrl = CommandConstants.URL_ROOT+userIcon;
+			 final String localUrl = CacheSupport.staticServerUrlConvertToCachePath(serverUrl);
+			 new Thread(){
+			 public void run() {
+				 if(HttpUtils.downloadFile(serverUrl,localUrl)){
+					 Message msg = new Message();
+					 msg.what = 3;
+					 msg.obj = localUrl;
+					 mHandler.sendMessage(msg);
+				 }
+			 };
+			 }.start();
+		}
+		
 		// ////打开下面两块
 		if ("1".equals(gender))
 			genderImageView.setBackgroundResource(R.drawable.icon_male);
@@ -217,6 +237,14 @@ public class UserDetailActivity extends BaseActivity
 					// SharedPreferencesConfig.saveConfig(UserDetailActivity.this, Constant.USER_COURSEARRAY,
 					// StringUtil.Object2String(lists.toString()));
 					initListView(true);
+					break;
+				case 3:
+					Bitmap photo = FileUtils.getBitmapByimgPath(msg.obj.toString());
+					if(photo != null){
+						photo = BitmapUtils.toRoundBitmap(photo);
+						userImageView.setImageBitmap(photo);	
+					}
+					
 					break;
 				default:
 					break;

@@ -7,6 +7,7 @@ import java.util.Map;
 import ui.listener.OnClickAvoidForceListener;
 import android.R.raw;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,6 +27,7 @@ import android.widget.TextView;
 import com.demo.base.global.ActivityTaskManager;
 import com.demo.base.support.BaseConstants;
 import com.demo.base.support.CacheSupport;
+import com.demo.base.util.BitmapUtils;
 import com.demo.base.util.FileUtils;
 import com.demo.base.util.HttpUtils;
 import com.demo.base.util.JsonUtil;
@@ -58,6 +60,8 @@ public class LeftFragment extends BaseFragment
 	private Map<String, String> configMap;
 
 	private int current = 0;
+	
+	private ImageView imgUser;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -92,6 +96,23 @@ public class LeftFragment extends BaseFragment
 		// ((LinearLayout)getActivity().findViewById(R.id.layout_leftfragment)).setBackgroundDrawable(BitmapUtils.scaleBitmap(bitmapOrg, getActivity()));
 		// showProgress();
 
+		String userAvatar = SharedPreferencesConfig.config(getActivity()).get(Constant.USER_AVATAR);
+		imgUser = (ImageView)getActivity().findViewById(R.id.img_user);
+		if(!StringUtil.isBlank(userAvatar)){
+			 final String serverUrl = CommandConstants.URL_ROOT+userAvatar;
+			 final String localUrl = CacheSupport.staticServerUrlConvertToCachePath(serverUrl);
+			 new Thread(){
+			 public void run() {
+				 if(HttpUtils.downloadFile(serverUrl,localUrl)){
+					 Message msg = new Message();
+					 msg.what = 3;
+					 msg.obj = localUrl;
+					 mHandler.sendMessage(msg);
+				 }
+			 };
+			 }.start();
+		}
+		
 		map.put("确定", new OnClickListener()
 		{
 
@@ -230,11 +251,18 @@ public class LeftFragment extends BaseFragment
 
 		if (current == 0)
 		{
-			((TextView) getActivity().findViewById(R.id.text_index)).setBackgroundResource(R.color.transparent_white_30);
+			TextView tv = ((TextView) getActivity().findViewById(R.id.text_index));
+			if(tv != null){
+				tv.setBackgroundResource(R.color.transparent_white_30);
+			}
 		}
 		else
 		{
-			((TextView) getActivity().findViewById(current)).setBackgroundResource(R.color.transparent_white_30);
+			TextView tv = ((TextView) getActivity().findViewById(current));
+			if(tv != null){
+				tv.setBackgroundResource(R.color.transparent_white_30);	
+			}
+			
 		}
 	}
 
@@ -302,7 +330,11 @@ public class LeftFragment extends BaseFragment
 			{
 				case 1:
 					closeProgress();
-					((TextView) getActivity().findViewById(R.id.text_user)).setText(configMap.get(Constant.USER_NAME));
+					TextView textUser = ((TextView) getActivity().findViewById(R.id.text_user));
+					if(textUser != null){
+						textUser.setText(configMap.get(Constant.USER_NAME));	
+					}
+					
 					if (courseList != null)
 						initView();
 					break;
@@ -316,6 +348,14 @@ public class LeftFragment extends BaseFragment
 						db.setBounds(0, 0, db.getMinimumWidth(), db.getMinimumHeight());
 						((TextView) (courseLayout.findViewById(msg.arg1))).setCompoundDrawables(db, null, null, null);
 					}
+					break;
+				case 3:
+					Bitmap photo = FileUtils.getBitmapByimgPath(msg.obj.toString());
+					if(photo != null){
+						photo = BitmapUtils.toRoundBitmap(photo);
+						imgUser.setImageBitmap(photo);
+					}
+					
 					break;
 				default:
 					break;

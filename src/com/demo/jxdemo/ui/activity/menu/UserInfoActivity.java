@@ -9,6 +9,7 @@ import ui.listener.OnClickAvoidForceListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
@@ -38,6 +39,7 @@ import com.demo.base.global.ActivityTaskManager;
 import com.demo.base.services.http.HttpPostAsync;
 import com.demo.base.support.BaseConstants;
 import com.demo.base.support.CacheSupport;
+import com.demo.base.util.BitmapUtils;
 import com.demo.base.util.FileUtils;
 import com.demo.base.util.HttpUtils;
 import com.demo.base.util.JsonUtil;
@@ -86,6 +88,9 @@ public class UserInfoActivity extends BaseSlidingActivity
 	private TextView tvCacheSize;
 	
 	private String cacheRoot = BaseConstants.BASE_CACHE_PATH;
+	
+	private String iconImgPath = BaseConstants.BASE_CACHE_PATH + BaseConstants.STATIC_PATH;
+	private String iconImgName = "iconimg.jpg";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -142,9 +147,9 @@ public class UserInfoActivity extends BaseSlidingActivity
 		String introduce = SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_INTRODUCTION);
 		String userAvatar = SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_AVATAR); 
 		
-		// Bitmap bm = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + "/gixueIcon.jpg");
-		// bm = toRoundBitmap(bm);
-		// iconImg.setImageBitmap(bm);
+//		 Bitmap bm = BitmapFactory.decodeFile(iconImgPath+iconImgName);
+//		 bm = toRoundBitmap(bm);
+//		 iconImg.setImageBitmap(bm);
 		if(!StringUtil.isBlank(userAvatar)){
 			 final String serverUrl = CommandConstants.URL_ROOT+userAvatar;
 			 final String localUrl = CacheSupport.staticServerUrlConvertToCachePath(serverUrl);
@@ -183,9 +188,14 @@ public class UserInfoActivity extends BaseSlidingActivity
 		userIntroduceEditText.setSelection(introduce.length());
 
 		((ScrollView) findViewById(R.id.scrollView1)).setVisibility(View.VISIBLE);
+		
+		if(StringUtil.isBlank(fromLoginString) && isRequest){
+			loadMenu();
+		}
+		
 		// TODO
 		if (!isRequest)
-			request();
+			request(isRequest);
 	}
 	
 	private void refreshCacheSize(){
@@ -193,7 +203,7 @@ public class UserInfoActivity extends BaseSlidingActivity
 		tvCacheSize.setText(cachesize);
 	}
 
-	private void request()
+	private void request(final boolean isRefreshLeft)
 	{
 		Map<String, Object> parasTemp = new HashMap<String, Object>();
 		parasTemp.put("UserToken", SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_TOKEN));
@@ -229,7 +239,7 @@ public class UserInfoActivity extends BaseSlidingActivity
 					}
 					else
 					{
-						loadSuccessDeal(mapstr);// 成功后处理
+						loadSuccessDeal(mapstr,isRefreshLeft);// 成功后处理
 					}
 				}
 				return "";
@@ -238,13 +248,17 @@ public class UserInfoActivity extends BaseSlidingActivity
 	}
 
 	@SuppressWarnings("unchecked")
-	private void loadSuccessDeal(Map<String, Object> map)
+	private void loadSuccessDeal(Map<String, Object> map,boolean isRefreshLeft)
 	{
-		new LoadDealTask().execute(map);
+		new LoadDealTask(isRefreshLeft).execute(map);
 	}
 
 	class LoadDealTask extends AsyncTask<Map<String, Object>, Integer, Void>
 	{
+		boolean isRefreshLeft = false;
+		public LoadDealTask(boolean _isRefreshLeft){
+			isRefreshLeft = _isRefreshLeft;
+		}
 
 		@Override
 		protected void onPreExecute()
@@ -333,10 +347,16 @@ public class UserInfoActivity extends BaseSlidingActivity
 				case 3:
 					// 下载成功
 					//（file转bitmap转Drawable）
-					Drawable db = FileUtils.imgPathToDrawable(msg.obj.toString(), UserInfoActivity.this,60,60);
-					if(db != null){
-						iconImg.setBackgroundDrawable(db);
+//					Drawable db = FileUtils.imgPathToDrawable(msg.obj.toString(), UserInfoActivity.this,0,0);
+//					if(db != null){
+//						iconImg.setBackgroundDrawable(db);
+//					}
+					Bitmap photo = FileUtils.getBitmapByimgPath(msg.obj.toString());
+					if(photo != null){
+						photo = BitmapUtils.toRoundBitmap(photo);
+						iconImg.setImageBitmap(photo);
 					}
+					
 					break;
 				default:
 					break;
@@ -408,7 +428,7 @@ public class UserInfoActivity extends BaseSlidingActivity
 		showProgress(5 * 60 * 1000);
 		Map<String, Object> parasTemp = new HashMap<String, Object>();
 		parasTemp.put("UserToken", SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_TOKEN));
-		parasTemp.put("Avatar", userImageStr);
+		//parasTemp.put("Avatar", userImageStr);
 		parasTemp.put("Title", userNameEditText.getText().toString());
 		parasTemp.put("PhoneNumber", userTelEditText.getText().toString());
 		parasTemp.put("AuthCode", "");// 验证码 当手机号码没有修改的时候,服务器端忽略此项。
@@ -418,6 +438,9 @@ public class UserInfoActivity extends BaseSlidingActivity
 		// 整数，代表性别。 0 －未设置 1 － 男 2 － 女
 		parasTemp.put("Sex", userGenderIdTextView.getText().toString());
 
+		Map<String, File> paramsFile = new HashMap<String, File>();
+		paramsFile.put("Avatar", new File(iconImgPath+iconImgName));
+		
 		new HttpPostAsync(UserInfoActivity.this)
 		{
 			@Override
@@ -449,14 +472,14 @@ public class UserInfoActivity extends BaseSlidingActivity
 					else
 					{
 						// 成功后处理
-						request();
+						request(true);
 						ToastManager.getInstance(UserInfoActivity.this).showToast("保存成功!");
 						mHandler.sendEmptyMessage(2);
 					}
 				}
 				return "";
 			}
-		}.execute(BaseConstants.POST_KEYVALUE_DATA, CommandConstants.URL + CommandConstants.UPDATEUSERPROFILE, parasTemp);
+		}.execute(BaseConstants.POST_FILES_DATA, CommandConstants.URL + CommandConstants.UPDATEUSERPROFILE, parasTemp,paramsFile);
 
 	}
 
@@ -612,68 +635,18 @@ public class UserInfoActivity extends BaseSlidingActivity
 			 * BitmapDrawable(dBitmap);
 			 */
 			Bitmap photo = extras.getParcelable("data");
+			if(photo == null){
+				return;
+			}
 			ByteArrayOutputStream stream = new ByteArrayOutputStream();
 			photo.compress(Bitmap.CompressFormat.JPEG, 75, stream);// (0 - 100)压缩文件
-			photo = toRoundBitmap(photo);
+			photo = BitmapUtils.toRoundBitmap(photo);
 			iconImg.setImageBitmap(photo);
+			BitmapUtils.saveBitmap2file(photo, iconImgPath, iconImgName);
 			userImageStr = stream.toString();
 		}
 	}
 
-	public Bitmap toRoundBitmap(Bitmap bitmap)
-	{
-		int width = bitmap.getWidth();
-		int height = bitmap.getHeight();
-		float roundPx;
-		float left, top, right, bottom, dst_left, dst_top, dst_right, dst_bottom;
-		if (width <= height)
-		{
-			roundPx = width / 2;
-			top = 0;
-			bottom = width;
-			left = 0;
-			right = width;
-			height = width;
-			dst_left = 0;
-			dst_top = 0;
-			dst_right = width;
-			dst_bottom = width;
-		}
-		else
-		{
-			roundPx = height / 2;
-			float clip = (width - height) / 2;
-			left = clip;
-			right = width - clip;
-			top = 0;
-			bottom = height;
-			width = height;
-			dst_left = 0;
-			dst_top = 0;
-			dst_right = height;
-			dst_bottom = height;
-		}
-
-		Bitmap output = Bitmap.createBitmap(width, height, Config.ARGB_8888);
-		Canvas canvas = new Canvas(output);
-
-		final int color = 0xff424242;
-		final Paint paint = new Paint();
-		final Rect src = new Rect((int) left, (int) top, (int) right, (int) bottom);
-		final Rect dst = new Rect((int) dst_left, (int) dst_top, (int) dst_right, (int) dst_bottom);
-		final RectF rectF = new RectF(dst);
-
-		paint.setAntiAlias(true);
-
-		canvas.drawARGB(0, 0, 0, 0);
-		paint.setColor(color);
-		canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
-
-		paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
-		canvas.drawBitmap(bitmap, src, dst, paint);
-		return output;
-	}
-	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{

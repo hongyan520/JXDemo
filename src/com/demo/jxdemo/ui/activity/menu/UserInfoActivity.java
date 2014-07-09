@@ -173,7 +173,7 @@ public class UserInfoActivity extends BaseSlidingActivity
 		else if ("2".equals(gender))
 			userGenderTextView.setText("女");
 		else
-			userGenderTextView.setText("未设置");
+			userGenderTextView.setText("请选择");
 
 		userNameEditText.setText(name);
 		userTelEditText.setText(tel.replace(" ", ""));
@@ -508,14 +508,14 @@ public class UserInfoActivity extends BaseSlidingActivity
 				userGenderIdTextView.setText("2");
 			}
 		});
-		cDialog = new CustomDialog(this, "选择性别", map, "不设置", new OnClickListener()
+		cDialog = new CustomDialog(this, "选择性别", map, "取消", new OnClickListener()
 		{
 
 			@Override
 			public void onClick(View v)
 			{
 				cDialog.cancel();
-				userGenderTextView.setText("未设置");
+				userGenderTextView.setText("请选择");
 				userGenderIdTextView.setText("0");
 			}
 		});

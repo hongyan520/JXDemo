@@ -1,5 +1,6 @@
 package com.demo.jxdemo.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,6 +10,8 @@ import android.os.Message;
 import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 
@@ -21,6 +24,7 @@ import com.demo.jxdemo.ui.activity.main.MainActivity;
 import com.demo.jxdemo.ui.customviews.CustomProgressDialog;
 import com.demo.jxdemo.ui.customviews.slide.SlidingActivity;
 import com.demo.jxdemo.ui.customviews.slide.SlidingMenu;
+import com.demo.jxdemo.ui.customviews.slide.SlidingMenu.OnOpenListener;
 import com.demo.jxdemo.ui.fragment.main.LeftFragment;
 
 public abstract class BaseSlidingActivity extends SlidingActivity
@@ -81,7 +85,18 @@ public abstract class BaseSlidingActivity extends SlidingActivity
 		sm.setBehindOffset(offset);
 		sm.setFadeDegree(0.35f);
 		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+		
+		sm.setOnOpenListener(new OnOpenListener() {
+			
+			@Override
+			public void onOpen() {
+				// TODO Auto-generated method stub
+				System.out.println("open...");
+				closeKeyboard();
+			}
+		});
 	}
+	
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
@@ -106,7 +121,7 @@ public abstract class BaseSlidingActivity extends SlidingActivity
 					InputMethodManager.HIDE_NOT_ALWAYS);
 		}
 	}
-
+	
 	/**
 	 * 等待圈显示
 	 * 

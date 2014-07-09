@@ -157,7 +157,7 @@ public class ManageDetailActivity extends BaseActivity
 		Map<String, Object> parasTemp = new HashMap<String, Object>();
 		parasTemp.put("UserToken", SharedPreferencesConfig.config(ManageDetailActivity.this).get(Constant.USER_TOKEN));
 		parasTemp.put("CourseID", id+"");
-
+		showProgress(2 * 60 * 1000);
 		new HttpPostAsync(ManageDetailActivity.this)
 		{
 			@Override
@@ -200,6 +200,7 @@ public class ManageDetailActivity extends BaseActivity
 							mHandler.sendEmptyMessage(2);
 						}
 						dismissProgress();
+						ToastManager.getInstance(ManageDetailActivity.this).showToast("设置完成");
 					}
 				}
 				return "";

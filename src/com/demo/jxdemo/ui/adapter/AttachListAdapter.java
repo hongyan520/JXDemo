@@ -167,6 +167,8 @@ public class AttachListAdapter extends BaseAdapter
 							}
 						};
 					}.start();
+				}else if(((Button)v).getText().equals(DOWN_OK_SEE)){// 点击查看附件
+					// TODO 
 				}
 			}
 		});

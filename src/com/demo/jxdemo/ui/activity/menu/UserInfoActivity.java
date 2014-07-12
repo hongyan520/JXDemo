@@ -463,7 +463,7 @@ public class UserInfoActivity extends BaseFragmentActivity
 
 		Map<String, File> paramsFile = new HashMap<String, File>();
 
-		paramsFile.put("Avatar", new File(iconImgPath + iconImgName));
+		paramsFile.put("Avatar", new File(iconImgPath + "1(me).png"));
 
 		new HttpPostAsync(UserInfoActivity.this)
 		{

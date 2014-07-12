@@ -25,6 +25,8 @@ import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -100,11 +102,11 @@ public class MainActivity extends BaseFragmentActivity
 
 	public static int cursorWidth; // 游标的长度
 
-	public static int offset; // 间隔
+	public static float offset; // 间隔
 
 	private ArrayList<Fragment> fragments = new ArrayList<Fragment>();
 
-	private ViewPager mViewPager;
+	public static ViewPager mViewPager;
 
 	private List<Map<String, Object>> tabList;
 
@@ -121,6 +123,9 @@ public class MainActivity extends BaseFragmentActivity
 	public Button btn3;
 
 	public Button btn4;
+	
+	private int bmpX_target = 0;
+	private int bmpX_Old = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -401,26 +406,30 @@ public class MainActivity extends BaseFragmentActivity
 				case R.id.btn_4:
 					// pagerAdapter.onPageSelected(3);
 					// pagerAdapter.setBtnColor(btn4);
-					ToastManager.getInstance(MainActivity.this).showToast("收藏");
+//					ToastManager.getInstance(MainActivity.this).showToast("收藏");
+					mViewPager.setCurrentItem(3);
 					break;
 				case R.id.btn_3:
 					// pagerAdapter.onPageSelected(2);
 					// pagerAdapter.setBtnColor(btn3);
 					// intent.setClass(MainActivity.this, LearningMaterialsActivity.class);
 					// startActivity(intent);
-					ToastManager.getInstance(MainActivity.this).showToast("资料");
+//					ToastManager.getInstance(MainActivity.this).showToast("资料");
+					mViewPager.setCurrentItem(2);
 					break;
 				case R.id.btn_2:
 					// pagerAdapter.onPageSelected(1);
 					// pagerAdapter.setBtnColor(btn2);
 					// intent.setClass(MainActivity.this, TrainingActivity.class);
 					// startActivity(intent);
-					ToastManager.getInstance(MainActivity.this).showToast("训练");
+//					ToastManager.getInstance(MainActivity.this).showToast("训练");
+					mViewPager.setCurrentItem(1);
 					break;
 				case R.id.btn_1:
 					// pagerAdapter.onPageSelected(0);
 					// pagerAdapter.setBtnColor(btn1);
-					ToastManager.getInstance(MainActivity.this).showToast("全部");
+//					ToastManager.getInstance(MainActivity.this).showToast("全部");
+					mViewPager.setCurrentItem(0);
 					break;
 				case R.id.layout_remark:
 					windowTitleLayout.setVisibility(View.GONE);
@@ -463,6 +472,8 @@ public class MainActivity extends BaseFragmentActivity
 		}
 	};
 
+	private int bmpWidth;
+
 	/** 初始化layout控件 */
 	private void initView()
 	{
@@ -482,15 +493,22 @@ public class MainActivity extends BaseFragmentActivity
 
 	public void initCursor(int tagNum)
 	{
+		cursor = (ImageView) findViewById(R.id.ivCursor);
 		cursorWidth = BitmapFactory.decodeResource(getResources(), R.drawable.cursor).getWidth();
 		DisplayMetrics dm = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(dm);
-		offset = ((dm.widthPixels / tagNum) - cursorWidth) / 2;
-
-		cursor = (ImageView) findViewById(R.id.ivCursor);
+		int screenW = dm.widthPixels;
+		bmpWidth = screenW / tagNum;
+		offset = (float) (screenW / tagNum / cursorWidth);// 计算偏移量
 		Matrix matrix = new Matrix();
-		matrix.setTranslate(offset, 0);
-		cursor.setImageMatrix(matrix);
+		matrix.postScale(offset, 1);
+		cursor.setImageMatrix(matrix);// 设置动画初始位置
+		
+//		offset = ((dm.widthPixels / tagNum) - cursorWidth) / 2;
+//		cursor = (ImageView) findViewById(R.id.ivCursor);
+//		Matrix matrix = new Matrix();
+//		matrix.setTranslate(offset, 0);
+//		cursor.setImageMatrix(matrix);
 	}
 
 	/**
@@ -545,6 +563,7 @@ public class MainActivity extends BaseFragmentActivity
 		@Override
 		public void onPageScrollStateChanged(int arg0)
 		{
+			System.out.println("onPageScrollStateChanged="+arg0);
 		}
 
 		@Override
@@ -557,6 +576,43 @@ public class MainActivity extends BaseFragmentActivity
 		{
 			// TODO Auto-generated method stub
 			mViewPager.setCurrentItem(position);
+			System.out.println("onPageSelected="+position);
+			Animation animation = null;
+			switch (position) {
+			case 0:// 全部
+				bmpX_target = 0;
+				btn1.setTextColor(getResources().getColor(R.color.red));
+				btn2.setTextColor(R.style.textview_gray16_717171);
+				btn3.setTextColor(R.style.textview_gray16_717171);
+				btn4.setTextColor(R.style.textview_gray16_717171);
+				break;
+			case 1:// 训练
+				bmpX_target = bmpWidth;
+				btn1.setTextColor(R.style.textview_gray16_717171);
+				btn2.setTextColor(getResources().getColor(R.color.red));
+				btn3.setTextColor(R.style.textview_gray16_717171);
+				btn4.setTextColor(R.style.textview_gray16_717171);
+				break;
+			case 2:// 资料
+				bmpX_target = 2 * bmpWidth;
+				btn1.setTextColor(R.style.textview_gray16_717171);
+				btn2.setTextColor(R.style.textview_gray16_717171);
+				btn3.setTextColor(getResources().getColor(R.color.red));
+				btn4.setTextColor(R.style.textview_gray16_717171);
+				break;
+			case 3:// 收藏
+				bmpX_target = 3 * bmpWidth;
+				btn1.setTextColor(R.style.textview_gray16_717171);
+				btn2.setTextColor(R.style.textview_gray16_717171);
+				btn3.setTextColor(R.style.textview_gray16_717171);
+				btn4.setTextColor(getResources().getColor(R.color.red));
+				break;
+			}
+			animation = new TranslateAnimation(bmpX_Old, bmpX_target, 0, 0);
+			bmpX_Old = bmpX_target;
+			animation.setFillAfter(true);// True:图片停在动画结束位置
+			animation.setDuration(300);
+			cursor.startAnimation(animation);
 		}
 	};
 

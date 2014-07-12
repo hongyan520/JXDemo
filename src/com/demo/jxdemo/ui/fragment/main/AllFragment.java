@@ -6,13 +6,18 @@ import java.util.Map;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.demo.jxdemo.R;
+import com.demo.jxdemo.ui.activity.main.MainActivity;
 import com.demo.jxdemo.ui.adapter.main.AllListAdapter;
+import com.demo.jxdemo.utils.UIUtils;
 
 public class AllFragment extends Fragment
 {
@@ -68,6 +73,24 @@ public class AllFragment extends Fragment
 	{
 		adapter = new AllListAdapter(getActivity(), list);
 		listView.setAdapter(adapter);
+		autoChangeViewPagerHeight(MainActivity.mViewPager, listView);
+	}
+	
+	/**
+	 * 动态设置ViewPager的高度（根据listView的数据量计算）
+	 * 
+	 * @param _viewPager
+	 * @param _listView
+	 */
+	private void autoChangeViewPagerHeight(ViewPager _viewPager, ListView _listView)
+	{
+		int totalHeight = UIUtils.getTotalHeightofListView(_listView);
+		if (totalHeight > 0)
+		{
+			LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) _viewPager.getLayoutParams();
+			params.height = totalHeight + _listView.getAdapter().getCount() * UIUtils.px2dip(getActivity(), 30);
+			_viewPager.setLayoutParams(params);
+		}
 	}
 
 	@SuppressWarnings("unchecked")

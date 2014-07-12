@@ -74,6 +74,23 @@ public class AllFragment extends Fragment
 		listView.setAdapter(adapter);
 		autoChangeViewPagerHeight(MainActivity.mViewPager, listView);
 	}
+	
+	/**
+	 * 动态设置ViewPager的高度（根据listView的数据量计算）
+	 * 
+	 * @param _viewPager
+	 * @param _listView
+	 */
+	private void autoChangeViewPagerHeight(ViewPager _viewPager, ListView _listView)
+	{
+		int totalHeight = UIUtils.getTotalHeightofListView(_listView);
+		if (totalHeight > 0)
+		{
+			LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) _viewPager.getLayoutParams();
+			params.height = totalHeight + _listView.getAdapter().getCount() * UIUtils.px2dip(getActivity(), 30);
+			_viewPager.setLayoutParams(params);
+		}
+	}
 
 	@SuppressWarnings("unchecked")
 	private void initData()
@@ -98,22 +115,5 @@ public class AllFragment extends Fragment
 		super.onDestroy();
 	}
 	
-	/**
-	 * 动态设置ViewPager的高度（根据listView的数据量计算）
-	 * 
-	 * @param _viewPager
-	 * @param _listView
-	 */
-	private void autoChangeViewPagerHeight(ViewPager _viewPager, ListView _listView)
-	{
-		int totalHeight = UIUtils.getTotalHeightofListView(_listView);
-		if (totalHeight > 0)
-		{
-			FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) _viewPager.getLayoutParams();
-			params.height = totalHeight + listView.getAdapter().getCount() * UIUtils.px2dip(getActivity(), 40);
-			_viewPager.setLayoutParams(params);
-		}
-	}
-
 
 }

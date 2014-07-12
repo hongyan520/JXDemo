@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -104,45 +105,33 @@ public class AttachListAdapter extends BaseAdapter
 	private class AttachListHolder
 	{
 
-		// TextView textQi;
-		//
-		// TextView textMoney;
-		//
-		// TextView textDate;
-		//
-		// TextView textStatus;
-		//
-		// TextView textTitle;
-		//
-		// ImageView imageView;
+		TextView textTitle;
+
+		TextView textSize;
+
+		Button leftIcon;
 
 		private AttachListHolder(View convertView)
 		{
-			// textQi = (TextView) convertView.findViewById(R.id.text_qi);
-			// textMoney = (TextView) convertView.findViewById(R.id.text_money);
-			// textDate = (TextView) convertView.findViewById(R.id.text_date);
-			// textStatus = (TextView) convertView.findViewById(R.id.text_result);
-			// textTitle = (TextView) convertView.findViewById(R.id.text_title);
-			// imageView = (ImageView) convertView.findViewById(R.id.img_icon);
+			textTitle = (TextView) convertView.findViewById(R.id.text_title);
+			textSize = (TextView) convertView.findViewById(R.id.text_size);
+			leftIcon = (Button) convertView.findViewById(R.id.btn_left);
 		}
 
 		private void setData(Map<String, Object> map)
 		{
-			// String money = StringUtil.Object2String(map.get("betting_amount"));
-			// String cpType = StringUtil.Object2String(map.get("lottery_type_name"));
-			// textQi.setText(StringUtil.Object2String("第" + map.get("order_nper")));// xx+1.0e-6 betting_amount
-			// textMoney.setText(money.substring(0, money.indexOf(".")) + "元");
-			// textDate.setText(StringUtil.Object2String(map.get("time")));// 订单日期
-			// textStatus.setText(StringUtil.Object2String(map.get("order_status_name")));// 状态
-			// textTitle.setText(cpType);
-			// if (context.getResources().getString(R.string.gc_dlt).equals(cpType))
-			// imageView.setBackgroundResource(R.drawable.logo_dlt_72);
-			// else if (context.getResources().getString(R.string.gc_qxc).equals(cpType))
-			// imageView.setBackgroundResource(R.drawable.logo_qxc_72);
-			// else if (context.getResources().getString(R.string.gc_pl3).equals(cpType))
-			// imageView.setBackgroundResource(R.drawable.logo_pl3_72);
-			// else if (context.getResources().getString(R.string.gc_pl5).equals(cpType))
-			// imageView.setBackgroundResource(R.drawable.logo_pl5_72);
+			String[] a;// 分隔整个url
+			String[] b;// 分隔标题和文件类型
+			String url = StringUtil.Object2String(map.get("URL"));
+			if (!StringUtil.isBlank(url))
+			{
+				a = url.split("/");
+				url = a[a.length - 1];
+			}
+			b = url.replace(".", "!").split("!");
+			textTitle.setText(StringUtil.Object2String(url));
+			textSize.setText(StringUtil.Object2String(map.get("Size")));
+			leftIcon.setText(StringUtil.Object2String(b[b.length - 1]));
 		}
 	}
 

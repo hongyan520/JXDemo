@@ -48,8 +48,8 @@
 
                     <ImageView
                         android:id="@+id/img_self_icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="88dp"
+                        android:layout_height="88dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="16dp"
@@ -305,6 +305,8 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
+                        android:minLines="3"
+                        android:gravity="top"
                         android:background="@null"
                         android:hint="@string/left_self_introduce_hint"
                         android:text="个人介绍哦啊个人介绍哦个人介绍哦个人介绍哦个人介绍哦个人介绍哦个人介绍哦个人介绍哦个人介绍哦个人介绍哦个人介绍哦"

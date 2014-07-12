@@ -12,7 +12,7 @@
         android:paddingRight="16dp" >
 
         <Button
-            android:id="@+id/img_left"
+            android:id="@+id/btn_left"
             style="@style/textview_gray16_888888_bold"
             android:layout_width="73dp"
             android:layout_height="73dp"
@@ -27,7 +27,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:layout_toLeftOf="@+id/btn_right"
-            android:layout_toRightOf="@+id/img_left"
+            android:layout_toRightOf="@+id/btn_left"
             android:orientation="vertical" >
 
             <TextView
@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:text="英语口语英语口语英英语口语英语口语语口语.pptx" />
 
-            <TextView
+            <TextView android:id="@+id/text_size"
                 style="@style/textview_gray14_818181"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

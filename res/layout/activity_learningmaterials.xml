@@ -13,7 +13,7 @@
     </include>
 
     <ScrollView
-        android:id="@+id/scrollView1"
+        android:id="@+id/scrollView1" android:visibility="invisible"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
 
@@ -32,13 +32,13 @@
                 android:focusableInTouchMode="true"
                 android:orientation="vertical" >
 
-                <TextView
+                <TextView  android:id="@+id/text_title"
                     style="@style/textview_black20_bold"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:padding="16dp"
-                    android:text="如何如何如何" />
+                    android:text="" />
 
                 <ImageView
                     android:id="@+id/detail_top_image"
@@ -47,7 +47,7 @@
                     android:scaleType="centerCrop"
                     android:background="@drawable/four" />
 
-                <TextView
+                <TextView  android:id="@+id/text_content"
                     style="@style/set_about_black_14"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -66,7 +66,7 @@
                 android:gravity="center"
                 android:orientation="vertical" >
 
-                <TextView
+                <TextView  android:id="@+id/text_att_count"
                     style="@style/textview_white12_fefefe"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -102,7 +102,7 @@
                 android:gravity="center"
                 android:orientation="vertical" >
 
-                <TextView
+                <TextView  android:id="@+id/text_comment_count"
                     style="@style/textview_white12_fefefe"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -110,10 +110,10 @@
                     android:drawablePadding="8dp"
                     android:gravity="center_vertical"
                     android:paddingLeft="16dp"
-                    android:text="评论讨论" />
+                    android:text="3条讨论" />
             </LinearLayout>
 
-            <EditText
+            <EditText  android:id="@+id/edit_comment"
                 style="@style/login_black_16"
                 android:layout_width="fill_parent"
                 android:layout_height="89dp"

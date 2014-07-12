@@ -26,10 +26,11 @@ import com.demo.jxdemo.R;
 import com.demo.jxdemo.application.SharedPreferencesConfig;
 import com.demo.jxdemo.constant.CommandConstants;
 import com.demo.jxdemo.constant.Constant;
-import com.demo.jxdemo.ui.activity.BaseSlidingActivity;
+import com.demo.jxdemo.ui.activity.BaseFragmentActivity;
+import com.demo.jxdemo.ui.customviews.SlidingView;
 import com.demo.jxdemo.utils.ToastManager;
 
-public class OptionActivity extends BaseSlidingActivity
+public class OptionActivity extends BaseFragmentActivity
 {
 	private Button submitButton;
 
@@ -41,11 +42,16 @@ public class OptionActivity extends BaseSlidingActivity
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_menu_option);
-		loadMenu();
 
 		findViews();
+		initSlidingMenu();
 		initView();
 		setViewClick();
+	}
+
+	protected void initSlidingMenu()
+	{
+		side_drawer = new SlidingView(this).initSlidingMenu();
 	}
 
 	private void findViews()
@@ -79,10 +85,10 @@ public class OptionActivity extends BaseSlidingActivity
 	private void setViewClick()
 	{
 		((LinearLayout) findViewById(R.id.layout_return)).setOnClickListener(onClickAvoidForceListener);
-		submitButton.setOnClickListener(onClickAvoidForceListener);
+		submitButton.setOnClickListener(onclicks);
 	}
 
-	private OnClickAvoidForceListener onClickAvoidForceListener = new OnClickAvoidForceListener()
+	private OnClickAvoidForceListener onclicks = new OnClickAvoidForceListener()
 	{
 
 		@Override
@@ -90,10 +96,6 @@ public class OptionActivity extends BaseSlidingActivity
 		{
 			switch (v.getId())
 			{
-				case R.id.layout_return:
-					closeKeyboard();
-					getSlidingMenu().toggle();
-					break;
 				case R.id.btn_option:
 					showProgress(5 * 60 * 1000);
 					request();

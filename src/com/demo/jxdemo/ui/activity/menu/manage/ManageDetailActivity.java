@@ -12,8 +12,9 @@ import android.os.Message;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.ViewGroup.LayoutParams;
+import android.view.Window;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -48,11 +49,15 @@ public class ManageDetailActivity extends BaseActivity
 
 	private int acceptTraining = 0;
 
+	private String description;
+
 	private ImageView materialImageView;
 
 	private ImageView trainingImageView;
-	
+
 	private boolean isChange = false;
+
+	private WebView webView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -68,6 +73,7 @@ public class ManageDetailActivity extends BaseActivity
 		muBiao = getIntent().getStringExtra("muBiao");
 		acceptMaterial = getIntent().getIntExtra("AcceptMaterial", 0);
 		acceptTraining = getIntent().getIntExtra("AcceptTraining", 0);
+		description = getIntent().getStringExtra("Description");
 
 		findViews();
 		initView();
@@ -80,8 +86,10 @@ public class ManageDetailActivity extends BaseActivity
 		((ImageView) findViewById(R.id.imgview_return)).setBackgroundResource(R.drawable.img_back);
 		((ImageView) findViewById(R.id.imgview_return)).setVisibility(View.VISIBLE);
 
-		 trainingImageView = (ImageView) findViewById(R.id.img_xl);
-		 materialImageView = (ImageView) findViewById(R.id.img_dy);
+		trainingImageView = (ImageView) findViewById(R.id.img_xl);
+		materialImageView = (ImageView) findViewById(R.id.img_dy);
+
+		webView = (WebView) findViewById(R.id.web1);
 	}
 
 	private void initView()
@@ -96,10 +104,14 @@ public class ManageDetailActivity extends BaseActivity
 
 		((ImageView) findViewById(R.id.manage_detail_top_img)).setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT,
 				(int) currentHight));
-		
+
 		((TextView) findViewById(R.id.text_manage_yq)).setText(yaoQiu);
 		((TextView) findViewById(R.id.text_manage_zq)).setText(zhouQi);
 		((TextView) findViewById(R.id.text_manage_mb)).setText(muBiao);
+		// ((TextView) findViewById(R.id.text_description)).setText("<html><body>" + Html.fromHtml(description) + "</body></html>");
+		// webView.getSettings().setDefaultTextEncodingName("UTF-8");
+		// webView.loadData("<html><body>" + description + "</body></html>", "text/html", "UTF-8");
+		webView.loadDataWithBaseURL(null, "<html><body>" + description + "</body></html>", "text/html", "utf-8", null);
 
 		controlImg();
 
@@ -134,7 +146,8 @@ public class ManageDetailActivity extends BaseActivity
 			switch (v.getId())
 			{
 				case R.id.layout_return:
-					if(isChange){
+					if (isChange)
+					{
 						setResult(RESULT_OK);
 					}
 					finishMyActivity();
@@ -153,11 +166,11 @@ public class ManageDetailActivity extends BaseActivity
 
 	private void request(final String cmd)
 	{
-		isChange  = true;
+		isChange = true;
 		Map<String, Object> parasTemp = new HashMap<String, Object>();
 		parasTemp.put("UserToken", SharedPreferencesConfig.config(ManageDetailActivity.this).get(Constant.USER_TOKEN));
-		parasTemp.put("CourseID", id+"");
-
+		parasTemp.put("CourseID", id + "");
+		showProgress(2 * 60 * 1000);
 		new HttpPostAsync(ManageDetailActivity.this)
 		{
 			@Override
@@ -191,12 +204,12 @@ public class ManageDetailActivity extends BaseActivity
 						// 成功后处理
 						if (CommandConstants.ENGAGECOURSE.equals(cmd))
 						{
-							acceptMaterial = Integer.parseInt(mapstr.get("Status")+"");
+							acceptMaterial = Integer.parseInt(mapstr.get("Status") + "");
 							mHandler.sendEmptyMessage(1);
 						}
 						else if (CommandConstants.LEARNCOURSE.equals(cmd))
 						{
-							acceptTraining = Integer.parseInt(mapstr.get("Status")+"");
+							acceptTraining = Integer.parseInt(mapstr.get("Status") + "");
 							mHandler.sendEmptyMessage(2);
 						}
 						dismissProgress();
@@ -224,7 +237,7 @@ public class ManageDetailActivity extends BaseActivity
 			}
 		}
 	};
-	
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{

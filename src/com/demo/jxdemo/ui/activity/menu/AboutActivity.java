@@ -13,14 +13,11 @@ import android.widget.TextView;
 
 import com.demo.base.util.StringUtil;
 import com.demo.jxdemo.R;
-import com.demo.jxdemo.ui.activity.BaseSlidingActivity;
+import com.demo.jxdemo.ui.activity.BaseFragmentActivity;
+import com.demo.jxdemo.ui.customviews.SlidingView;
 
-public class AboutActivity extends BaseSlidingActivity
+public class AboutActivity extends BaseFragmentActivity
 {
-	private TextView urlText;
-
-	private TextView companyText;
-
 	private String fromLoginString = "";
 
 	@Override
@@ -36,35 +33,26 @@ public class AboutActivity extends BaseSlidingActivity
 		setViewClick();
 	}
 
+	protected void initSlidingMenu()
+	{
+		side_drawer = new SlidingView(this).initSlidingMenu();
+	}
+
 	private void findViews()
 	{
 		((TextView) findViewById(R.id.formTilte)).setText(getResources().getString(R.string.left_about));
 		if (StringUtil.isBlank(fromLoginString))
 		{
 			((ImageView) findViewById(R.id.imgview_return)).setBackgroundResource(R.drawable.top_left);
-			loadMenu();
+			initSlidingMenu();
 		}
 		else
 		{
 			((ImageView) findViewById(R.id.imgview_return)).setBackgroundResource(R.drawable.img_back);
-			setBehindContentView(R.layout.slidemenu_back_content); // 后面的布局(机构)
+			// setBehindContentView(R.layout.slidemenu_back_content); // 后面的布局(机构)
 		}
 		((ImageView) findViewById(R.id.imgview_return)).setVisibility(View.VISIBLE);
 
-		urlText = (TextView) findViewById(R.id.text_about_url);
-		companyText = (TextView) findViewById(R.id.text_about_company);
-
-		// SpannableUtil.spannable(getResources().getString(R.string.left_about_url1), getResources().getString(R.string.left_about_url1),
-		// urlText);
-		// SpannableUtil.spannable(getResources().getString(R.string.left_about_company1), "http://shuzhiying.com", companyText);
-
-		// SpannableString sp = new SpannableString(getResources().getString(R.string.left_about_url1));
-		// // 设置超链接
-		// sp.setSpan(new URLSpan(getResources().getString(R.string.left_about_url1)), 0, sp.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		// // SpannableString对象设置给TextView
-		// urlText.setText(sp);
-		// // 设置TextView可点击
-		// urlText.setMovementMethod(LinkMovementMethod.getInstance());
 	}
 
 	private void setViewClick()
@@ -86,7 +74,14 @@ public class AboutActivity extends BaseSlidingActivity
 					if (StringUtil.isBlank(fromLoginString))
 					{
 						closeKeyboard();
-						getSlidingMenu().toggle();
+						if (side_drawer.isMenuShowing())
+						{
+							side_drawer.showContent();
+						}
+						else
+						{
+							side_drawer.showMenu();
+						}
 					}
 					else
 						finish();

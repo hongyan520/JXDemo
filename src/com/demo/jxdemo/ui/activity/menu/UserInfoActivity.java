@@ -8,14 +8,6 @@ import java.util.Map;
 import ui.listener.OnClickAvoidForceListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PorterDuff.Mode;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -38,6 +30,7 @@ import com.demo.base.global.ActivityTaskManager;
 import com.demo.base.services.http.HttpPostAsync;
 import com.demo.base.support.BaseConstants;
 import com.demo.base.support.CacheSupport;
+import com.demo.base.util.BitmapUtils;
 import com.demo.base.util.FileUtils;
 import com.demo.base.util.HttpUtils;
 import com.demo.base.util.JsonUtil;
@@ -46,12 +39,13 @@ import com.demo.jxdemo.R;
 import com.demo.jxdemo.application.SharedPreferencesConfig;
 import com.demo.jxdemo.constant.CommandConstants;
 import com.demo.jxdemo.constant.Constant;
-import com.demo.jxdemo.ui.activity.BaseSlidingActivity;
+import com.demo.jxdemo.ui.activity.BaseFragmentActivity;
 import com.demo.jxdemo.ui.activity.main.MainActivity;
 import com.demo.jxdemo.ui.customviews.CustomDialog;
+import com.demo.jxdemo.ui.customviews.SlidingView;
 import com.demo.jxdemo.utils.ToastManager;
 
-public class UserInfoActivity extends BaseSlidingActivity
+public class UserInfoActivity extends BaseFragmentActivity
 {
 	private RelativeLayout cleanLayout;
 
@@ -80,12 +74,16 @@ public class UserInfoActivity extends BaseSlidingActivity
 	private CustomDialog cDialog = null;
 
 	private String fromLoginString;
-	
+
 	private String userImageStr;
-	
+
 	private TextView tvCacheSize;
-	
+
 	private String cacheRoot = BaseConstants.BASE_CACHE_PATH;
+
+	private String iconImgPath = BaseConstants.BASE_CACHE_PATH + BaseConstants.STATIC_PATH;
+
+	private String iconImgName = "iconimg.jpg";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -100,20 +98,25 @@ public class UserInfoActivity extends BaseSlidingActivity
 		setViewClick();
 	}
 
+	protected void initSlidingMenu()
+	{
+		side_drawer = new SlidingView(this).initSlidingMenu();
+	}
+
 	private void findViews()
 	{
 		((TextView) findViewById(R.id.formTilte)).setText(getResources().getString(R.string.left_self));
 		if (StringUtil.isBlank(fromLoginString))
 		{
 			((ImageView) findViewById(R.id.imgview_return)).setBackgroundResource(R.drawable.top_left);
-			loadMenu();
+			initSlidingMenu();
 		}
 		else
 		{
 			((ImageView) findViewById(R.id.imgview_return)).setBackgroundResource(R.drawable.img_back);
-			setBehindContentView(R.layout.slidemenu_back_content); // 后面的布局(机构)
+			// setBehindContentView(R.layout.slidemenu_back_content); // 后面的布局(机构)
 		}
-		
+
 		((ImageView) findViewById(R.id.imgview_return)).setVisibility(View.VISIBLE);
 		((TextView) findViewById(R.id.text_right)).setText(getResources().getString(R.string.left_self_save));
 		((TextView) findViewById(R.id.text_right)).setVisibility(View.VISIBLE);
@@ -126,7 +129,7 @@ public class UserInfoActivity extends BaseSlidingActivity
 		userLocationEditText = (EditText) findViewById(R.id.edit_userlocation);
 		userJobEditText = (EditText) findViewById(R.id.edit_userjob);
 		userIntroduceEditText = (EditText) findViewById(R.id.edit_userintroduce);
-		
+
 		tvCacheSize = (TextView) findViewById(R.id.tv_cache_size);
 
 		cleanLayout = (RelativeLayout) findViewById(R.id.rlayout_cleancache);
@@ -140,35 +143,39 @@ public class UserInfoActivity extends BaseSlidingActivity
 		String location = SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_LOCATION);
 		String job = SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_JOB);
 		String introduce = SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_INTRODUCTION);
-		String userAvatar = SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_AVATAR); 
-		
+		String userAvatar = SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_AVATAR);
+
 		// Bitmap bm = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + "/gixueIcon.jpg");
 		// bm = toRoundBitmap(bm);
 		// iconImg.setImageBitmap(bm);
-		if(!StringUtil.isBlank(userAvatar)){
-			 final String serverUrl = CommandConstants.URL_ROOT+userAvatar;
-			 final String localUrl = CacheSupport.staticServerUrlConvertToCachePath(serverUrl);
-			 new Thread(){
-			 public void run() {
-				 if(HttpUtils.downloadFile(serverUrl,localUrl)){
-					 Message msg = new Message();
-					 msg.what = 3;
-					 msg.obj = localUrl;
-					 mHandler.sendMessage(msg);
-				 }
-			 };
-			 }.start();
+		if (!StringUtil.isBlank(userAvatar))
+		{
+			final String serverUrl = CommandConstants.URL_ROOT + userAvatar;
+			final String localUrl = CacheSupport.staticServerUrlConvertToCachePath(serverUrl);
+			new Thread()
+			{
+				public void run()
+				{
+					if (HttpUtils.downloadFile(serverUrl, localUrl))
+					{
+						Message msg = new Message();
+						msg.what = 3;
+						msg.obj = localUrl;
+						mHandler.sendMessage(msg);
+					}
+				};
+			}.start();
 		}
-		
+
 		refreshCacheSize();// 刷新缓存大小
-		
+
 		userGenderIdTextView.setText(gender);
 		if ("1".equals(gender))
 			userGenderTextView.setText("男");
 		else if ("2".equals(gender))
 			userGenderTextView.setText("女");
 		else
-			userGenderTextView.setText("未设置");
+			userGenderTextView.setText("请选择");
 
 		userNameEditText.setText(name);
 		userTelEditText.setText(tel.replace(" ", ""));
@@ -183,17 +190,23 @@ public class UserInfoActivity extends BaseSlidingActivity
 		userIntroduceEditText.setSelection(introduce.length());
 
 		((ScrollView) findViewById(R.id.scrollView1)).setVisibility(View.VISIBLE);
+
+		if (StringUtil.isBlank(fromLoginString) && isRequest)
+		{
+			initSlidingMenu();
+		}
 		// TODO
 		if (!isRequest)
-			request();
+			request(isRequest);
 	}
-	
-	private void refreshCacheSize(){
+
+	private void refreshCacheSize()
+	{
 		String cachesize = FileUtils.calculatePathSize(cacheRoot);
 		tvCacheSize.setText(cachesize);
 	}
 
-	private void request()
+	private void request(final boolean isRefreshLeft)
 	{
 		Map<String, Object> parasTemp = new HashMap<String, Object>();
 		parasTemp.put("UserToken", SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_TOKEN));
@@ -229,7 +242,7 @@ public class UserInfoActivity extends BaseSlidingActivity
 					}
 					else
 					{
-						loadSuccessDeal(mapstr);// 成功后处理
+						loadSuccessDeal(mapstr, isRefreshLeft);// 成功后处理
 					}
 				}
 				return "";
@@ -238,13 +251,19 @@ public class UserInfoActivity extends BaseSlidingActivity
 	}
 
 	@SuppressWarnings("unchecked")
-	private void loadSuccessDeal(Map<String, Object> map)
+	private void loadSuccessDeal(Map<String, Object> map, boolean isRefreshLeft)
 	{
-		new LoadDealTask().execute(map);
+		new LoadDealTask(isRefreshLeft).execute(map);
 	}
 
 	class LoadDealTask extends AsyncTask<Map<String, Object>, Integer, Void>
 	{
+		boolean isRefreshLeft = false;
+
+		public LoadDealTask(boolean _isRefreshLeft)
+		{
+			isRefreshLeft = _isRefreshLeft;
+		}
 
 		@Override
 		protected void onPreExecute()
@@ -322,7 +341,8 @@ public class UserInfoActivity extends BaseSlidingActivity
 					break;
 				case 2:
 					// 保存成功
-					if (!StringUtil.isBlank(fromLoginString)){
+					if (!StringUtil.isBlank(fromLoginString))
+					{
 						// 跳转到首页
 						Intent intent = new Intent();
 						intent.setClass(UserInfoActivity.this, MainActivity.class);
@@ -332,10 +352,12 @@ public class UserInfoActivity extends BaseSlidingActivity
 					break;
 				case 3:
 					// 下载成功
-					//（file转bitmap转Drawable）
-					Drawable db = FileUtils.imgPathToDrawable(msg.obj.toString(), UserInfoActivity.this,60,60);
-					if(db != null){
-						iconImg.setBackgroundDrawable(db);
+					// （file转bitmap转Drawable）
+					Bitmap photo = FileUtils.getBitmapByimgPath(msg.obj.toString());
+					if (photo != null)
+					{
+						photo = BitmapUtils.toRoundBitmap(photo);
+						iconImg.setImageBitmap(photo);
 					}
 					break;
 				default:
@@ -365,14 +387,21 @@ public class UserInfoActivity extends BaseSlidingActivity
 					if (StringUtil.isBlank(fromLoginString))
 					{
 						closeKeyboard();
-						getSlidingMenu().toggle();
+						if (side_drawer.isMenuShowing())
+						{
+							side_drawer.showContent();
+						}
+						else
+						{
+							side_drawer.showMenu();
+						}
 					}
 					else
 						finish();
 					break;
 				case R.id.rlayout_cleancache:
 					ToastManager.getInstance(UserInfoActivity.this).showToast("清除成功");
-					FileUtils.deleteFilesByPath(cacheRoot,false);
+					FileUtils.deleteFilesByPath(cacheRoot, false);
 					refreshCacheSize();// 刷新缓存大小
 					break;
 				case R.id.layout_remark:
@@ -397,11 +426,13 @@ public class UserInfoActivity extends BaseSlidingActivity
 
 	private void saveInfo()
 	{
-		if(StringUtil.isBlank(userNameEditText.getText().toString())){
+		if (StringUtil.isBlank(userNameEditText.getText().toString()))
+		{
 			ToastManager.getInstance(UserInfoActivity.this).showToast("请输入名字");
 			return;
 		}
-		if(StringUtil.isBlank(userTelEditText.getText().toString())){
+		if (StringUtil.isBlank(userTelEditText.getText().toString()))
+		{
 			ToastManager.getInstance(UserInfoActivity.this).showToast("请输入手机号");
 			return;
 		}
@@ -417,6 +448,9 @@ public class UserInfoActivity extends BaseSlidingActivity
 		parasTemp.put("Introduction", userIntroduceEditText.getText().toString());
 		// 整数，代表性别。 0 －未设置 1 － 男 2 － 女
 		parasTemp.put("Sex", userGenderIdTextView.getText().toString());
+
+		Map<String, File> paramsFile = new HashMap<String, File>();
+		paramsFile.put("Avatar", new File(iconImgPath + iconImgName));
 
 		new HttpPostAsync(UserInfoActivity.this)
 		{
@@ -449,7 +483,7 @@ public class UserInfoActivity extends BaseSlidingActivity
 					else
 					{
 						// 成功后处理
-						request();
+						request(true);
 						ToastManager.getInstance(UserInfoActivity.this).showToast("保存成功!");
 						mHandler.sendEmptyMessage(2);
 					}
@@ -485,14 +519,14 @@ public class UserInfoActivity extends BaseSlidingActivity
 				userGenderIdTextView.setText("2");
 			}
 		});
-		cDialog = new CustomDialog(this, "选择性别", map, "不设置", new OnClickListener()
+		cDialog = new CustomDialog(this, "选择性别", map, "取消", new OnClickListener()
 		{
 
 			@Override
 			public void onClick(View v)
 			{
 				cDialog.cancel();
-				userGenderTextView.setText("未设置");
+				userGenderTextView.setText("请选择");
 				userGenderIdTextView.setText("0");
 			}
 		});
@@ -612,68 +646,19 @@ public class UserInfoActivity extends BaseSlidingActivity
 			 * BitmapDrawable(dBitmap);
 			 */
 			Bitmap photo = extras.getParcelable("data");
+			if (photo == null)
+			{
+				return;
+			}
 			ByteArrayOutputStream stream = new ByteArrayOutputStream();
 			photo.compress(Bitmap.CompressFormat.JPEG, 75, stream);// (0 - 100)压缩文件
-			photo = toRoundBitmap(photo);
+			photo = BitmapUtils.toRoundBitmap(photo);
 			iconImg.setImageBitmap(photo);
+			BitmapUtils.saveBitmap2file(photo, iconImgPath, iconImgName);
 			userImageStr = stream.toString();
 		}
 	}
 
-	public Bitmap toRoundBitmap(Bitmap bitmap)
-	{
-		int width = bitmap.getWidth();
-		int height = bitmap.getHeight();
-		float roundPx;
-		float left, top, right, bottom, dst_left, dst_top, dst_right, dst_bottom;
-		if (width <= height)
-		{
-			roundPx = width / 2;
-			top = 0;
-			bottom = width;
-			left = 0;
-			right = width;
-			height = width;
-			dst_left = 0;
-			dst_top = 0;
-			dst_right = width;
-			dst_bottom = width;
-		}
-		else
-		{
-			roundPx = height / 2;
-			float clip = (width - height) / 2;
-			left = clip;
-			right = width - clip;
-			top = 0;
-			bottom = height;
-			width = height;
-			dst_left = 0;
-			dst_top = 0;
-			dst_right = height;
-			dst_bottom = height;
-		}
-
-		Bitmap output = Bitmap.createBitmap(width, height, Config.ARGB_8888);
-		Canvas canvas = new Canvas(output);
-
-		final int color = 0xff424242;
-		final Paint paint = new Paint();
-		final Rect src = new Rect((int) left, (int) top, (int) right, (int) bottom);
-		final Rect dst = new Rect((int) dst_left, (int) dst_top, (int) dst_right, (int) dst_bottom);
-		final RectF rectF = new RectF(dst);
-
-		paint.setAntiAlias(true);
-
-		canvas.drawARGB(0, 0, 0, 0);
-		paint.setColor(color);
-		canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
-
-		paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
-		canvas.drawBitmap(bitmap, src, dst, paint);
-		return output;
-	}
-	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{

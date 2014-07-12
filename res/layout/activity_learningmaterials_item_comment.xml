@@ -38,6 +38,7 @@
                 android:text="Chan" />
 
             <TextView
+                android:id="@+id/text_time"
                 style="@style/textview_gray12_414141"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -46,6 +47,7 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/text_content"
             style="@style/textview_gray14_545454"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

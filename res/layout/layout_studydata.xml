@@ -32,9 +32,9 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginRight="5dp" android:maxLines="4" android:ellipsize="end"
             android:layout_marginTop="5dp"
-            android:text="嘻嘻嘻哈哈嘻嘻嘻哈哈嘻嘻嘻哈哈嘻嘻嘻哈哈嘻嘻嘻哈哈嘻嘻嘻哈哈嘻嘻嘻哈哈嘻嘻嘻哈哈" />
+            android:text="嘻嘻嘻哈哈嘻嘻嘻哈哈嘻嘻嘻哈哈嘻嘻嘻哈哈嘻嘻嘻哈哈嘻嘻嘻哈哈嘻嘻嘻哈哈嘻嘻嘻哈哈嘻嘻嘻哈哈嘻嘻嘻哈哈嘻嘻嘻哈哈嘻嘻嘻哈哈嘻嘻嘻哈哈嘻嘻嘻哈哈嘻嘻嘻哈哈嘻嘻嘻哈哈" />
 
         <RelativeLayout
             android:layout_width="fill_parent"

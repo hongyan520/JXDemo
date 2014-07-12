@@ -1,11 +1,9 @@
 package com.demo.jxdemo.ui.activity.menu.manage;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ui.listener.OnClickAvoidForceListener;
 import ui.listener.OnItemClickAvoidForceListener;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -29,12 +27,12 @@ import com.demo.jxdemo.R;
 import com.demo.jxdemo.application.SharedPreferencesConfig;
 import com.demo.jxdemo.constant.CommandConstants;
 import com.demo.jxdemo.constant.Constant;
-import com.demo.jxdemo.ui.activity.BaseSlidingActivity;
-import com.demo.jxdemo.ui.activity.menu.UserInfoActivity;
+import com.demo.jxdemo.ui.activity.BaseFragmentActivity;
 import com.demo.jxdemo.ui.adapter.ManageListAdapter;
+import com.demo.jxdemo.ui.customviews.SlidingView;
 import com.demo.jxdemo.utils.ToastManager;
 
-public class ManageActivity extends BaseSlidingActivity
+public class ManageActivity extends BaseFragmentActivity
 {
 	private ListView listView;
 
@@ -48,12 +46,18 @@ public class ManageActivity extends BaseSlidingActivity
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_menu_manage);
-		loadMenu();
 		showProgress(4 * 1000);
 		findViews();
+
+		initSlidingMenu();
 		initData();
 		initView();
 		setViewClick();
+	}
+
+	protected void initSlidingMenu()
+	{
+		side_drawer = new SlidingView(this).initSlidingMenu();
 	}
 
 	private void findViews()
@@ -210,7 +214,7 @@ public class ManageActivity extends BaseSlidingActivity
 		{
 			if (isrefreshUserCourse)
 			{ // 变化更新侧边栏数据
-				loadMenu();
+				initSlidingMenu();
 			}
 			dismissProgress();
 		}
@@ -249,27 +253,6 @@ public class ManageActivity extends BaseSlidingActivity
 		((LinearLayout) findViewById(R.id.layout_remark)).setOnClickListener(onClickAvoidForceListener);
 	}
 
-	private OnClickAvoidForceListener onClickAvoidForceListener = new OnClickAvoidForceListener()
-	{
-
-		@Override
-		public void onClickAvoidForce(View v)
-		{
-			switch (v.getId())
-			{
-				case R.id.layout_return:
-					closeKeyboard();
-					getSlidingMenu().toggle();
-					break;
-				case R.id.layout_remark:
-					ToastManager.getInstance(ManageActivity.this).showToast("完成.......");
-					break;
-				default:
-					break;
-			}
-		}
-	};
-
 	private OnItemClickAvoidForceListener onItemClickAvoidForceListener = new OnItemClickAvoidForceListener()
 	{
 
@@ -285,6 +268,7 @@ public class ManageActivity extends BaseSlidingActivity
 			intent.putExtra("muBiao", StringUtil.Object2String(lists.get(arg2).get("Aim")));
 			intent.putExtra("AcceptMaterial", (Integer) lists.get(arg2).get("AcceptMaterial"));// 学习资料
 			intent.putExtra("AcceptTraining", (Integer) lists.get(arg2).get("AcceptTraining"));// 训练项目
+			intent.putExtra("Description", StringUtil.Object2String(lists.get(arg2).get("Description")));
 			// startActivity(intent);
 			startActivityForResult(intent, 1);
 		}

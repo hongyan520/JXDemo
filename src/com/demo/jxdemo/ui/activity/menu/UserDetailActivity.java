@@ -29,7 +29,6 @@ import com.demo.jxdemo.application.SharedPreferencesConfig;
 import com.demo.jxdemo.constant.CommandConstants;
 import com.demo.jxdemo.constant.Constant;
 import com.demo.jxdemo.ui.activity.BaseActivity;
-import com.demo.jxdemo.ui.activity.login.LoginActivity;
 import com.demo.jxdemo.ui.activity.menu.manage.ManageDetailActivity;
 import com.demo.jxdemo.ui.adapter.UserDetailListAdapter;
 import com.demo.jxdemo.utils.ToastManager;
@@ -117,11 +116,9 @@ public class UserDetailActivity extends BaseActivity
 		nameTextView.setText(name);
 		locationTextView.setText(location);
 		introduceTextView.setText(introduce);
-
-		initListView(false);
-
 		if (!isRequest)
 			request(CommandConstants.USERPROFILE);
+		initListView(false);
 	}
 
 	private void initListView(boolean isRequest)

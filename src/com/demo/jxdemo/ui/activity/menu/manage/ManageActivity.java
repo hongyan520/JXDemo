@@ -1,5 +1,6 @@
 package com.demo.jxdemo.ui.activity.menu.manage;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,8 @@ import com.demo.jxdemo.application.SharedPreferencesConfig;
 import com.demo.jxdemo.constant.CommandConstants;
 import com.demo.jxdemo.constant.Constant;
 import com.demo.jxdemo.ui.activity.BaseFragmentActivity;
+import com.demo.jxdemo.ui.activity.login.LoginActivity;
+import com.demo.jxdemo.ui.activity.login.SplashActivity;
 import com.demo.jxdemo.ui.adapter.ManageListAdapter;
 import com.demo.jxdemo.ui.customviews.SlidingView;
 import com.demo.jxdemo.utils.ToastManager;
@@ -51,7 +54,6 @@ public class ManageActivity extends BaseFragmentActivity
 
 		initSlidingMenu();
 		initData();
-		initView();
 		setViewClick();
 	}
 
@@ -171,8 +173,14 @@ public class ManageActivity extends BaseFragmentActivity
 			{
 				if (map != null)
 				{
-					lists = JsonUtil.getList(map[0].get("Courses").toString());
-					mHandler.sendEmptyMessage(1);
+					if(lists != null){
+						lists.clear();
+					}else{
+						lists = new ArrayList<Map<String,Object>>();
+					}
+					List<Map<String, Object>> liststemp = JsonUtil.getList(map[0].get("Courses").toString());
+					lists.addAll(liststemp);
+					
 					if (isrefreshUserCourse)
 					{
 						Map<String, Object> parasTemp = new HashMap<String, Object>();
@@ -212,6 +220,9 @@ public class ManageActivity extends BaseFragmentActivity
 		@Override
 		protected void onPostExecute(Void result)
 		{
+			if(lists != null){
+				initView();
+			}
 			if (isrefreshUserCourse)
 			{ // 变化更新侧边栏数据
 				initSlidingMenu();
@@ -221,30 +232,17 @@ public class ManageActivity extends BaseFragmentActivity
 
 	}
 
-	private Handler mHandler = new Handler()
-	{
-
-		@Override
-		public void handleMessage(Message msg)
-		{
-			switch (msg.what)
-			{
-				case 1:
-					adapter = new ManageListAdapter(ManageActivity.this);
-					initView();
-					break;
-				default:
-					break;
-			}
-		}
-	};
-
 	private void initView()
 	{
-		adapter = new ManageListAdapter(ManageActivity.this);
-		adapter.setDataList(lists);
-		listView.setAdapter(adapter);
-		listView.setOnItemClickListener(onItemClickAvoidForceListener);
+		if(adapter == null){
+			adapter = new ManageListAdapter(ManageActivity.this);
+			adapter.setDataList(lists);
+			listView.setAdapter(adapter);
+			listView.setOnItemClickListener(onItemClickAvoidForceListener);
+		}else{
+			adapter.notifyDataSetChanged();
+		}
+		
 	}
 
 	private void setViewClick()

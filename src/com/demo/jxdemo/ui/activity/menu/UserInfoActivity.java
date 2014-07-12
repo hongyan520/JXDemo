@@ -8,6 +8,7 @@ import java.util.Map;
 import ui.listener.OnClickAvoidForceListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
+
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -101,6 +102,7 @@ public class UserInfoActivity extends BaseFragmentActivity
 	protected void initSlidingMenu()
 	{
 		side_drawer = new SlidingView(this).initSlidingMenu();
+		
 	}
 
 	private void findViews()
@@ -143,9 +145,10 @@ public class UserInfoActivity extends BaseFragmentActivity
 		String location = SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_LOCATION);
 		String job = SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_JOB);
 		String introduce = SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_INTRODUCTION);
+
 		String userAvatar = SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_AVATAR);
 
-		// Bitmap bm = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + "/gixueIcon.jpg");
+		// Bitmap bm = BitmapFactory.decodeFile(iconImgPath+iconImgName);
 		// bm = toRoundBitmap(bm);
 		// iconImg.setImageBitmap(bm);
 		if (!StringUtil.isBlank(userAvatar))
@@ -165,6 +168,7 @@ public class UserInfoActivity extends BaseFragmentActivity
 					}
 				};
 			}.start();
+
 		}
 
 		refreshCacheSize();// 刷新缓存大小
@@ -195,6 +199,7 @@ public class UserInfoActivity extends BaseFragmentActivity
 		{
 			initSlidingMenu();
 		}
+
 		// TODO
 		if (!isRequest)
 			request(isRequest);
@@ -252,6 +257,7 @@ public class UserInfoActivity extends BaseFragmentActivity
 
 	@SuppressWarnings("unchecked")
 	private void loadSuccessDeal(Map<String, Object> map, boolean isRefreshLeft)
+
 	{
 		new LoadDealTask(isRefreshLeft).execute(map);
 	}
@@ -262,6 +268,7 @@ public class UserInfoActivity extends BaseFragmentActivity
 
 		public LoadDealTask(boolean _isRefreshLeft)
 		{
+
 			isRefreshLeft = _isRefreshLeft;
 		}
 
@@ -353,12 +360,17 @@ public class UserInfoActivity extends BaseFragmentActivity
 				case 3:
 					// 下载成功
 					// （file转bitmap转Drawable）
+					// Drawable db = FileUtils.imgPathToDrawable(msg.obj.toString(), UserInfoActivity.this,0,0);
+					// if(db != null){
+					// iconImg.setBackgroundDrawable(db);
+					// }
 					Bitmap photo = FileUtils.getBitmapByimgPath(msg.obj.toString());
 					if (photo != null)
 					{
 						photo = BitmapUtils.toRoundBitmap(photo);
 						iconImg.setImageBitmap(photo);
 					}
+
 					break;
 				default:
 					break;
@@ -439,7 +451,7 @@ public class UserInfoActivity extends BaseFragmentActivity
 		showProgress(5 * 60 * 1000);
 		Map<String, Object> parasTemp = new HashMap<String, Object>();
 		parasTemp.put("UserToken", SharedPreferencesConfig.config(UserInfoActivity.this).get(Constant.USER_TOKEN));
-		parasTemp.put("Avatar", userImageStr);
+		// parasTemp.put("Avatar", userImageStr);
 		parasTemp.put("Title", userNameEditText.getText().toString());
 		parasTemp.put("PhoneNumber", userTelEditText.getText().toString());
 		parasTemp.put("AuthCode", "");// 验证码 当手机号码没有修改的时候,服务器端忽略此项。
@@ -450,6 +462,7 @@ public class UserInfoActivity extends BaseFragmentActivity
 		parasTemp.put("Sex", userGenderIdTextView.getText().toString());
 
 		Map<String, File> paramsFile = new HashMap<String, File>();
+
 		paramsFile.put("Avatar", new File(iconImgPath + iconImgName));
 
 		new HttpPostAsync(UserInfoActivity.this)
@@ -490,7 +503,7 @@ public class UserInfoActivity extends BaseFragmentActivity
 				}
 				return "";
 			}
-		}.execute(BaseConstants.POST_KEYVALUE_DATA, CommandConstants.URL + CommandConstants.UPDATEUSERPROFILE, parasTemp);
+		}.execute(BaseConstants.POST_FILES_DATA, CommandConstants.URL + CommandConstants.UPDATEUSERPROFILE, parasTemp, paramsFile);
 
 	}
 
@@ -646,6 +659,7 @@ public class UserInfoActivity extends BaseFragmentActivity
 			 * BitmapDrawable(dBitmap);
 			 */
 			Bitmap photo = extras.getParcelable("data");
+
 			if (photo == null)
 			{
 				return;

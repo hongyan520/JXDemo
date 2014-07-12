@@ -47,6 +47,7 @@ public class OptionActivity extends BaseFragmentActivity
 		initSlidingMenu();
 		initView();
 		setViewClick();
+		
 	}
 
 	protected void initSlidingMenu()
@@ -97,6 +98,10 @@ public class OptionActivity extends BaseFragmentActivity
 			switch (v.getId())
 			{
 				case R.id.btn_option:
+					if(StringUtil.isBlank(optionEditText.getText().toString())){
+						ToastManager.getInstance(OptionActivity.this).showToast("请输入意见内容!");
+						return;
+					}
 					showProgress(5 * 60 * 1000);
 					request();
 					break;

@@ -16,17 +16,22 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.demo.base.global.ActivityTaskManager;
+import com.demo.base.support.CacheSupport;
+import com.demo.base.util.BitmapUtils;
 import com.demo.base.util.FileUtils;
+import com.demo.base.util.HttpUtils;
 import com.demo.base.util.JsonUtil;
 import com.demo.base.util.StringUtil;
 import com.demo.base.util.Utils;
 import com.demo.jxdemo.R;
 import com.demo.jxdemo.application.SharedPreferencesConfig;
+import com.demo.jxdemo.constant.CommandConstants;
 import com.demo.jxdemo.constant.Constant;
 import com.demo.jxdemo.ui.activity.login.LoginActivity;
 import com.demo.jxdemo.ui.activity.main.MainActivity;
@@ -37,6 +42,7 @@ import com.demo.jxdemo.ui.activity.menu.UserInfoActivity;
 import com.demo.jxdemo.ui.activity.menu.manage.ManageActivity;
 import com.demo.jxdemo.ui.customviews.slide.SlidingMenu;
 import com.demo.jxdemo.ui.customviews.slide.SlidingMenu.OnClosedListener;
+import com.demo.jxdemo.ui.customviews.slide.SlidingMenu.OnOpenListener;
 import com.demo.jxdemo.utils.UIUtils;
 
 public class SlidingView
@@ -56,6 +62,8 @@ public class SlidingView
 	private Map<String, String> configMap;
 
 	private int current = 0;
+	
+	private ImageView imgUser;
 
 	public SlidingView(Activity activity)
 	{
@@ -92,12 +100,22 @@ public class SlidingView
 		// localSlidingMenu.setTouchModeBehind(SlidingMenu.SLIDING_CONTENT);//设置了这个会获取不到菜单里面的焦点，所以先注释掉
 		localSlidingMenu.setShadowWidthRes(R.dimen.shadow_width);// 设置阴影图片的宽度
 		localSlidingMenu.setShadowDrawable(R.drawable.shadow);// 设置阴影图片
-		localSlidingMenu.setBehindOffsetRes(R.dimen.slidingmenu_offset);// SlidingMenu划出时主页面显示的剩余宽度
+//		localSlidingMenu.setBehindOffsetRes(R.dimen.slidingmenu_offset);// SlidingMenu划出时主页面显示的剩余宽度
 		localSlidingMenu.setFadeDegree(0.35F);// SlidingMenu滑动时的渐变程度
 		localSlidingMenu.attachToActivity((Activity) activity, SlidingMenu.RIGHT);// 使SlidingMenu附加在Activity右边
 		// localSlidingMenu.setBehindWidthRes(R.dimen.left_drawer_avatar_size);//设置SlidingMenu菜单的宽度
 		localSlidingMenu.setMenu(R.layout.fragment_left);// 设置menu的布局文件
 		// localSlidingMenu.toggle();//动态判断自动关闭或开启SlidingMenu
+		
+		localSlidingMenu.setOnOpenListener(new OnOpenListener() {
+				
+				@Override
+				public void onOpen() {
+					// TODO Auto-generated method stub
+					System.out.println("open...");
+					closeKeyboard();
+				}
+			});
 		localSlidingMenu.setOnOpenedListener(new SlidingMenu.OnOpenedListener()
 		{
 			public void onOpened()
@@ -118,6 +136,15 @@ public class SlidingView
 
 		taskAddView();
 		return localSlidingMenu;
+	}
+	
+	public void closeKeyboard()
+	{
+		if (activity.getCurrentFocus() != null)
+		{
+			((InputMethodManager) activity.getSystemService(activity.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(),
+					InputMethodManager.HIDE_NOT_ALWAYS);
+		}
 	}
 
 	private void taskAddView()
@@ -149,6 +176,23 @@ public class SlidingView
 				cDialog.cancel();
 			}
 		});
+		
+		imgUser = ((ImageView) localSlidingMenu.findViewById(R.id.img_user));
+		String userAvatar = SharedPreferencesConfig.config(activity).get(Constant.USER_AVATAR);
+		if(!StringUtil.isBlank(userAvatar)){
+			 final String serverUrl = CommandConstants.URL_ROOT+userAvatar;
+			 final String localUrl = CacheSupport.staticServerUrlConvertToCachePath(serverUrl);
+			 new Thread(){
+			 public void run() {
+				 if(HttpUtils.downloadFile(serverUrl,localUrl)){
+					 Message msg = new Message();
+					 msg.what = 3;
+					 msg.obj = localUrl;
+					 mHandler.sendMessage(msg);
+				 }
+			 };
+			 }.start();
+		}
 
 		initData();
 		setViewClick();
@@ -322,6 +366,14 @@ public class SlidingView
 						db.setBounds(0, 0, db.getMinimumWidth(), db.getMinimumHeight());
 						((TextView) (courseLayout.findViewById(msg.arg1))).setCompoundDrawables(db, null, null, null);
 					}
+					break;
+				case 3:
+					Bitmap photo = FileUtils.getBitmapByimgPath(msg.obj.toString());
+					if(photo != null){
+						photo = BitmapUtils.toRoundBitmap(photo);
+						imgUser.setImageBitmap(photo);
+					}
+					
 					break;
 				default:
 					break;

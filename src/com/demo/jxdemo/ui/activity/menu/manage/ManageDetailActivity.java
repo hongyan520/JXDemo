@@ -213,6 +213,7 @@ public class ManageDetailActivity extends BaseActivity
 							mHandler.sendEmptyMessage(2);
 						}
 						dismissProgress();
+						ToastManager.getInstance(ManageDetailActivity.this).showToast("设置完成");
 					}
 				}
 				return "";

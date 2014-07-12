@@ -154,15 +154,15 @@ public class ManageListAdapter extends BaseAdapter
 			
 			// 动态设置drawableLeft图标，（先下载到本地缓存，再读取本地缓存）
 			// TODO
-//			String iconUrlStr = StringUtil.Object2String(map.get("Icon"));
-//			final String serverUrl = CommandConstants.URL_ROOT+iconUrlStr;
-//			final String localUrl = CacheSupport.staticServerUrlConvertToCachePath(serverUrl);
-//			// 下载成功
-//			//（file转bitmap转Drawable）
-//			Drawable db = FileUtils.imgPathToDrawable(localUrl, context,60,60);
-//			if(db != null){
-//				imageView.setBackgroundDrawable(db);
-//			}
+			String iconUrlStr = StringUtil.Object2String(map.get("Icon"));
+			final String serverUrl = CommandConstants.URL_ROOT+iconUrlStr;
+			final String localUrl = CacheSupport.staticServerUrlConvertToCachePath(serverUrl);
+			// 下载成功
+			//（file转bitmap转Drawable）
+			Drawable db = FileUtils.imgPathToDrawable(localUrl, context,60,60);
+			if(db != null){
+				imageView.setBackgroundDrawable(db);
+			}
 		}
 	}
 

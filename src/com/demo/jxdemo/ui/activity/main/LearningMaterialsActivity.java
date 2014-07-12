@@ -14,12 +14,16 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -243,7 +247,8 @@ public class LearningMaterialsActivity extends BaseActivity
 					if (flag == 1)
 					{
 						returnMap = map[0];
-						attachLists = JsonUtil.getList(map[0].get("AttachementArray").toString());
+						if (map[0].get("AttachementArray") != null)
+							attachLists = JsonUtil.getList(map[0].get("AttachementArray").toString());
 						mHandler.sendEmptyMessage(1);
 					}
 					else if (flag == 2)
@@ -389,12 +394,16 @@ public class LearningMaterialsActivity extends BaseActivity
 			commentLayout.removeAllViews();
 			for (int i = 0; i < commentshLists.size(); i++)
 			{
+				String name = StringUtil.Object2String(commentshLists.get(i).get("SenderTitle"));
+
 				LinearLayout layout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.activity_learningmaterials_item_comment,
 						null);
-				((TextView) layout.findViewById(R.id.text_title)).setText(StringUtil
-						.Object2String(commentshLists.get(i).get("SenderTitle")));
+				((TextView) layout.findViewById(R.id.text_title)).setText(name);
 				((TextView) layout.findViewById(R.id.text_time)).setText(StringUtil.Object2String(commentshLists.get(i).get("SentAt")));
 				((TextView) layout.findViewById(R.id.text_content)).setText(StringUtil.Object2String(commentshLists.get(i).get("Content")));
+
+				if (SharedPreferencesConfig.config(LearningMaterialsActivity.this).get(Constant.USER_NAME).equals(name))
+					((Button) layout.findViewById(R.id.btn_right)).setVisibility(View.VISIBLE);
 				commentLayout.addView(layout);
 			}
 		}
@@ -421,7 +430,7 @@ public class LearningMaterialsActivity extends BaseActivity
 					finishMyActivity();
 					break;
 				case R.id.detail_top_image:
-					if (returnMap != null && !StringUtil.isBlank(returnMap.get("Link").toString()))
+					if (returnMap != null && returnMap.get("Link") != null)
 					{
 						Intent intent = new Intent();
 						intent.putExtra("url", returnMap.get("Link").toString());
@@ -514,6 +523,33 @@ public class LearningMaterialsActivity extends BaseActivity
 		@Override
 		public void onItemClickAvoidForce(AdapterView<?> arg0, View arg1, int arg2, long arg3)
 		{
+		}
+	};
+
+	public TextWatcher textWatcher = new TextWatcher()
+	{
+
+		@Override
+		public void onTextChanged(CharSequence s, int start, int before, int count)
+		{
+
+		}
+
+		@Override
+		public void beforeTextChanged(CharSequence s, int start, int count, int after)
+		{
+		}
+
+		@Override
+		public void afterTextChanged(Editable s)
+		{
+			try
+			{
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
 		}
 	};
 

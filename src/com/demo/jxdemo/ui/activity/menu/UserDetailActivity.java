@@ -286,6 +286,7 @@ public class UserDetailActivity extends BaseActivity
 			intent.putExtra("muBiao", StringUtil.Object2String(lists.get(arg2).get("Aim")));
 			intent.putExtra("AcceptMaterial", (Integer) lists.get(arg2).get("AcceptMaterial"));// 学习资料
 			intent.putExtra("AcceptTraining", (Integer) lists.get(arg2).get("AcceptTraining"));// 训练项目
+			intent.putExtra("Description", StringUtil.Object2String(lists.get(arg2).get("Description")));
 			startActivity(intent);
 		}
 	};

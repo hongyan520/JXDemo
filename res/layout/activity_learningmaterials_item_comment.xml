@@ -59,7 +59,7 @@
             android:text="我是评论我是评论我是评论我是评论我是评论我是评论我是评论我是评论我是评论我是评论我是评论我是评论我是评论我是评论我是评论我是评论我是评论" />
 
         <Button
-            android:id="@+id/btn_right"
+            android:id="@+id/btn_right" android:visibility="invisible"
             style="@style/textview_red16"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

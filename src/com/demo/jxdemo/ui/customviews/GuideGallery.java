@@ -59,7 +59,7 @@ public class GuideGallery extends Gallery
 		}
 		onKeyDown(kEvent, null);
 		if (this.getSelectedItemPosition() == 0)
-			this.setSelection(SwitherImageAdapter.imgs.length);
+			this.setSelection(SwitherImageAdapter.bitmaps.size());
 		System.out.println("DDD" + this.getSelectedItemPosition());
 		new java.util.Timer().schedule(new TimerTask()
 		{

@@ -507,9 +507,14 @@ public class MainActivity extends BaseFragmentActivity
 		getWindowManager().getDefaultDisplay().getMetrics(dm);
 		int screenW = dm.widthPixels;
 		bmpWidth = screenW / tagNum;
-		offset = (float) (screenW / tagNum / cursorWidth);// 计算偏移量
 		Matrix matrix = new Matrix();
-		matrix.postScale(offset, 1);
+		//offset = (float) (screenW / tagNum / cursorWidth);// 计算偏移量
+		//matrix.postScale(offset, 1);
+		offset = (bmpWidth - cursorWidth) / 2;
+		matrix.setTranslate(offset, 0);
+		android.widget.LinearLayout.LayoutParams layout = (android.widget.LinearLayout.LayoutParams) cursor.getLayoutParams();
+		layout.width = bmpWidth;
+		cursor.setLayoutParams(layout); // 动态设置宽度
 		cursor.setImageMatrix(matrix);// 设置动画初始位置
 		
 //		offset = ((dm.widthPixels / tagNum) - cursorWidth) / 2;
@@ -716,7 +721,7 @@ public class MainActivity extends BaseFragmentActivity
 					bottomLayout.setVisibility(View.VISIBLE);
 					break;
 				case 2:
-					for (int i = 0; i < bitmapLists.size(); i++)
+					for (int i = 0; i < bannersLists.size(); i++)
 					{
 						ImageView pointView = new ImageView(MainActivity.this);
 						if (i == 0)

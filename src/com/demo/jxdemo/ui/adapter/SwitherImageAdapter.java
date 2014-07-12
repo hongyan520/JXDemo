@@ -1,25 +1,31 @@
 package com.demo.jxdemo.ui.adapter;
 
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Gallery;
 import android.widget.ImageView;
 
+import com.demo.base.util.StringUtil;
 import com.demo.jxdemo.R;
+import com.demo.jxdemo.ui.activity.main.LearningMaterialsActivity;
 import com.demo.jxdemo.ui.activity.main.MainActivity;
+import com.demo.jxdemo.ui.activity.menu.ViewWebViewActivity;
 
 public class SwitherImageAdapter extends BaseAdapter
 {
-	private List<String> imageUrls; // 图片地址list
+	private List<String> linkLists;
 
 	private Context context;
 
@@ -31,15 +37,19 @@ public class SwitherImageAdapter extends BaseAdapter
 
 	ImageView imageView;
 
-	public static Integer[] imgs = { R.drawable.one, R.drawable.two, R.drawable.three, R.drawable.four };
-
-	private String[] myuri = { "http://www.36939.net/", "http://www.36939.net/", "http://www.36939.net/", "http://www.36939.net/" };
+	public static List<Bitmap> bitmaps;
 
 	public SwitherImageAdapter(/* List<String> imageUrls, */Context context)
 	{
 		// this.imageUrls = imageUrls;
 		this.context = context;
 		this.self = this;
+	}
+
+	public void setImg(List<Bitmap> bitmaps, List<String> linkLists)
+	{
+		this.bitmaps = bitmaps;
+		this.linkLists = linkLists;
 	}
 
 	public int getCount()
@@ -49,7 +59,7 @@ public class SwitherImageAdapter extends BaseAdapter
 
 	public Object getItem(int position)
 	{
-		return imageUrls.get(position % imgs.length);
+		return linkLists.get(position % bitmaps.size());
 	}
 
 	public long getItemId(int position)
@@ -83,7 +93,7 @@ public class SwitherImageAdapter extends BaseAdapter
 
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
-
+		final String link = StringUtil.Object2String(linkLists.get(position % linkLists.size()));
 		// Bitmap image;
 		if (convertView == null)
 		{
@@ -100,23 +110,22 @@ public class SwitherImageAdapter extends BaseAdapter
 			 * task.execute(imageUrls.get(position % imageUrls.size()));
 			 * }
 			 */
-			convertView.setTag(imgs);
+
+			convertView.setTag(bitmaps);
 
 		}
 		else
 		{
 			// image = (Bitmap) convertView.getTag();
 		}
-		// TextView textView = (TextView) convertView.findViewById(R.id.gallery_text);
-		// textView.setText(position % imgs.length+" sdfsdfdsfdf");
-		// textView.setBackgroundColor(Color.argb(200, 135, 135, 152));
 		imageView = (ImageView) convertView.findViewById(R.id.gallery_image);
-		imageView.setImageResource(imgs[position % imgs.length]);
+		// imageView.setImageResource(imgs[position % imgs.length]);
+		imageView.setImageBitmap(bitmaps.get(position % bitmaps.size()));
 		// 设置缩放比例：保持原样
 		imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 		// textView.setText(position % imgs.length+" sdfsdfdsfdf");
-//		((SwitherImageActivity) context).changePointView(position % imgs.length);
-		((MainActivity) context).changePointView(position % imgs.length);
+		// ((SwitherImageActivity) context).changePointView(position % imgs.length);
+		((MainActivity) context).changePointView(position % bitmaps.size());
 		/*
 		 * imageView.setOnClickListener(new OnClickListener() {
 		 * @Override
@@ -126,6 +135,21 @@ public class SwitherImageAdapter extends BaseAdapter
 		 * }
 		 * });
 		 */
+		// imageView.setOnClickListener(new OnClickListener()
+		// {
+		//
+		// @Override
+		// public void onClick(View v)
+		// {
+		// if (!StringUtil.isBlank(link))
+		// {
+		// Intent intent = new Intent();
+		// intent.putExtra("url", link);
+		// intent.setClass(context, ViewWebViewActivity.class);
+		// context.startActivity(intent);
+		// }
+		// }
+		// });
 		return convertView;
 
 	}

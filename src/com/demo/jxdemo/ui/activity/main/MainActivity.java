@@ -38,6 +38,10 @@ import android.widget.TextView;
 import com.demo.base.global.ActivityTaskManager;
 import com.demo.base.services.http.HttpPostAsync;
 import com.demo.base.support.BaseConstants;
+import com.demo.base.support.CacheSupport;
+import com.demo.base.util.BitmapUtils;
+import com.demo.base.util.FileUtils;
+import com.demo.base.util.HttpUtils;
 import com.demo.base.util.JsonUtil;
 import com.demo.base.util.StringUtil;
 import com.demo.base.util.Utils;
@@ -122,6 +126,12 @@ public class MainActivity extends BaseFragmentActivity
 
 	public Button btn4;
 
+	private List<Map<String, Object>> bannersLists;
+
+	private List<Bitmap> bitmapLists = new ArrayList<Bitmap>();
+
+	private List<String> linkLists = new ArrayList<String>();
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -164,7 +174,8 @@ public class MainActivity extends BaseFragmentActivity
 		};
 		timeThread.start();
 		init();
-		request();
+		request(CommandConstants.LEARNINGFRAGMENTS);
+		request(CommandConstants.BANNERS);
 	}
 
 	private void init()
@@ -180,9 +191,10 @@ public class MainActivity extends BaseFragmentActivity
 		images_ga = (GuideGallery) findViewById(R.id.image_wall_gallery);
 		images_ga.setImageActivity(this);
 		images_ga.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, (int) currentHight));
-
-		SwitherImageAdapter imageAdapter = new SwitherImageAdapter(this);
-		images_ga.setAdapter(imageAdapter);
+		//
+		// SwitherImageAdapter imageAdapter = new SwitherImageAdapter(this);
+		// imageAdapter.setImg(bitmapLists);
+		// images_ga.setAdapter(imageAdapter);
 		LinearLayout pointLinear = (LinearLayout) findViewById(R.id.gallery_point_linear);
 		LayoutParams params = pointLinear.getLayoutParams();
 		params.height = 50;
@@ -206,13 +218,6 @@ public class MainActivity extends BaseFragmentActivity
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3)
 			{
 				System.out.println(arg2 + "arg2");
-				/*
-				 * switch (arg2) { case 0: uri = Uri.parse("http://www.36939.net/"); intent = new Intent(Intent.ACTION_VIEW, uri); startActivity(intent); break;
-				 * case 1: uri = Uri.parse("http://www.jiqunejia.com/default.aspx"); intent = new Intent(Intent.ACTION_VIEW, uri); startActivity(intent); break;
-				 * case 2: uri = Uri.parse("http://www.jiqunejia.tv/"); intent = new Intent(Intent.ACTION_VIEW, uri); startActivity(intent); break; case 3: uri
-				 * = Uri.parse("http://city.4000100006.com/"); intent = new Intent(Intent.ACTION_VIEW, uri); startActivity(intent); break; default: break; }
-				 */
-
 			}
 		});
 
@@ -560,9 +565,9 @@ public class MainActivity extends BaseFragmentActivity
 		}
 	};
 
-	private void request()
+	private void request(final String cmd)
 	{
-
+		showProgress(6 * 1000);
 		Map<String, Object> parasTemp = new HashMap<String, Object>();
 		parasTemp.put("UserToken", SharedPreferencesConfig.config(MainActivity.this).get(Constant.USER_TOKEN));
 
@@ -571,13 +576,15 @@ public class MainActivity extends BaseFragmentActivity
 			@Override
 			public Object backResult(Object result)
 			{// 请求回调
-				System.out.println("CourseList=" + result);
+				// System.out.println("CourseList=" + result);
 				if (result == null || "".equals(result.toString()))
 				{
+					dismissProgress();
 					ToastManager.getInstance(MainActivity.this).showToast("服务器异常，请联系管理员!");
 				}
 				else if (BaseConstants.HTTP_REQUEST_FAIL.equals(result.toString().trim()))
 				{
+					dismissProgress();
 					ToastManager.getInstance(MainActivity.this).showToast("连接不上服务器");
 				}
 				else
@@ -594,15 +601,45 @@ public class MainActivity extends BaseFragmentActivity
 					else
 					{
 						// 成功后处理
-						String data = mapstr.get("Fragments").toString();// mapstr.get("Fragments").toString().replace("\"", "\\\"");
-						SharedPreferencesConfig.saveConfig(MainActivity.this, Constant.USER_TEST, data);
-						tabList = JsonUtil.getList(data);
-						mHandler.sendEmptyMessage(1);
+						if (cmd.equals(CommandConstants.LEARNINGFRAGMENTS))
+						{
+							String data = mapstr.get("Fragments").toString();// mapstr.get("Fragments").toString().replace("\"", "\\\"");
+							SharedPreferencesConfig.saveConfig(MainActivity.this, Constant.USER_TEST, data);
+							tabList = JsonUtil.getList(data);
+							mHandler.sendEmptyMessage(1);
+						}
+						else
+						{
+							bannersLists = JsonUtil.getList(mapstr.get("Banners").toString());
+							bitmapLists.clear();
+							for (int i = 0; i < bannersLists.size(); i++)
+							{
+								final String serverUrl = CommandConstants.URL_ROOT + bannersLists.get(i).get("Image");
+								final String localUrl = CacheSupport.staticServerUrlConvertToCachePath(serverUrl);
+								linkLists.add(bannersLists.get(i).get("Link") == null ? "" : bannersLists.get(i).get("Link").toString());
+								new Thread()
+								{
+									public void run()
+									{
+										if (HttpUtils.downloadFile(serverUrl, localUrl))
+										{
+											Bitmap photo = FileUtils.getBitmapByimgPath(localUrl);
+											if (photo != null)
+											{
+												bitmapLists.add(photo);
+											}
+										}
+									};
+								}.start();
+							}
+							mHandler.sendEmptyMessage(2);
+						}
 					}
+					dismissProgress();
 				}
 				return "";
 			}
-		}.execute(BaseConstants.POST_KEYVALUE_DATA, CommandConstants.URL + CommandConstants.LEARNINGFRAGMENTS, parasTemp);
+		}.execute(BaseConstants.POST_KEYVALUE_DATA, CommandConstants.URL + cmd, parasTemp);
 
 	}
 
@@ -618,6 +655,11 @@ public class MainActivity extends BaseFragmentActivity
 				case 1:
 					initFragment();
 					bottomLayout.setVisibility(View.VISIBLE);
+					break;
+				case 2:
+					SwitherImageAdapter imageAdapter = new SwitherImageAdapter(MainActivity.this);
+					imageAdapter.setImg(bitmapLists,linkLists);
+					images_ga.setAdapter(imageAdapter);
 					break;
 				default:
 					break;

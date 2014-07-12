@@ -2,9 +2,9 @@ package com.demo.jxdemo.constant;
 
 public class CommandConstants
 {
-	
+
 	public static final String URL_ROOT = "http://dev.gixue.com";
-	
+
 	/** Url */
 	public static final String URL = "http://dev.gixue.com/Api/";
 
@@ -16,6 +16,9 @@ public class CommandConstants
 
 	/** 登陆 */
 	public static final String LOGIN = "SignIn";
+
+	/** 获取首页轮播图片 */
+	public static final String BANNERS = "Banners";
 
 	/** 获取用户信息 */
 	public static final String USERPROFILE = "UserProfile";

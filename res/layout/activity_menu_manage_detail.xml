@@ -228,7 +228,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_margin="16dp"
-                android:background="@color/bg_color" />
+                android:background="@color/transparent" />
         </LinearLayout>
     </ScrollView>
 

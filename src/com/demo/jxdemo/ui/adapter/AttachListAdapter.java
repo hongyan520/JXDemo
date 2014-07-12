@@ -4,16 +4,28 @@ import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.demo.base.global.ActivityTaskManager;
+import com.demo.base.support.CacheSupport;
+import com.demo.base.util.BitmapUtils;
+import com.demo.base.util.FileUtils;
+import com.demo.base.util.HttpUtils;
 import com.demo.base.util.StringUtil;
 import com.demo.jxdemo.R;
+import com.demo.jxdemo.constant.CommandConstants;
+import com.demo.jxdemo.ui.activity.main.MainActivity;
+import com.demo.jxdemo.ui.activity.menu.UserInfoActivity;
 
 public class AttachListAdapter extends BaseAdapter
 {
@@ -33,6 +45,8 @@ public class AttachListAdapter extends BaseAdapter
 	 */
 	@SuppressWarnings("unused")
 	private Context context;
+
+	private AttachListHolder holder = null;
 
 	/**
 	 * 构造方法
@@ -77,7 +91,7 @@ public class AttachListAdapter extends BaseAdapter
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent)
 	{
-		Map<String, Object> map = list.get(position);
+		final Map<String, Object> map = list.get(position);
 		// 先确保view存在
 		if (convertView == null)
 		{
@@ -85,11 +99,11 @@ public class AttachListAdapter extends BaseAdapter
 		}
 
 		// 获得holder
-		AttachListHolder holder = null;
+
 		Object tag = convertView.getTag();
 		if (tag == null)
 		{
-			holder = new AttachListHolder(convertView);
+			holder = new AttachListHolder(convertView, map);
 		}
 		else
 		{
@@ -102,6 +116,30 @@ public class AttachListAdapter extends BaseAdapter
 		return convertView;
 	}
 
+	private Handler mHandler = new Handler()
+	{
+
+		@Override
+		public void handleMessage(Message msg)
+		{
+			switch (msg.what)
+			{
+				case 1:
+					if ("下载".equals(holder.rightBtn.getText().toString()))
+					{
+						holder.rightBtn.setText("暂停");
+					}
+					else if ("暂停".equals(holder.rightBtn.getText().toString()))
+					{
+						holder.rightBtn.setText("下载");
+					}
+					break;
+				default:
+					break;
+			}
+		}
+	};
+
 	private class AttachListHolder
 	{
 
@@ -111,11 +149,38 @@ public class AttachListAdapter extends BaseAdapter
 
 		Button leftIcon;
 
-		private AttachListHolder(View convertView)
+		Button rightBtn;
+
+		private AttachListHolder(View convertView, final Map<String, Object> map)
 		{
 			textTitle = (TextView) convertView.findViewById(R.id.text_title);
 			textSize = (TextView) convertView.findViewById(R.id.text_size);
 			leftIcon = (Button) convertView.findViewById(R.id.btn_left);
+			rightBtn = (Button) convertView.findViewById(R.id.btn_right);
+
+			rightBtn.setOnClickListener(new OnClickListener()
+			{
+
+				@Override
+				public void onClick(View v)
+				{
+					final String serverUrl = CommandConstants.URL_ROOT + StringUtil.Object2String(map.get("URL"));
+					final String localUrl = CacheSupport.staticServerUrlConvertToCachePath(serverUrl);
+					new Thread()
+					{
+						public void run()
+						{
+							if (HttpUtils.downloadFile(serverUrl, localUrl))
+							{
+								Message msg = new Message();
+								msg.what = 1;
+								msg.obj = localUrl;
+								mHandler.sendMessage(msg);
+							}
+						};
+					}.start();
+				}
+			});
 		}
 
 		private void setData(Map<String, Object> map)

@@ -6,6 +6,7 @@ import java.util.Map;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
@@ -45,8 +46,6 @@ public class AttachListAdapter extends BaseAdapter
 	 */
 	@SuppressWarnings("unused")
 	private Context context;
-
-	private AttachListHolder holder = null;
 
 	/**
 	 * 构造方法
@@ -101,9 +100,10 @@ public class AttachListAdapter extends BaseAdapter
 		// 获得holder
 
 		Object tag = convertView.getTag();
+		final AttachListHolder holder;
 		if (tag == null)
 		{
-			holder = new AttachListHolder(convertView, map);
+			holder = new AttachListHolder(convertView);
 		}
 		else
 		{
@@ -112,6 +112,33 @@ public class AttachListAdapter extends BaseAdapter
 		holder.setData(map);
 		// 设置tag
 		convertView.setTag(holder);
+		
+		holder.rightBtn.setOnClickListener(new OnClickListener()
+		{
+
+			@Override
+			public void onClick(final View v)
+			{
+				final String serverUrl = CommandConstants.URL_ROOT + StringUtil.Object2String(map.get("URL"));
+				final String localUrl = CacheSupport.staticServerUrlConvertToCachePath(serverUrl);
+				new Thread()
+				{
+					public void run()
+					{
+						if (HttpUtils.downloadFile(serverUrl, localUrl))
+						{
+							Message msg = new Message();
+							msg.what = 1;
+							msg.obj = holder;
+							Bundle bundle = new Bundle();
+							bundle.putString("localUrl", localUrl);
+							msg.setData(bundle);
+							mHandler.sendMessage(msg);
+						}
+					};
+				}.start();
+			}
+		});
 
 		return convertView;
 	}
@@ -122,9 +149,11 @@ public class AttachListAdapter extends BaseAdapter
 		@Override
 		public void handleMessage(Message msg)
 		{
+			
 			switch (msg.what)
 			{
 				case 1:
+					AttachListHolder holder = (AttachListHolder) msg.obj;
 					if ("下载".equals(holder.rightBtn.getText().toString()))
 					{
 						holder.rightBtn.setText("暂停");
@@ -151,36 +180,12 @@ public class AttachListAdapter extends BaseAdapter
 
 		Button rightBtn;
 
-		private AttachListHolder(View convertView, final Map<String, Object> map)
+		private AttachListHolder(View convertView)
 		{
 			textTitle = (TextView) convertView.findViewById(R.id.text_title);
 			textSize = (TextView) convertView.findViewById(R.id.text_size);
 			leftIcon = (Button) convertView.findViewById(R.id.btn_left);
 			rightBtn = (Button) convertView.findViewById(R.id.btn_right);
-
-			rightBtn.setOnClickListener(new OnClickListener()
-			{
-
-				@Override
-				public void onClick(View v)
-				{
-					final String serverUrl = CommandConstants.URL_ROOT + StringUtil.Object2String(map.get("URL"));
-					final String localUrl = CacheSupport.staticServerUrlConvertToCachePath(serverUrl);
-					new Thread()
-					{
-						public void run()
-						{
-							if (HttpUtils.downloadFile(serverUrl, localUrl))
-							{
-								Message msg = new Message();
-								msg.what = 1;
-								msg.obj = localUrl;
-								mHandler.sendMessage(msg);
-							}
-						};
-					}.start();
-				}
-			});
 		}
 
 		private void setData(Map<String, Object> map)

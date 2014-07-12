@@ -118,6 +118,10 @@ public class SwitherImageAdapter extends BaseAdapter
 		{
 			// image = (Bitmap) convertView.getTag();
 		}
+		if(bitmaps.size() == 0){
+			return convertView;
+		}
+		
 		imageView = (ImageView) convertView.findViewById(R.id.gallery_image);
 		// imageView.setImageResource(imgs[position % imgs.length]);
 		imageView.setImageBitmap(bitmaps.get(position % bitmaps.size()));

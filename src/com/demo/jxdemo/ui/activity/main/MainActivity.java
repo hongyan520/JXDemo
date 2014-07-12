@@ -39,7 +39,6 @@ import com.demo.base.global.ActivityTaskManager;
 import com.demo.base.services.http.HttpPostAsync;
 import com.demo.base.support.BaseConstants;
 import com.demo.base.support.CacheSupport;
-import com.demo.base.util.BitmapUtils;
 import com.demo.base.util.FileUtils;
 import com.demo.base.util.HttpUtils;
 import com.demo.base.util.JsonUtil;
@@ -50,6 +49,7 @@ import com.demo.jxdemo.application.SharedPreferencesConfig;
 import com.demo.jxdemo.constant.CommandConstants;
 import com.demo.jxdemo.constant.Constant;
 import com.demo.jxdemo.ui.activity.BaseFragmentActivity;
+import com.demo.jxdemo.ui.activity.menu.ViewWebViewActivity;
 import com.demo.jxdemo.ui.adapter.SwitherImageAdapter;
 import com.demo.jxdemo.ui.adapter.main.FragmentPagerListAdapter;
 import com.demo.jxdemo.ui.customviews.GuideGallery;
@@ -132,6 +132,8 @@ public class MainActivity extends BaseFragmentActivity
 
 	private List<String> linkLists = new ArrayList<String>();
 
+	private LinearLayout pointLayout;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -195,31 +197,32 @@ public class MainActivity extends BaseFragmentActivity
 		// SwitherImageAdapter imageAdapter = new SwitherImageAdapter(this);
 		// imageAdapter.setImg(bitmapLists);
 		// images_ga.setAdapter(imageAdapter);
-		LinearLayout pointLinear = (LinearLayout) findViewById(R.id.gallery_point_linear);
-		LayoutParams params = pointLinear.getLayoutParams();
+		pointLayout = (LinearLayout) findViewById(R.id.gallery_point_linear);
+		LayoutParams params = pointLayout.getLayoutParams();
 		params.height = 50;
 		params.width = LayoutParams.FILL_PARENT;
-		pointLinear.setLayoutParams(params);
-		pointLinear.setBackgroundColor(getResources().getColor(R.color.bg_color));
-		for (int i = 0; i < 4; i++)
-		{
-			ImageView pointView = new ImageView(this);
-			if (i == 0)
-			{
-				pointView.setBackgroundResource(R.drawable.feature_point_cur);
-			}
-			else
-				pointView.setBackgroundResource(R.drawable.feature_point);
-			pointLinear.addView(pointView);
-		}
-		images_ga.setOnItemClickListener(new OnItemClickListener()
-		{
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3)
-			{
-				System.out.println(arg2 + "arg2");
-			}
-		});
+		pointLayout.setLayoutParams(params);
+		pointLayout.setBackgroundColor(getResources().getColor(R.color.bg_color));
+		pointLayout.removeAllViews();
+		// for (int i = 0; i < 4; i++)
+		// {
+		// ImageView pointView = new ImageView(this);
+		// if (i == 0)
+		// {
+		// pointView.setBackgroundResource(R.drawable.feature_point_cur);
+		// }
+		// else
+		// pointView.setBackgroundResource(R.drawable.feature_point);
+		// pointLayout.addView(pointView);
+		// }
+		// images_ga.setOnItemClickListener(new OnItemClickListener()
+		// {
+		// @Override
+		// public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3)
+		// {
+		// System.out.println(arg2 + "arg2");
+		// }
+		// });
 
 		images_ga.setFocusable(true);
 		images_ga.setFocusableInTouchMode(true);
@@ -657,8 +660,69 @@ public class MainActivity extends BaseFragmentActivity
 					bottomLayout.setVisibility(View.VISIBLE);
 					break;
 				case 2:
+					for (int i = 0; i < bitmapLists.size(); i++)
+					{
+						ImageView pointView = new ImageView(MainActivity.this);
+						if (i == 0)
+						{
+							pointView.setBackgroundResource(R.drawable.feature_point_cur);
+						}
+						else
+							pointView.setBackgroundResource(R.drawable.feature_point);
+						pointLayout.addView(pointView);
+					}
+					// images_ga.setOnItemClickListener(new OnItemClickListener()
+					// {
+					// @Override
+					// public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3)
+					// {
+					// if (!StringUtil.isBlank(linkLists.get(arg2)))
+					// {
+					// Intent intent = new Intent();
+					// intent.putExtra("url", linkLists.get(arg2));
+					// intent.setClass(MainActivity.this, ViewWebViewActivity.class);
+					// startActivity(intent);
+					// }
+					//
+					// }
+					// });
+
+					// LayoutParams params = pointLayout.getLayoutParams();
+					// params.height = 50;
+					// params.width = LayoutParams.FILL_PARENT;
+					// pointLayout.setLayoutParams(params);
+					// pointLayout.setBackgroundColor(getResources().getColor(R.color.bg_color));
+					// for (int i = 0; i < bitmapLists.size(); i++)
+					// {
+					// ImageView pointView = new ImageView(MainActivity.this);
+					// if (i == 0)
+					// {
+					// pointView.setBackgroundResource(R.drawable.feature_point_cur);
+					// }
+					// else
+					// pointView.setBackgroundResource(R.drawable.feature_point);
+					// pointLayout.addView(pointView);
+					// }
+					// images_ga.setOnItemClickListener(new OnItemClickListener()
+					// {
+					// @Override
+					// public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3)
+					// {
+					// if (!StringUtil.isBlank(linkLists.get(arg2)))
+					// {
+					// Intent intent = new Intent();
+					// intent.putExtra("url", linkLists.get(arg2));
+					// intent.setClass(MainActivity.this, ViewWebViewActivity.class);
+					// startActivity(intent);
+					// }
+					// }
+					// });
+					// images_ga.setFocusable(true);
+					// images_ga.setFocusableInTouchMode(true);
+					// images_ga.requestFocus();
+
 					SwitherImageAdapter imageAdapter = new SwitherImageAdapter(MainActivity.this);
-					imageAdapter.setImg(bitmapLists,linkLists);
+					imageAdapter.setImg(bitmapLists, linkLists);
 					images_ga.setAdapter(imageAdapter);
 					break;
 				default:

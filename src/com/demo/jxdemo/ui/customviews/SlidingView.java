@@ -317,20 +317,20 @@ public class SlidingView
 
 			// 动态设置drawableLeft图标，（先下载到本地缓存，再读取本地缓存）
 			// TODO
-			// String iconUrlStr = StringUtil.Object2String(courseList.get(i).get("Icon"));
-			// final String serverUrl = CommandConstants.URL_ROOT+iconUrlStr;
-			// final String localUrl = CacheSupport.staticServerUrlConvertToCachePath(serverUrl);
-			// new Thread(){
-			// public void run() {
-			// if(HttpUtils.downloadFile(serverUrl,localUrl)){
-			// Message msg = new Message();
-			// msg.what = 2;
-			// msg.obj = localUrl;
-			// msg.arg1 = textView.getId();
-			// mHandler.sendMessage(msg);
-			// }
-			// };
-			// }.start();
+			 String iconUrlStr = StringUtil.Object2String(courseList.get(i).get("Icon"));
+			 final String serverUrl = CommandConstants.URL_ROOT+iconUrlStr;
+			 final String localUrl = CacheSupport.staticServerUrlConvertToCachePath(serverUrl);
+			 new Thread(){
+				 public void run() {
+				if(HttpUtils.downloadFile(serverUrl,localUrl)){
+						 Message msg = new Message();
+						 msg.what = 2;
+						 msg.obj = localUrl;
+						 msg.arg1 = textView.getId();
+						 mHandler.sendMessage(msg);
+				 }
+			 };
+			 }.start();
 		}
 
 		if (current == 0)

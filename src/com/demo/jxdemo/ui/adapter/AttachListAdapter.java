@@ -31,10 +31,12 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.demo.base.global.ActivityTaskManager;
 import com.demo.base.support.CacheSupport;
 import com.demo.base.util.BitmapUtils;
+import com.demo.base.util.CallOtherOpeanFile;
 import com.demo.base.util.FileUtils;
 import com.demo.base.util.HttpUtils;
 import com.demo.base.util.StringUtil;
@@ -135,44 +137,63 @@ public class AttachListAdapter extends BaseAdapter
 		// 设置tag
 		convertView.setTag(holder);
 		
-		final String serverUrl = CommandConstants.URL_ROOT + StringUtil.Object2String(map.get("URL"));
-		final String localUrl = CacheSupport.staticServerUrlConvertToCachePath(serverUrl);
-		if(FileUtils.isExisitFile(localUrl)){
-			// 存在，已经下载
-			holder.rightBtn.setText(DOWN_OK_SEE);
+		if(!"".equals(StringUtil.Object2String(map.get("URL")))){
+			final String serverUrl = CommandConstants.URL_ROOT + StringUtil.Object2String(map.get("URL"));
+			final String localUrl = CacheSupport.staticServerUrlConvertToCachePath(serverUrl);
+			if(FileUtils.isExisitFile(localUrl)){
+				// 存在，已经下载
+				holder.rightBtn.setText(DOWN_OK_SEE);
+			}
+			
+			holder.rightBtn.setOnClickListener(new OnClickListener()
+			{
+
+				@Override
+				public void onClick(final View v)
+				{
+					if(((Button)v).getText().equals(DOWN_ON)){// 点击下载开始下载
+						holder.progressBar.setVisibility(View.VISIBLE);
+						holder.rightBtn.setText(DOWN_ING);
+						new Thread()
+						{
+							public void run()
+							{
+								if (downloadFile(serverUrl, localUrl,mHandler,holder))
+								{
+									Message msg = new Message();
+									msg.what = 1;
+									msg.obj = holder;
+									Bundle bundle = new Bundle();
+									bundle.putString("localUrl", localUrl);
+									msg.setData(bundle);
+									mHandler.sendMessage(msg);
+								}
+							};
+						}.start();
+					}else if(((Button)v).getText().equals(DOWN_OK_SEE)){// 点击查看附件
+						// TODO 
+						File file = new File(localUrl);
+						if(file != null && file.exists()){
+							new CallOtherOpeanFile().openFile(context, file);
+						}else{
+							Toast.makeText(context, "没有找到查看的文件！", Toast.LENGTH_SHORT).show();
+						}
+						
+					}
+				}
+			});
+		}else{
+			holder.rightBtn.setOnClickListener(new OnClickListener()
+			{
+
+				@Override
+				public void onClick(final View v)
+				{
+					Toast.makeText(context, "附件路径不正确！", Toast.LENGTH_SHORT).show();
+				}
+			});
 		}
 		
-		holder.rightBtn.setOnClickListener(new OnClickListener()
-		{
-
-			@Override
-			public void onClick(final View v)
-			{
-				if(((Button)v).getText().equals(DOWN_ON)){// 点击下载开始下载
-					holder.progressBar.setVisibility(View.VISIBLE);
-					holder.rightBtn.setText(DOWN_ING);
-					new Thread()
-					{
-						public void run()
-						{
-							if (downloadFile(serverUrl, localUrl,mHandler,holder))
-							{
-								Message msg = new Message();
-								msg.what = 1;
-								msg.obj = holder;
-								Bundle bundle = new Bundle();
-								bundle.putString("localUrl", localUrl);
-								msg.setData(bundle);
-								mHandler.sendMessage(msg);
-							}
-						};
-					}.start();
-				}else if(((Button)v).getText().equals(DOWN_OK_SEE)){// 点击查看附件
-					// TODO 
-				}
-			}
-		});
-
 		return convertView;
 	}
 
@@ -245,6 +266,9 @@ public class AttachListAdapter extends BaseAdapter
 
 		private void setData(Map<String, Object> map)
 		{
+			if(map == null){
+				return ;
+			}
 			String[] a;// 分隔整个url
 			String[] b;// 分隔标题和文件类型
 			String url = StringUtil.Object2String(map.get("URL"));
@@ -252,11 +276,21 @@ public class AttachListAdapter extends BaseAdapter
 			{
 				a = url.split("/");
 				url = a[a.length - 1];
+			}else{
+				return ;
 			}
 			b = url.replace(".", "!").split("!");
 			textTitle.setText(StringUtil.Object2String(url));
-			textSize.setText(FileUtils.FormetFileSize(Long.parseLong(StringUtil.Object2String(map.get("Size")))));
-			leftIcon.setText(StringUtil.Object2String(b[b.length - 1]));
+			if("".equals(StringUtil.Object2String(map.get("Size")))){
+				textSize.setText("0B");
+			}else{
+				textSize.setText(FileUtils.FormetFileSize(Long.parseLong(StringUtil.Object2String(map.get("Size")))));
+			}
+			if("".equals(StringUtil.Object2String(b)) || b.length == 0){
+				leftIcon.setText("");
+			}else{
+				leftIcon.setText(StringUtil.Object2String(b[b.length - 1]));
+			}
 		}
 	}
 	

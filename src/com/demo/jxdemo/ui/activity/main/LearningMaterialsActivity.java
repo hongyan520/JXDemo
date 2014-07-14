@@ -34,7 +34,10 @@ import android.widget.TextView;
 
 import com.demo.base.services.http.HttpPostAsync;
 import com.demo.base.support.BaseConstants;
+import com.demo.base.support.CacheSupport;
 import com.demo.base.util.DateUtil;
+import com.demo.base.util.FileUtils;
+import com.demo.base.util.HttpUtils;
 import com.demo.base.util.JsonUtil;
 import com.demo.base.util.ScrollListViewUtil;
 import com.demo.base.util.StringUtil;
@@ -250,6 +253,17 @@ public class LearningMaterialsActivity extends BaseActivity
 						if (map[0].get("AttachementArray") != null)
 							attachLists = JsonUtil.getList(map[0].get("AttachementArray").toString());
 						mHandler.sendEmptyMessage(1);
+						if(map[0].get("Banner") != null){
+							String serverUrl = CommandConstants.URL_ROOT + map[0].get("Banner").toString();
+							String localUrl = CacheSupport.staticServerUrlConvertToCachePath(serverUrl);
+							if (HttpUtils.downloadFile(serverUrl, localUrl))
+							{
+								Message msg = new Message();
+								msg.what = 1001;
+								msg.obj = localUrl;
+								mHandler.sendMessage(msg);	
+							}
+						}
 					}
 					else if (flag == 2)
 					{
@@ -358,6 +372,10 @@ public class LearningMaterialsActivity extends BaseActivity
 					commentEditText.setText("");
 					commentCountTextView.setText(commentCount + 1 + "条评论");
 					break;
+				case 1001:
+					// 刷新top图片
+					refreshTopImage((String)msg.obj);
+					break;
 				default:
 					break;
 			}
@@ -385,6 +403,18 @@ public class LearningMaterialsActivity extends BaseActivity
 		attachListView.setOnItemClickListener(onItemClickAvoidForceListener);
 
 		((ScrollView) findViewById(R.id.scrollView1)).setVisibility(View.VISIBLE);
+		
+	}
+	
+	private void refreshTopImage(String localImagePath){
+		Bitmap bitmapOrg = FileUtils.getBitmapByimgPath(localImagePath);
+		DisplayMetrics dm = Utils.getDisplayMetrics(this);
+		// 窗口的宽度
+		int screenWidth = dm.widthPixels;
+		float currentHight = ((float) (bitmapOrg.getHeight() * screenWidth)) / ((float) bitmapOrg.getWidth());
+
+		topImageView.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, (int) currentHight));
+		topImageView.setImageBitmap(bitmapOrg);
 	}
 
 	private void initCommentsView()

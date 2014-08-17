@@ -111,7 +111,8 @@ public class ManageDetailActivity extends BaseActivity
 		// ((TextView) findViewById(R.id.text_description)).setText("<html><body>" + Html.fromHtml(description) + "</body></html>");
 		// webView.getSettings().setDefaultTextEncodingName("UTF-8");
 		// webView.loadData("<html><body>" + description + "</body></html>", "text/html", "UTF-8");
-		webView.setBackgroundColor(0) ;
+		// webView.setBackgroundColor(0);
+		// webView.getBackground().setAlpha(2); // 设置填充透明度 范围：0-255
 		webView.loadDataWithBaseURL(null, "<html><body>" + description + "</body></html>", "text/html", "utf-8", null);
 
 		controlImg();

@@ -227,8 +227,7 @@
                 android:id="@+id/web1"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_margin="16dp"
-                android:background="@color/transparent" />
+                android:layout_margin="16dp" />
         </LinearLayout>
     </ScrollView>
 

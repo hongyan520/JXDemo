@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import ui.listener.OnClickAvoidForceListener;
-import ui.listener.OnItemClickAvoidForceListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,12 +17,11 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -92,6 +91,8 @@ public class LearningMaterialsActivity extends BaseActivity
 
 	private int commentCount = 0;
 
+	private int temp = 0;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -113,8 +114,6 @@ public class LearningMaterialsActivity extends BaseActivity
 		((ImageView) findViewById(R.id.imgview_return)).setBackgroundResource(R.drawable.img_back);
 		((ImageView) findViewById(R.id.imgview_return)).setVisibility(View.VISIBLE);
 		colTextView = (TextView) findViewById(R.id.text_right);
-		colTextView.setText("收藏");
-		colTextView.setVisibility(View.VISIBLE);
 
 		attachListView = (ListView) findViewById(R.id.list_learn_attach);
 		commentLayout = (LinearLayout) findViewById(R.id.list_learn_comment);
@@ -138,23 +137,10 @@ public class LearningMaterialsActivity extends BaseActivity
 
 	private void initData()
 	{
-		// Map<String, Object> m1 = new HashMap<String, Object>();
-		// m1.put("11", "111");
-		// Map<String, Object> m2 = new HashMap<String, Object>();
-		// m2.put("11", "111");
-		// Map<String, Object> m3 = new HashMap<String, Object>();
-		// m3.put("11", "111");
-		//
-		// lists = new ArrayList<Map<String, Object>>();
-		// lists.add(m1);
-		// lists.add(m2);
-		// lists.add(m3);
-
 		// 请求主信息
 		request(CommandConstants.LEARNINGFRAGMENT);
 		// 请求评论列表
 		request(CommandConstants.LEARNINGFRAGMENTCOMMENTS);
-		// 收藏(连接失败?)
 
 	}
 
@@ -253,7 +239,8 @@ public class LearningMaterialsActivity extends BaseActivity
 						if (map[0].get("AttachementArray") != null)
 							attachLists = JsonUtil.getList(map[0].get("AttachementArray").toString());
 						mHandler.sendEmptyMessage(1);
-						if(map[0].get("Banner") != null){
+						if (map[0].get("Banner") != null)
+						{
 							String serverUrl = CommandConstants.URL_ROOT + map[0].get("Banner").toString();
 							String localUrl = CacheSupport.staticServerUrlConvertToCachePath(serverUrl);
 							if (HttpUtils.downloadFile(serverUrl, localUrl))
@@ -261,7 +248,7 @@ public class LearningMaterialsActivity extends BaseActivity
 								Message msg = new Message();
 								msg.what = 1001;
 								msg.obj = localUrl;
-								mHandler.sendMessage(msg);	
+								mHandler.sendMessage(msg);
 							}
 						}
 					}
@@ -352,6 +339,7 @@ public class LearningMaterialsActivity extends BaseActivity
 					initView();
 					break;
 				case 2:
+					dismissProgress();
 					controlRightImg();
 					break;
 				case 3:
@@ -372,9 +360,12 @@ public class LearningMaterialsActivity extends BaseActivity
 					commentEditText.setText("");
 					commentCountTextView.setText(commentCount + 1 + "条评论");
 					break;
+				case 5:
+					initCommentsView();
+					break;
 				case 1001:
 					// 刷新top图片
-					refreshTopImage((String)msg.obj);
+					refreshTopImage((String) msg.obj);
 					break;
 				default:
 					break;
@@ -384,7 +375,20 @@ public class LearningMaterialsActivity extends BaseActivity
 
 	private void controlRightImg()
 	{
-		ToastManager.getInstance(LearningMaterialsActivity.this).showToast(fav + "");
+		if (fav == 1)
+		{
+			Drawable drawable = getResources().getDrawable(R.drawable.icon_favourite);
+			drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+			colTextView.setCompoundDrawables(drawable, null, null, null);
+		}
+		else
+		{
+			Drawable drawable = getResources().getDrawable(R.drawable.icon_favourite_gray);
+			drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+			colTextView.setCompoundDrawables(drawable, null, null, null);
+		}
+		colTextView.setText(" 收藏");
+		colTextView.setVisibility(View.VISIBLE);
 	}
 
 	private void initView()
@@ -394,19 +398,21 @@ public class LearningMaterialsActivity extends BaseActivity
 		attachListView.setAdapter(attachAdapter);
 		ScrollListViewUtil.setListViewHeightBasedOnChildren(attachListView);
 
+		fav = returnMap.get("Fav") == null ? 0 : Integer.parseInt(returnMap.get("Fav").toString());
+		controlRightImg();
+
 		commentCount = returnMap.get("CommentCount") == null ? 0 : Integer.parseInt(returnMap.get("CommentCount").toString());
 		titleTextView.setText(StringUtil.Object2String(returnMap.get("Title")));
 		contentTextView.setText(StringUtil.Object2String(returnMap.get("Content")));
 		attCountTextView.setText(StringUtil.Object2String(attachLists == null ? "0" : attachLists.size()) + "个附件");
 		commentCountTextView.setText(commentCount + "条评论");
 
-		attachListView.setOnItemClickListener(onItemClickAvoidForceListener);
-
 		((ScrollView) findViewById(R.id.scrollView1)).setVisibility(View.VISIBLE);
-		
+
 	}
-	
-	private void refreshTopImage(String localImagePath){
+
+	private void refreshTopImage(String localImagePath)
+	{
 		Bitmap bitmapOrg = FileUtils.getBitmapByimgPath(localImagePath);
 		DisplayMetrics dm = Utils.getDisplayMetrics(this);
 		// 窗口的宽度
@@ -422,8 +428,10 @@ public class LearningMaterialsActivity extends BaseActivity
 		if (commentshLists != null)
 		{
 			commentLayout.removeAllViews();
+
 			for (int i = 0; i < commentshLists.size(); i++)
 			{
+				temp = i;
 				String name = StringUtil.Object2String(commentshLists.get(i).get("SenderTitle"));
 
 				LinearLayout layout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.activity_learningmaterials_item_comment,
@@ -434,6 +442,17 @@ public class LearningMaterialsActivity extends BaseActivity
 
 				if (SharedPreferencesConfig.config(LearningMaterialsActivity.this).get(Constant.USER_NAME).equals(name))
 					((Button) layout.findViewById(R.id.btn_right)).setVisibility(View.VISIBLE);
+
+				((Button) layout.findViewById(R.id.btn_right)).setOnClickListener(new OnClickListener()
+				{
+
+					@Override
+					public void onClick(View v)
+					{
+						deleteComment(StringUtil.Object2String(commentshLists.get(temp).get("ID")));
+					}
+				});
+
 				commentLayout.addView(layout);
 			}
 		}
@@ -480,15 +499,64 @@ public class LearningMaterialsActivity extends BaseActivity
 		}
 	};
 
+	private void deleteComment(String CommentID)
+	{
+
+		showProgress(4 * 1000);
+		Map<String, Object> parasTemp = new HashMap<String, Object>();
+		parasTemp.put("UserToken", SharedPreferencesConfig.config(LearningMaterialsActivity.this).get(Constant.USER_TOKEN));
+		parasTemp.put("CommentID", CommentID);
+
+		new HttpPostAsync(LearningMaterialsActivity.this)
+		{
+			@Override
+			public Object backResult(Object result)
+			{// 请求回调
+				if (result == null || "".equals(result.toString()))
+				{
+					dismissProgress();
+					ToastManager.getInstance(LearningMaterialsActivity.this).showToast("服务器异常，请联系管理员!");
+				}
+				else if (BaseConstants.HTTP_REQUEST_FAIL.equals(result.toString().trim()))
+				{
+					dismissProgress();
+					ToastManager.getInstance(LearningMaterialsActivity.this).showToast("连接不上服务器");
+				}
+				else
+				{
+					Map<String, Object> mapstr = JsonUtil.getMapString(result.toString());
+					boolean isSuccess = false;
+					if (!mapstr.containsKey(CommandConstants.ERRCODE))
+						isSuccess = true;
+					String desc = (String) mapstr.get(CommandConstants.ERRCODE);
+					if (!isSuccess && !StringUtil.isBlank(desc))
+					{
+						dismissProgress();
+						ToastManager.getInstance(LearningMaterialsActivity.this).showToast(desc);
+					}
+					else
+					{
+						dismissProgress();
+						ToastManager.getInstance(LearningMaterialsActivity.this).showToast("删除成功");
+						mHandler.sendEmptyMessage(4);
+					}
+				}
+				return "";
+			}
+		}.execute(BaseConstants.POST_KEYVALUE_DATA, CommandConstants.URL + CommandConstants.DELETECOMMENT, parasTemp);
+
+	}
+
 	private void toggleFavourite()
 	{
+		showProgress(4000);
 		String learningFragmentID = "";
 		if (returnMap != null && !StringUtil.isBlank(returnMap.get("ID").toString()))
 			learningFragmentID = returnMap.get("ID").toString();
 
 		Map<String, Object> parasTemp = new HashMap<String, Object>();
 		parasTemp.put("UserToken", SharedPreferencesConfig.config(LearningMaterialsActivity.this).get(Constant.USER_TOKEN));
-		parasTemp.put("LearningFragmentID", learningFragmentID);
+		parasTemp.put("FragmentID", learningFragmentID);
 
 		new HttpPostAsync(LearningMaterialsActivity.this)
 		{
@@ -529,32 +597,6 @@ public class LearningMaterialsActivity extends BaseActivity
 		}.execute(BaseConstants.POST_KEYVALUE_DATA, CommandConstants.URL + CommandConstants.TOGGLEFAVOURITE, parasTemp);
 
 	}
-
-	// protected void onActivityResult(int requestCode, int resultCode, Intent data)
-	// {
-	// super.onActivityResult(requestCode, resultCode, data);
-	// if (RESULT_OK == resultCode)
-	// {
-	// switch (requestCode)
-	// {
-	// case 1:
-	// showProgress(4 * 1000);
-	// request();
-	// break;
-	// default:
-	// break;
-	// }
-	// }
-	// };
-
-	private OnItemClickAvoidForceListener onItemClickAvoidForceListener = new OnItemClickAvoidForceListener()
-	{
-
-		@Override
-		public void onItemClickAvoidForce(AdapterView<?> arg0, View arg1, int arg2, long arg3)
-		{
-		}
-	};
 
 	public TextWatcher textWatcher = new TextWatcher()
 	{

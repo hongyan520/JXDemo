@@ -67,7 +67,6 @@ public class UserDetailActivity extends BaseActivity
 
 		adapter = new UserDetailListAdapter(UserDetailActivity.this);
 		findViews();
-		// initData();// 记得去掉
 		initView(false);
 		setViewClick();
 	}
@@ -87,21 +86,6 @@ public class UserDetailActivity extends BaseActivity
 		listView = (ListView) findViewById(R.id.list_userdetail);
 	}
 
-	private void initData()
-	{
-		Map<String, Object> m1 = new HashMap<String, Object>();
-		m1.put("11", "111");
-		Map<String, Object> m2 = new HashMap<String, Object>();
-		m2.put("11", "111");
-		Map<String, Object> m3 = new HashMap<String, Object>();
-		m3.put("11", "111");
-
-		lists = new ArrayList<Map<String, Object>>();
-		lists.add(m1);
-		lists.add(m2);
-		lists.add(m3);
-	}
-
 	private void initView(boolean isRequest)
 	{
 		String name = SharedPreferencesConfig.config(UserDetailActivity.this).get(Constant.USER_NAME);
@@ -110,21 +94,25 @@ public class UserDetailActivity extends BaseActivity
 		String gender = SharedPreferencesConfig.config(UserDetailActivity.this).get(Constant.USER_GENDER);
 		String userIcon = SharedPreferencesConfig.config(UserDetailActivity.this).get(Constant.USER_AVATAR);
 
-		if(!StringUtil.isBlank(userIcon)){
-			 final String serverUrl = CommandConstants.URL_ROOT+userIcon;
-			 final String localUrl = CacheSupport.staticServerUrlConvertToCachePath(serverUrl);
-			 new Thread(){
-			 public void run() {
-				 if(HttpUtils.downloadFile(serverUrl,localUrl)){
-					 Message msg = new Message();
-					 msg.what = 3;
-					 msg.obj = localUrl;
-					 mHandler.sendMessage(msg);
-				 }
-			 };
-			 }.start();
+		if (!StringUtil.isBlank(userIcon))
+		{
+			final String serverUrl = CommandConstants.URL_ROOT + userIcon;
+			final String localUrl = CacheSupport.staticServerUrlConvertToCachePath(serverUrl);
+			new Thread()
+			{
+				public void run()
+				{
+					if (HttpUtils.downloadFile(serverUrl, localUrl))
+					{
+						Message msg = new Message();
+						msg.what = 3;
+						msg.obj = localUrl;
+						mHandler.sendMessage(msg);
+					}
+				};
+			}.start();
 		}
-		
+
 		// ////打开下面两块
 		if ("1".equals(gender))
 			genderImageView.setBackgroundResource(R.drawable.icon_male);
@@ -138,23 +126,22 @@ public class UserDetailActivity extends BaseActivity
 		introduceTextView.setText(introduce);
 		if (!isRequest)
 			request(CommandConstants.USERPROFILE);
-		initListView(false);
+
+		request(CommandConstants.COURSELIST);
 	}
 
-	private void initListView(boolean isRequest)
+	private void initListView()
 	{
 		// lists = JsonUtil.getList(SharedPreferencesConfig.config(UserDetailActivity.this).get(Constant.USER_COURSEARRAY).toString());
 		adapter.setDataList(lists);
 		listView.setAdapter(adapter);
 		ScrollListViewUtil.setListViewHeightBasedOnChildren(listView);
 		listView.setOnItemClickListener(onItemClickAvoidForceListener);
-		// 打开下面一块
-		if (!isRequest)
-			request(CommandConstants.COURSELIST);
 	}
 
 	private void request(final String cmd)
 	{
+		showProgress(4 * 1000);
 		Map<String, Object> parasTemp = new HashMap<String, Object>();
 		parasTemp.put("UserToken", SharedPreferencesConfig.config(UserDetailActivity.this).get(Constant.USER_TOKEN));
 		parasTemp.put("UserID", SharedPreferencesConfig.config(UserDetailActivity.this).get(Constant.USER_ID));
@@ -233,15 +220,16 @@ public class UserDetailActivity extends BaseActivity
 				case 2:
 					// SharedPreferencesConfig.saveConfig(UserDetailActivity.this, Constant.USER_COURSEARRAY,
 					// StringUtil.Object2String(lists.toString()));
-					initListView(true);
+					initListView();
 					break;
 				case 3:
 					Bitmap photo = FileUtils.getBitmapByimgPath(msg.obj.toString());
-					if(photo != null){
+					if (photo != null)
+					{
 						photo = BitmapUtils.toRoundBitmap(photo);
-						userImageView.setImageBitmap(photo);	
+						userImageView.setImageBitmap(photo);
 					}
-					
+
 					break;
 				default:
 					break;

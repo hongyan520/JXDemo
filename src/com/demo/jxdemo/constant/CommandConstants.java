@@ -52,7 +52,10 @@ public class CommandConstants
 
 	/** CommentFragment／评论学习片段 */
 	public static final String COMMENTFRAGMENT = "CommentFragment";
-
+	
+	/** DeleteComment／删除评论片段 */
+	public static final String DELETECOMMENT = "DeleteComment";
+	
 	/** UploadAudio ／上传录音 */
 	public static final String UPLOADAUDIO = "UploadAudio";
 

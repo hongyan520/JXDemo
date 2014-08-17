@@ -27,8 +27,6 @@ import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -51,7 +49,6 @@ import com.demo.jxdemo.application.SharedPreferencesConfig;
 import com.demo.jxdemo.constant.CommandConstants;
 import com.demo.jxdemo.constant.Constant;
 import com.demo.jxdemo.ui.activity.BaseFragmentActivity;
-import com.demo.jxdemo.ui.activity.menu.ViewWebViewActivity;
 import com.demo.jxdemo.ui.adapter.SwitherImageAdapter;
 import com.demo.jxdemo.ui.adapter.main.FragmentPagerListAdapter;
 import com.demo.jxdemo.ui.customviews.GuideGallery;
@@ -114,6 +111,8 @@ public class MainActivity extends BaseFragmentActivity
 
 	private List<Map<String, Object>> tabList;
 
+	// private List<Map<String, Object>> tabCollectionList;
+
 	private PullToRefreshScrollView csrcoll;
 
 	private TextView tvRefresh;
@@ -127,8 +126,9 @@ public class MainActivity extends BaseFragmentActivity
 	public Button btn3;
 
 	public Button btn4;
-	
+
 	private int bmpX_target = 0;
+
 	private int bmpX_Old = 0;
 
 	private List<Map<String, Object>> bannersLists;
@@ -182,6 +182,7 @@ public class MainActivity extends BaseFragmentActivity
 		timeThread.start();
 		init();
 		request(CommandConstants.LEARNINGFRAGMENTS);
+		// request(CommandConstants.LEARNINGFRAGMENTS, "3");
 		request(CommandConstants.BANNERS);
 	}
 
@@ -414,7 +415,7 @@ public class MainActivity extends BaseFragmentActivity
 				case R.id.btn_4:
 					// pagerAdapter.onPageSelected(3);
 					// pagerAdapter.setBtnColor(btn4);
-//					ToastManager.getInstance(MainActivity.this).showToast("收藏");
+					// ToastManager.getInstance(MainActivity.this).showToast("收藏");
 					mViewPager.setCurrentItem(3);
 					break;
 				case R.id.btn_3:
@@ -422,7 +423,7 @@ public class MainActivity extends BaseFragmentActivity
 					// pagerAdapter.setBtnColor(btn3);
 					// intent.setClass(MainActivity.this, LearningMaterialsActivity.class);
 					// startActivity(intent);
-//					ToastManager.getInstance(MainActivity.this).showToast("资料");
+					// ToastManager.getInstance(MainActivity.this).showToast("资料");
 					mViewPager.setCurrentItem(2);
 					break;
 				case R.id.btn_2:
@@ -430,13 +431,13 @@ public class MainActivity extends BaseFragmentActivity
 					// pagerAdapter.setBtnColor(btn2);
 					// intent.setClass(MainActivity.this, TrainingActivity.class);
 					// startActivity(intent);
-//					ToastManager.getInstance(MainActivity.this).showToast("训练");
+					// ToastManager.getInstance(MainActivity.this).showToast("训练");
 					mViewPager.setCurrentItem(1);
 					break;
 				case R.id.btn_1:
 					// pagerAdapter.onPageSelected(0);
 					// pagerAdapter.setBtnColor(btn1);
-//					ToastManager.getInstance(MainActivity.this).showToast("全部");
+					// ToastManager.getInstance(MainActivity.this).showToast("全部");
 					mViewPager.setCurrentItem(0);
 					break;
 				case R.id.layout_remark:
@@ -508,20 +509,20 @@ public class MainActivity extends BaseFragmentActivity
 		int screenW = dm.widthPixels;
 		bmpWidth = screenW / tagNum;
 		Matrix matrix = new Matrix();
-		//offset = (float) (screenW / tagNum / cursorWidth);// 计算偏移量
-		//matrix.postScale(offset, 1);
+		// offset = (float) (screenW / tagNum / cursorWidth);// 计算偏移量
+		// matrix.postScale(offset, 1);
 		offset = (bmpWidth - cursorWidth) / 2;
 		matrix.setTranslate(offset, 0);
 		android.widget.LinearLayout.LayoutParams layout = (android.widget.LinearLayout.LayoutParams) cursor.getLayoutParams();
 		layout.width = bmpWidth;
 		cursor.setLayoutParams(layout); // 动态设置宽度
 		cursor.setImageMatrix(matrix);// 设置动画初始位置
-		
-//		offset = ((dm.widthPixels / tagNum) - cursorWidth) / 2;
-//		cursor = (ImageView) findViewById(R.id.ivCursor);
-//		Matrix matrix = new Matrix();
-//		matrix.setTranslate(offset, 0);
-//		cursor.setImageMatrix(matrix);
+
+		// offset = ((dm.widthPixels / tagNum) - cursorWidth) / 2;
+		// cursor = (ImageView) findViewById(R.id.ivCursor);
+		// Matrix matrix = new Matrix();
+		// matrix.setTranslate(offset, 0);
+		// cursor.setImageMatrix(matrix);
 	}
 
 	/**
@@ -576,7 +577,7 @@ public class MainActivity extends BaseFragmentActivity
 		@Override
 		public void onPageScrollStateChanged(int arg0)
 		{
-			System.out.println("onPageScrollStateChanged="+arg0);
+			System.out.println("onPageScrollStateChanged=" + arg0);
 		}
 
 		@Override
@@ -589,37 +590,38 @@ public class MainActivity extends BaseFragmentActivity
 		{
 			// TODO Auto-generated method stub
 			mViewPager.setCurrentItem(position);
-			System.out.println("onPageSelected="+position);
+			System.out.println("onPageSelected=" + position);
 			Animation animation = null;
-			switch (position) {
-			case 0:// 全部
-				bmpX_target = 0;
-				btn1.setTextColor(getResources().getColor(R.color.red));
-				btn2.setTextColor(R.style.textview_gray16_717171);
-				btn3.setTextColor(R.style.textview_gray16_717171);
-				btn4.setTextColor(R.style.textview_gray16_717171);
-				break;
-			case 1:// 训练
-				bmpX_target = bmpWidth;
-				btn1.setTextColor(R.style.textview_gray16_717171);
-				btn2.setTextColor(getResources().getColor(R.color.red));
-				btn3.setTextColor(R.style.textview_gray16_717171);
-				btn4.setTextColor(R.style.textview_gray16_717171);
-				break;
-			case 2:// 资料
-				bmpX_target = 2 * bmpWidth;
-				btn1.setTextColor(R.style.textview_gray16_717171);
-				btn2.setTextColor(R.style.textview_gray16_717171);
-				btn3.setTextColor(getResources().getColor(R.color.red));
-				btn4.setTextColor(R.style.textview_gray16_717171);
-				break;
-			case 3:// 收藏
-				bmpX_target = 3 * bmpWidth;
-				btn1.setTextColor(R.style.textview_gray16_717171);
-				btn2.setTextColor(R.style.textview_gray16_717171);
-				btn3.setTextColor(R.style.textview_gray16_717171);
-				btn4.setTextColor(getResources().getColor(R.color.red));
-				break;
+			switch (position)
+			{
+				case 0:// 全部
+					bmpX_target = 0;
+					btn1.setTextColor(getResources().getColor(R.color.red));
+					btn2.setTextColor(R.style.textview_gray16_717171);
+					btn3.setTextColor(R.style.textview_gray16_717171);
+					btn4.setTextColor(R.style.textview_gray16_717171);
+					break;
+				case 1:// 训练
+					bmpX_target = bmpWidth;
+					btn1.setTextColor(R.style.textview_gray16_717171);
+					btn2.setTextColor(getResources().getColor(R.color.red));
+					btn3.setTextColor(R.style.textview_gray16_717171);
+					btn4.setTextColor(R.style.textview_gray16_717171);
+					break;
+				case 2:// 资料
+					bmpX_target = 2 * bmpWidth;
+					btn1.setTextColor(R.style.textview_gray16_717171);
+					btn2.setTextColor(R.style.textview_gray16_717171);
+					btn3.setTextColor(getResources().getColor(R.color.red));
+					btn4.setTextColor(R.style.textview_gray16_717171);
+					break;
+				case 3:// 收藏
+					bmpX_target = 3 * bmpWidth;
+					btn1.setTextColor(R.style.textview_gray16_717171);
+					btn2.setTextColor(R.style.textview_gray16_717171);
+					btn3.setTextColor(R.style.textview_gray16_717171);
+					btn4.setTextColor(getResources().getColor(R.color.red));
+					break;
 			}
 			animation = new TranslateAnimation(bmpX_Old, bmpX_target, 0, 0);
 			bmpX_Old = bmpX_target;
@@ -629,11 +631,13 @@ public class MainActivity extends BaseFragmentActivity
 		}
 	};
 
-	private void request(final String cmd)
+	private void request(final String cmd)// , final String FragmentType)
 	{
 		showProgress(6 * 1000);
 		Map<String, Object> parasTemp = new HashMap<String, Object>();
 		parasTemp.put("UserToken", SharedPreferencesConfig.config(MainActivity.this).get(Constant.USER_TOKEN));
+		// if (!StringUtil.isBlank(FragmentType))
+		// parasTemp.put("FragmentType", FragmentType);
 
 		new HttpPostAsync(MainActivity.this)
 		{
@@ -669,8 +673,19 @@ public class MainActivity extends BaseFragmentActivity
 						{
 							String data = mapstr.get("Fragments").toString();// mapstr.get("Fragments").toString().replace("\"", "\\\"");
 							SharedPreferencesConfig.saveConfig(MainActivity.this, Constant.USER_TEST, data);
+							// switch (Integer.parseInt(FragmentType))
+							// {
+							// case 0:
 							tabList = JsonUtil.getList(data);
 							mHandler.sendEmptyMessage(1);
+							// break;
+							// case 3:// 最后一个再显示ui
+							// tabCollectionList = JsonUtil.getList(data);
+							// mHandler.sendEmptyMessage(1);
+							// break;
+							// default:
+							// break;
+							// }
 						}
 						else
 						{

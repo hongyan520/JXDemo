@@ -43,7 +43,9 @@ import com.demo.base.util.StringUtil;
 import com.demo.jxdemo.R;
 import com.demo.jxdemo.constant.CommandConstants;
 import com.demo.jxdemo.ui.activity.main.MainActivity;
+import com.demo.jxdemo.ui.activity.main.TrainingActivity;
 import com.demo.jxdemo.ui.activity.menu.UserInfoActivity;
+import com.demo.jxdemo.utils.ToastManager;
 
 public class AttachListAdapter extends BaseAdapter
 {
@@ -65,10 +67,13 @@ public class AttachListAdapter extends BaseAdapter
 	 */
 	@SuppressWarnings("unused")
 	private Context context;
-	
+
 	private final static String DOWN_ON = "下载";
+
 	private final static String DOWN_ING = "下载中";
+
 	private final static String DOWN_WAIT = "暂停";
+
 	private final static String DOWN_OK_SEE = "查看";
 
 	/**
@@ -136,29 +141,32 @@ public class AttachListAdapter extends BaseAdapter
 		holder.setData(map);
 		// 设置tag
 		convertView.setTag(holder);
-		
-		if(!"".equals(StringUtil.Object2String(map.get("URL")))){
-			final String serverUrl = CommandConstants.URL_ROOT + StringUtil.Object2String(map.get("URL"));
+
+		if (!"".equals(StringUtil.Object2String(map.get("URL"))))
+		{
+			final String serverUrl = CommandConstants.URL_ROOT + StringUtil.Object2String(map.get("URL")).replace(" ", "_");
 			final String localUrl = CacheSupport.staticServerUrlConvertToCachePath(serverUrl);
-			if(FileUtils.isExisitFile(localUrl)){
+			if (FileUtils.isExisitFile(localUrl))
+			{
 				// 存在，已经下载
 				holder.rightBtn.setText(DOWN_OK_SEE);
 			}
-			
+
 			holder.rightBtn.setOnClickListener(new OnClickListener()
 			{
 
 				@Override
 				public void onClick(final View v)
 				{
-					if(((Button)v).getText().equals(DOWN_ON)){// 点击下载开始下载
+					if (((Button) v).getText().equals(DOWN_ON))
+					{// 点击下载开始下载
 						holder.progressBar.setVisibility(View.VISIBLE);
 						holder.rightBtn.setText(DOWN_ING);
 						new Thread()
 						{
 							public void run()
 							{
-								if (downloadFile(serverUrl, localUrl,mHandler,holder))
+								if (downloadFile(serverUrl, localUrl, mHandler, holder))
 								{
 									Message msg = new Message();
 									msg.what = 1;
@@ -168,21 +176,40 @@ public class AttachListAdapter extends BaseAdapter
 									msg.setData(bundle);
 									mHandler.sendMessage(msg);
 								}
+								else
+								{
+
+									Message msg = new Message();
+									msg.what = 2;
+									msg.obj = holder;
+									Bundle bundle = new Bundle();
+									bundle.putString("localUrl", localUrl);
+									msg.setData(bundle);
+									mHandler.sendMessage(msg);
+
+								}
 							};
 						}.start();
-					}else if(((Button)v).getText().equals(DOWN_OK_SEE)){// 点击查看附件
-						// TODO 
+					}
+					else if (((Button) v).getText().equals(DOWN_OK_SEE))
+					{// 点击查看附件
+						// TODO
 						File file = new File(localUrl);
-						if(file != null && file.exists()){
+						if (file != null && file.exists())
+						{
 							new CallOtherOpeanFile().openFile(context, file);
-						}else{
+						}
+						else
+						{
 							Toast.makeText(context, "没有找到查看的文件！", Toast.LENGTH_SHORT).show();
 						}
-						
+
 					}
 				}
 			});
-		}else{
+		}
+		else
+		{
 			holder.rightBtn.setOnClickListener(new OnClickListener()
 			{
 
@@ -193,7 +220,7 @@ public class AttachListAdapter extends BaseAdapter
 				}
 			});
 		}
-		
+
 		return convertView;
 	}
 
@@ -203,7 +230,7 @@ public class AttachListAdapter extends BaseAdapter
 		@Override
 		public void handleMessage(Message msg)
 		{
-			
+
 			switch (msg.what)
 			{
 				case 1:
@@ -217,24 +244,38 @@ public class AttachListAdapter extends BaseAdapter
 						holder.rightBtn.setText(DOWN_ON);
 					}
 					break;
+				case 2:
+					AttachListHolder holder1 = (AttachListHolder) msg.obj;
+					if (DOWN_ING.equals(holder1.rightBtn.getText().toString()))
+					{
+						ToastManager.getInstance(context).showToast("下载失败，请重新下载！");
+						holder1.rightBtn.setText(DOWN_ON);
+					}
+					break;
 				case 2014:
 					// 下载中更新UI进度条
 					AttachListHolder aholder = (AttachListHolder) msg.obj;
 					int currentDownSize = msg.arg1;
-					if(currentDownSize == 100){ // 下载完成
-						try {
+					if (currentDownSize == 100)
+					{ // 下载完成
+						try
+						{
 							Thread.sleep(1000);
-						} catch (InterruptedException e) {
+						}
+						catch (InterruptedException e)
+						{
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 						aholder.rightBtn.setText(DOWN_OK_SEE);
 						aholder.progressBar.setVisibility(View.GONE);
 						aholder.progressBar.setProgress(0); // 复位进度条
-					}else{
+					}
+					else
+					{
 						aholder.progressBar.setProgress(currentDownSize);
 					}
-					
+
 					break;
 				default:
 					break;
@@ -252,7 +293,7 @@ public class AttachListAdapter extends BaseAdapter
 		Button leftIcon;
 
 		Button rightBtn;
-		
+
 		ProgressBar progressBar;
 
 		private AttachListHolder(View convertView)
@@ -266,8 +307,9 @@ public class AttachListAdapter extends BaseAdapter
 
 		private void setData(Map<String, Object> map)
 		{
-			if(map == null){
-				return ;
+			if (map == null)
+			{
+				return;
 			}
 			String[] a;// 分隔整个url
 			String[] b;// 分隔标题和文件类型
@@ -276,124 +318,154 @@ public class AttachListAdapter extends BaseAdapter
 			{
 				a = url.split("/");
 				url = a[a.length - 1];
-			}else{
-				return ;
+			}
+			else
+			{
+				return;
 			}
 			b = url.replace(".", "!").split("!");
 			textTitle.setText(StringUtil.Object2String(url));
-			if("".equals(StringUtil.Object2String(map.get("Size")))){
+			if ("".equals(StringUtil.Object2String(map.get("Size"))))
+			{
 				textSize.setText("0B");
-			}else{
+			}
+			else
+			{
 				textSize.setText(FileUtils.FormetFileSize(Long.parseLong(StringUtil.Object2String(map.get("Size")))));
 			}
-			if("".equals(StringUtil.Object2String(b)) || b.length == 0){
+			if ("".equals(StringUtil.Object2String(b)) || b.length == 0)
+			{
 				leftIcon.setText("");
-			}else{
+			}
+			else
+			{
 				leftIcon.setText(StringUtil.Object2String(b[b.length - 1]));
 			}
 		}
 	}
-	
-	
+
 	/**
 	 * 下载服务器文件
-	 * @param serverUrl 服务器地址
-	 * @param localUrl 本地存储地址
+	 * 
+	 * @param serverUrl
+	 *            服务器地址
+	 * @param localUrl
+	 *            本地存储地址
 	 * @return
 	 */
-	public static boolean downloadFile(String serverUrl, String localUrl,Handler mHandler,AttachListHolder mholder) {
+	public static boolean downloadFile(String serverUrl, String localUrl, Handler mHandler, AttachListHolder mholder)
+	{
 		InputStream input = null;
 		OutputStream output = null;
 		HttpURLConnection conn = null;
-		try {
+		try
+		{
 
 			File file = new File(localUrl);
-			if (file.exists()) {
+			if (file.exists())
+			{
 				Log.i(tag = "AttachListAdapter", localUrl + "is exist");
 				return true;
-			} else {
-				
-				//httpGet连接对象 
-		        HttpGet httpRequest = new HttpGet(serverUrl);
-		      //取得HttpClient 对象  
-		        HttpClient httpclient = new DefaultHttpClient();  
-		      //请求httpClient ，取得HttpRestponse  
-	            HttpResponse httpResponse = httpclient.execute(httpRequest);  
-	            if(httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK){  
-	                //取得相关信息 取得HttpEntiy  
-	                HttpEntity httpEntity = httpResponse.getEntity();  
-	                //获得一个输入流  
-	                input = httpEntity.getContent();  
-	                int fileSize = 0;
-	                if(input != null){
-	                	fileSize = input.toString().length();
-	                }
-	                
-	                String dir = localUrl.substring(0,
-							localUrl.lastIndexOf("/") + 1);
+			}
+			else
+			{
+
+				// httpGet连接对象
+				HttpGet httpRequest = new HttpGet(serverUrl);
+				// 取得HttpClient 对象
+				HttpClient httpclient = new DefaultHttpClient();
+				// 请求httpClient ，取得HttpRestponse
+				HttpResponse httpResponse = httpclient.execute(httpRequest);
+				if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK)
+				{
+					// 取得相关信息 取得HttpEntiy
+					HttpEntity httpEntity = httpResponse.getEntity();
+					// 获得一个输入流
+					input = httpEntity.getContent();
+					int fileSize = 0;
+					if (input != null)
+					{
+						fileSize = input.toString().length();
+					}
+
+					String dir = localUrl.substring(0, localUrl.lastIndexOf("/") + 1);
 					new File(dir).mkdirs();// 新建文件夹
 					file.createNewFile();// 新建文件
 					output = new FileOutputStream(file);
 					byte[] buffer = new byte[1024];
-	                int len = 0;
-	                int lentemp = 0;
-	                while ((len = input.read(buffer)) != -1) {
-	                	output.write(buffer, 0, len);
-	                	if(mHandler != null){
-	                		Message msg = new Message();
-	                		msg.what = 2014;
-	                		msg.obj = mholder;
-	                		lentemp = lentemp + len;
-	                		msg.arg1 = (lentemp * 100) / fileSize;
-	                		mHandler.sendMessage(msg);
-	                		
-	                	}
-	                }
-	                if(mHandler != null){
-                		Message msg = new Message();
-                		msg.what = 2014;
-                		msg.obj = mholder;
-                		msg.arg1 = 100;
-                		mHandler.sendMessage(msg);
-                		
-                	}
-	                
-					
+					int len = 0;
+					int lentemp = 0;
+					while ((len = input.read(buffer)) != -1)
+					{
+						output.write(buffer, 0, len);
+						if (mHandler != null)
+						{
+							Message msg = new Message();
+							msg.what = 2014;
+							msg.obj = mholder;
+							lentemp = lentemp + len;
+							msg.arg1 = (lentemp * 100) / fileSize;
+							mHandler.sendMessage(msg);
+
+						}
+					}
+					if (mHandler != null)
+					{
+						Message msg = new Message();
+						msg.what = 2014;
+						msg.obj = mholder;
+						msg.arg1 = 100;
+						mHandler.sendMessage(msg);
+
+					}
+
 					// 读取大文件
-//					byte[] buffer = new byte[4 * 1024];
-//					while (input.read(buffer) != -1) {
-//						output.write(buffer);
-//					}
+					// byte[] buffer = new byte[4 * 1024];
+					// while (input.read(buffer) != -1) {
+					// output.write(buffer);
+					// }
 					output.flush();
-	            }
-				
-//				URL url = new URL(serverUrl);
-//				conn = (HttpURLConnection) url
-//						.openConnection();
-//				input = conn.getInputStream();
-				
+				}
+
+				// URL url = new URL(serverUrl);
+				// conn = (HttpURLConnection) url
+				// .openConnection();
+				// input = conn.getInputStream();
+
 			}
 			Log.i(tag, localUrl + "download success");
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
 			Log.i(tag, localUrl + "download fail");
 			return false;
-		} finally {
-			if(input != null){
-				try {
+		}
+		finally
+		{
+			if (input != null)
+			{
+				try
+				{
 					input.close();
-				} catch (IOException e) {
+				}
+				catch (IOException e)
+				{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
-			try {
-				if(output != null)
+			try
+			{
+				if (output != null)
 					output.close();
-			} catch (IOException e) {
+			}
+			catch (IOException e)
+			{
 				e.printStackTrace();
 			}
-			if(conn != null){
+			if (conn != null)
+			{
 				conn.disconnect();
 			}
 		}
